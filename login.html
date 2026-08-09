@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>InterviewAI — Sign In</title>
+  <!-- FIX: Inline favicon prevents favicon.ico 404 error -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;font-family:'Inter',sans-serif;background:#060608;color:#fff;}
+    .root{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;position:relative;overflow:hidden;}
+    .aurora{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+    .ab{position:absolute;border-radius:50%;}
+    .ab1{width:750px;height:750px;top:-220px;left:-160px;background:radial-gradient(circle,rgba(139,92,246,0.22) 0%,transparent 70%);animation:drift1 13s ease-in-out infinite alternate;}
+    .ab2{width:620px;height:620px;bottom:-200px;right:-120px;background:radial-gradient(circle,rgba(236,72,153,0.16) 0%,transparent 70%);animation:drift2 16s ease-in-out infinite alternate;}
+    .ab3{width:420px;height:420px;top:45%;left:52%;background:radial-gradient(circle,rgba(99,102,241,0.13) 0%,transparent 70%);animation:drift3 11s ease-in-out infinite alternate;}
+    @keyframes drift1{from{transform:translate(0,0) scale(1);}to{transform:translate(60px,45px) scale(1.15);}}
+    @keyframes drift2{from{transform:translate(0,0);}to{transform:translate(-55px,-35px) scale(1.1);}}
+    @keyframes drift3{from{transform:translate(-50%,-50%) scale(1);}to{transform:translate(-50%,-50%) scale(1.22);}}
+    .grain{position:absolute;inset:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:180px;opacity:0.5;}
+    .grid-lines{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);background-size:60px 60px;}
+    .card{position:relative;z-index:10;width:100%;max-width:980px;display:grid;grid-template-columns:1.05fr 0.95fr;min-height:640px;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:rgba(10,9,18,0.84);backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);box-shadow:0 0 0 1px rgba(255,255,255,0.04) inset,0 40px 120px rgba(0,0,0,0.75),0 0 90px rgba(139,92,246,0.1);}
+    .left{padding:48px 44px;border-right:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:26px;background:linear-gradient(160deg,rgba(139,92,246,0.07) 0%,transparent 60%);position:relative;overflow:hidden;}
+    .left::before{content:'';position:absolute;top:0;left:0;width:200px;height:200px;background:radial-gradient(circle at top left,rgba(139,92,246,0.2),transparent 70%);pointer-events:none;}
+    .logo-row{display:flex;align-items:center;gap:12px;}
+    .logo-gem{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(139,92,246,0.55);position:relative;overflow:hidden;flex-shrink:0;}
+    .logo-gem::after{content:'';position:absolute;top:-12px;left:-12px;width:32px;height:32px;background:rgba(255,255,255,0.14);border-radius:50%;}
+    .logo-gem svg{width:22px;height:22px;position:relative;z-index:1;}
+    .logo-name{font-size:17px;font-weight:800;color:#fff;letter-spacing:-0.4px;}
+    .logo-tag{font-size:9px;font-weight:600;letter-spacing:2.5px;color:#a78bfa;text-transform:uppercase;margin-top:1px;}
+    .avatar-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;padding:30px 20px 22px;border-radius:18px;border:1px solid rgba(139,92,246,0.16);background:rgba(139,92,246,0.05);position:relative;overflow:hidden;}
+    .avatar-wrap::before{content:'NEURAL VOICE ENGINE';position:absolute;top:14px;left:50%;transform:translateX(-50%);font-size:8px;font-weight:700;letter-spacing:2.5px;color:rgba(167,139,250,0.55);white-space:nowrap;}
+    .orb-container{position:relative;width:114px;height:114px;}
+    .orb-ring{position:absolute;border-radius:50%;border:1px solid rgba(139,92,246,0.3);}
+    .orb-ring:nth-child(1){inset:0;animation:ring-pulse 3s ease-in-out infinite;}
+    .orb-ring:nth-child(2){inset:-11px;border-color:rgba(139,92,246,0.15);animation:ring-pulse 3.5s ease-in-out infinite;animation-delay:0.5s;}
+    .orb-ring:nth-child(3){inset:-24px;border-color:rgba(139,92,246,0.07);animation:ring-pulse 4s ease-in-out infinite;animation-delay:1s;}
+    @keyframes ring-pulse{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.045);}}
+    .orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 35%,rgba(210,180,255,0.95),rgba(139,92,246,0.97) 38%,rgba(88,28,220,0.99) 72%,rgba(49,10,120,1));box-shadow:0 0 45px rgba(139,92,246,0.65),0 0 90px rgba(139,92,246,0.25),inset 0 0 30px rgba(255,255,255,0.1);overflow:hidden;}
+    .orb-shimmer{position:absolute;top:-20px;left:-20px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.13);filter:blur(10px);animation:shimmer-move 7s ease-in-out infinite alternate;}
+    @keyframes shimmer-move{from{transform:translate(0,0);}to{transform:translate(62px,54px);}}
+    .orb-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+    .face-eyes{display:flex;gap:22px;align-items:center;}
+    .eye{width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,0.95);animation:blink 5s ease-in-out infinite;display:flex;align-items:center;justify-content:center;}
+    .eye:nth-child(2){animation-delay:0.12s;}
+    @keyframes blink{0%,88%,100%{transform:scaleY(1);}92%,96%{transform:scaleY(0.07);}}
+    .eye-inner{width:4px;height:4px;background:#c4b5fd;border-radius:50%;margin-top:2px;}
+    .face-mouth{width:16px;height:5px;border-bottom:2px solid rgba(255,255,255,0.55);border-radius:0 0 10px 10px;animation:talk 2.4s ease-in-out infinite;}
+    @keyframes talk{0%,100%{width:12px;height:4px;}30%{width:20px;height:7px;}60%{width:10px;height:2px;}}
+    .wave-bars{display:flex;align-items:center;gap:3px;height:36px;}
+    .bar{width:3px;border-radius:2px;background:linear-gradient(to top,#7c3aed,#c084fc);animation:bar-anim var(--d,0.8s) ease-in-out infinite alternate;}
+    @keyframes bar-anim{from{height:4px;opacity:0.35;}to{height:var(--h,20px);opacity:1;}}
+    .avatar-status{font-size:11px;font-weight:600;color:rgba(167,139,250,0.85);letter-spacing:0.5px;display:flex;align-items:center;gap:7px;}
+    .status-dot{width:7px;height:7px;border-radius:50%;background:#a78bfa;box-shadow:0 0 10px #a78bfa;animation:pulse-dot 2.2s ease-in-out infinite;}
+    @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.45;transform:scale(0.75);}}
+    .stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+    .stat-card{border-radius:12px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.03);padding:13px 10px;text-align:center;transition:border-color 0.3s,background 0.3s,transform 0.2s;cursor:default;}
+    .stat-card:hover{border-color:rgba(139,92,246,0.35);background:rgba(139,92,246,0.08);transform:translateY(-2px);}
+    .stat-num{font-size:22px;font-weight:800;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .stat-label{font-size:9px;font-weight:600;letter-spacing:1.2px;color:rgba(255,255,255,0.32);text-transform:uppercase;margin-top:3px;}
+    .testimonial{border-radius:14px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.025);padding:18px;}
+    .test-quote{font-size:12.5px;font-weight:500;line-height:1.68;background:linear-gradient(110deg,#ddd6fe,#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:13px;}
+    .test-author{display:flex;align-items:center;gap:10px;}
+    .test-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;box-shadow:0 0 14px rgba(139,92,246,0.45);flex-shrink:0;}
+    .test-name{font-size:12px;font-weight:700;color:rgba(255,255,255,0.85);}
+    .test-role{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;}
+    .right{padding:52px 46px;display:flex;flex-direction:column;justify-content:center;}
+    .form-eyebrow{font-size:10px;font-weight:700;letter-spacing:3px;color:#a78bfa;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:9px;}
+    .form-eyebrow::before{content:'';width:22px;height:1px;background:linear-gradient(90deg,#a78bfa,transparent);}
+    .form-heading{font-size:38px;font-weight:900;letter-spacing:-1.8px;background:linear-gradient(120deg,#ede9fe 0%,#c084fc 42%,#f472b6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.05;margin-bottom:10px;}
+    .form-sub{font-size:14px;color:rgba(255,255,255,0.35);margin-bottom:36px;line-height:1.55;}
+    .form-group{margin-bottom:16px;}
+    .form-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.38);text-transform:uppercase;display:block;margin-bottom:8px;}
+    .form-input{width:100%;padding:13px 18px;font-size:14px;font-family:'Inter',sans-serif;color:#fff;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:12px;outline:none;transition:border-color 0.25s,box-shadow 0.25s,background 0.25s;}
+    .form-input::placeholder{color:rgba(255,255,255,0.18);}
+    .form-input:focus{background:rgba(139,92,246,0.07);border-color:rgba(139,92,246,0.52);box-shadow:0 0 0 3px rgba(139,92,246,0.13);}
+    .form-input.error{border-color:rgba(220,38,38,0.6)!important;box-shadow:0 0 0 3px rgba(220,38,38,0.1)!important;}
+    .forgot-link{font-size:12px;color:#a78bfa;display:block;text-align:right;margin-top:8px;cursor:pointer;text-decoration:none;transition:color 0.2s;}
+    .forgot-link:hover{color:#c084fc;}
+    .sign-btn{width:100%;padding:15px;margin-top:26px;border:none;border-radius:12px;background:linear-gradient(105deg,#7c3aed 0%,#a855f7 45%,#ec4899 100%);color:#fff;font-size:15px;font-weight:800;font-family:'Inter',sans-serif;cursor:pointer;position:relative;overflow:hidden;box-shadow:0 4px 32px rgba(139,92,246,0.52),0 2px 12px rgba(236,72,153,0.3),inset 0 1px 0 rgba(255,255,255,0.16);transition:transform 0.15s,box-shadow 0.2s;}
+    .sign-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 44px rgba(139,92,246,0.65),0 4px 22px rgba(236,72,153,0.42);}
+    .sign-btn:active:not(:disabled){transform:scale(0.99);}
+    .sign-btn:disabled{opacity:0.7;cursor:not-allowed;}
+    .btn-glint{position:absolute;top:0;left:-130%;width:65%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.28) 50%,transparent 70%);animation:glint-sweep 3s ease-in-out infinite;}
+    @keyframes glint-sweep{0%{left:-130%;}45%{left:130%;}100%{left:130%;}}
+    .divider{display:flex;align-items:center;gap:12px;margin:26px 0 20px;}
+    .div-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);}
+    .div-text{font-size:11px;color:rgba(255,255,255,0.25);font-weight:500;}
+    .social-row{display:flex;gap:10px;}
+    .social-btn{flex:1;padding:12px 0;border-radius:11px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.25s;}
+    .social-btn:hover:not(:disabled){background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.2);color:#fff;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.35);}
+    .social-btn:disabled{opacity:0.5;cursor:not-allowed;}
+    .social-btn svg{width:16px;height:16px;flex-shrink:0;}
+    .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.2);border-top-color:#a78bfa;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .signup-row{text-align:center;font-size:13px;color:rgba(255,255,255,0.28);margin-top:26px;}
+    .signup-link{font-weight:700;cursor:pointer;background:linear-gradient(90deg,#a78bfa,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+    .sec-badge{display:flex;align-items:center;justify-content:center;gap:7px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.18);letter-spacing:1px;text-transform:uppercase;margin-top:20px;}
+    .sec-badge::before,.sec-badge::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.05);}
+    .spin{width:14px;height:14px;border:2px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* ── TAB TOGGLE ── */
+    .tab-toggle{display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:4px;gap:4px;margin-bottom:24px;}
+    .tab-btn{flex:1;padding:9px;border:none;border-radius:9px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.25s;background:transparent;color:rgba(255,255,255,0.4);}
+    .tab-btn.active{background:linear-gradient(105deg,#7c3aed,#a855f7 50%,#ec4899);color:#fff;box-shadow:0 4px 16px rgba(139,92,246,0.4);}
+
+    /* ── STEP BAR ── */
+    .step-bar{display:flex;align-items:center;gap:0;margin-bottom:22px;}
+    .step{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;}
+    .step-num{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:rgba(255,255,255,0.35);transition:all 0.3s;}
+    .step.active .step-num{background:linear-gradient(135deg,#7c3aed,#ec4899);border-color:transparent;color:#fff;box-shadow:0 0 14px rgba(139,92,246,0.5);}
+    .step.done .step-num{background:rgba(34,197,94,0.2);border-color:rgba(34,197,94,0.4);color:#86efac;}
+    .step-label{font-size:9px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.3);text-transform:uppercase;}
+    .step.active .step-label{color:#a78bfa;}
+    .step-line{flex:1;height:1px;background:rgba(255,255,255,0.1);margin:0 8px;margin-bottom:16px;}
+
+    /* ── SELECT DROPDOWN ── */
+    .form-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.3)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px;cursor:pointer;}
+    .form-select option,.form-select optgroup{background:#0f0e1a;color:#fff;}
+
+    /* ── SKILL CHIPS ── */
+    .skill-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+    .skill-chip{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.2s;user-select:none;}
+    .skill-chip:hover{border-color:rgba(139,92,246,0.4);color:#c084fc;}
+    .skill-chip.selected{background:rgba(139,92,246,0.18);border-color:rgba(139,92,246,0.5);color:#c084fc;box-shadow:0 0 10px rgba(139,92,246,0.2);}
+
+    /* Scrollbar for signup form */
+    #form-signup::-webkit-scrollbar{width:3px;}
+    #form-signup::-webkit-scrollbar-track{background:transparent;}
+    #form-signup::-webkit-scrollbar-thumb{background:rgba(139,92,246,0.3);border-radius:2px;}
+    .config-warn{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(251,191,36,0.12);border-bottom:1px solid rgba(251,191,36,0.3);padding:10px 20px;display:flex;align-items:center;gap:10px;font-size:12px;color:#fde68a;font-weight:600;font-family:Inter,sans-serif;flex-wrap:wrap;}
+    .config-warn a{color:#fbbf24;}
+    .config-warn button{margin-left:auto;background:none;border:none;color:#fde68a;cursor:pointer;font-size:18px;padding:0 4px;}
+    @media(max-width:720px){.card{grid-template-columns:1fr;}.left{display:none;}.right{padding:40px 28px;}.form-heading{font-size:30px;}}
+  </style>
+</head>
+<body>
+<div class="root">
+  <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
+  <div class="grain"></div>
+  <div class="grid-lines"></div>
+  <div class="card">
+    <div class="left">
+      <div class="logo-row">
+        <div class="logo-gem"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
+        <div><div class="logo-name">InterviewAI</div><div class="logo-tag">Premium Platform</div></div>
+      </div>
+      <div class="avatar-wrap">
+        <div class="orb-container">
+          <div class="orb-ring"></div><div class="orb-ring"></div><div class="orb-ring"></div>
+          <div class="orb">
+            <div class="orb-shimmer"></div>
+            <div class="orb-face">
+              <div class="face-eyes"><div class="eye"><div class="eye-inner"></div></div><div class="eye"><div class="eye-inner"></div></div></div>
+              <div class="face-mouth"></div>
+            </div>
+          </div>
+        </div>
+        <div class="wave-bars" id="wave-bars"></div>
+        <div class="avatar-status"><div class="status-dot"></div>AI Interviewer &middot; Ready</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num">94%</div><div class="stat-label">Offer Rate</div></div>
+        <div class="stat-card"><div class="stat-num">12K+</div><div class="stat-label">Users</div></div>
+        <div class="stat-card"><div class="stat-num">4.9&#9733;</div><div class="stat-label">Rating</div></div>
+      </div>
+      <div class="testimonial">
+        <div class="test-quote">"InterviewAI completely changed how I prep. Three offers in 2 weeks — the AI feedback is like having a world-class coach on demand."</div>
+        <div class="test-author">
+          <div class="test-avatar">AB</div>
+          <div><div class="test-name">Alex_Builds</div><div class="test-role">@alex_builds &middot; Senior SWE @ Google</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="right" id="right-panel">
+
+      <!-- ── TAB TOGGLE ── -->
+      <div class="tab-toggle">
+        <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+        <button class="tab-btn" id="tab-signup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- ════════════════════════════
+           SIGN IN FORM
+      ════════════════════════════ -->
+      <div id="form-login">
+        <div class="form-eyebrow">Welcome Back</div>
+        <div class="form-heading" style="font-size:32px">Sign In.</div>
+        <div class="form-sub">Your AI coach is ready. Continue your journey.</div>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input class="form-input" id="login-email" type="email" placeholder="you@company.com" autocomplete="email"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input class="form-input" id="login-password" type="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" autocomplete="current-password"/>
+          <a class="forgot-link" id="forgot-link">Forgot password?</a>
+        </div>
+        <button class="sign-btn" id="sign-btn"><div class="btn-glint"></div>&#128274;&nbsp; Sign In Securely</button>
+        <div class="divider"><div class="div-line"></div><div class="div-text">or continue with</div><div class="div-line"></div></div>
+        <div class="social-row">
+          <button class="social-btn" id="google-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57C21.36 18.4 22.56 15.57 22.56 12.25z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+            Google
+          </button>
+          <button class="social-btn" id="github-btn">
+            <svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)" width="16" height="16"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </button>
+          <button class="social-btn" id="microsoft-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#f25022" d="M1 1h10v10H1z"/><path fill="#00a4ef" d="M13 1h10v10H13z"/><path fill="#7fba00" d="M1 13h10v10H1z"/><path fill="#ffb900" d="M13 13h10v10H13z"/></svg>
+            Microsoft
+          </button>
+        </div>
+        <div class="sec-badge">&#128274; 256-bit encryption &nbsp;&middot;&nbsp; SOC 2 compliant</div>
+      </div>
+
+      <!-- ════════════════════════════
+           SIGN UP FORM — Step 1 of 2
+      ════════════════════════════ -->
+      <div id="form-signup" style="display:none;overflow-y:auto;max-height:560px;padding-right:4px;">
+
+        <!-- Step indicator -->
+        <div class="step-bar">
+          <div class="step active" id="step-dot-1"><div class="step-num">1</div><div class="step-label">Account</div></div>
+          <div class="step-line"></div>
+          <div class="step" id="step-dot-2"><div class="step-num">2</div><div class="step-label">Profile</div></div>
+        </div>
+
+        <!-- STEP 1: Account info -->
+        <div id="signup-step1">
+          <div class="form-eyebrow">Create Account</div>
+          <div class="form-heading" style="font-size:30px">Join Free.</div>
+          <div class="form-sub" style="margin-bottom:20px">Start acing interviews from day one.</div>
+
+          <div class="form-group">
+            <label class="form-label" for="su-name">Full Name</label>
+            <input class="form-input" id="su-name" type="text" placeholder="Alex Johnson"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="su-email">Email Address</label>
+            <input class="form-input" id="su-email" type="email" placeholder="you@company.com"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="su-password">Password</label>
+            <input class="form-input" id="su-password" type="password" placeholder="Min. 6 characters"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="su-confirm">Confirm Password</label>
+            <input class="form-input" id="su-confirm" type="password" placeholder="Repeat password"/>
+          </div>
+          <button class="sign-btn" id="next-btn" onclick="goStep2()">
+            <div class="btn-glint"></div>Continue &nbsp;&#8594;
+          </button>
+          <div class="divider"><div class="div-line"></div><div class="div-text">or sign up with</div><div class="div-line"></div></div>
+          <div class="social-row">
+            <button class="social-btn" id="su-google-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57C21.36 18.4 22.56 15.57 22.56 12.25z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+              Google
+            </button>
+            <button class="social-btn" id="su-github-btn">
+              <svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)" width="16" height="16"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+              GitHub
+            </button>
+            <button class="social-btn" id="su-microsoft-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#f25022" d="M1 1h10v10H1z"/><path fill="#00a4ef" d="M13 1h10v10H13z"/><path fill="#7fba00" d="M1 13h10v10H1z"/><path fill="#ffb900" d="M13 13h10v10H13z"/></svg>
+              Microsoft
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: Profile info -->
+        <div id="signup-step2" style="display:none">
+          <div class="form-eyebrow">Your Profile</div>
+          <div class="form-heading" style="font-size:30px">Tell Us More.</div>
+          <div class="form-sub" style="margin-bottom:20px">We'll personalise your prep based on this.</div>
+
+          <div class="form-group">
+            <label class="form-label" for="su-role">Target Role</label>
+            <select class="form-input form-select" id="su-role">
+              <option value="" disabled selected>Select your target role</option>
+              <option>Software Engineer (SWE)</option>
+              <option>Senior Software Engineer</option>
+              <option>Product Manager (PM)</option>
+              <option>Data Scientist</option>
+              <option>Data Engineer</option>
+              <option>ML Engineer</option>
+              <option>DevOps / SRE</option>
+              <option>UI/UX Designer</option>
+              <option>Business Analyst</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="su-company">Target Company</label>
+            <select class="form-input form-select" id="su-company">
+              <option value="" disabled selected>Which company are you targeting?</option>
+              <optgroup label="FAANG+">
+                <option>Google</option>
+                <option>Meta</option>
+                <option>Amazon</option>
+                <option>Apple</option>
+                <option>Netflix</option>
+                <option>Microsoft</option>
+              </optgroup>
+              <optgroup label="Top Tech">
+                <option>Uber</option>
+                <option>Airbnb</option>
+                <option>Stripe</option>
+                <option>Salesforce</option>
+                <option>Adobe</option>
+                <option>LinkedIn</option>
+                <option>Twitter / X</option>
+                <option>Atlassian</option>
+              </optgroup>
+              <optgroup label="Top Indian Startups">
+                <option>Swiggy</option>
+                <option>Zomato</option>
+                <option>Zepto</option>
+                <option>Razorpay</option>
+                <option>CRED</option>
+                <option>PhonePe</option>
+                <option>Groww</option>
+                <option>Meesho</option>
+                <option>Ola</option>
+                <option>Paytm</option>
+              </optgroup>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="su-exp">Experience Level</label>
+            <select class="form-input form-select" id="su-exp">
+              <option value="" disabled selected>Select your experience</option>
+              <option>Student / Fresher (0 years)</option>
+              <option>Junior (1-2 years)</option>
+              <option>Mid-level (3-5 years)</option>
+              <option>Senior (6-9 years)</option>
+              <option>Staff / Principal (10+ years)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Skills (select all that apply)</label>
+            <div class="skill-grid" id="skill-grid">
+              <div class="skill-chip" onclick="toggleSkill(this)">DSA</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">System Design</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Behavioural</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">SQL</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Machine Learning</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Product Sense</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">React / Frontend</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Backend / APIs</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Cloud / AWS</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Python</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Java</div>
+              <div class="skill-chip" onclick="toggleSkill(this)">Leadership</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:6px;">
+            <button class="sign-btn" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);box-shadow:none;flex:0 0 44px;font-size:18px;" onclick="goStep1()">&#8592;</button>
+            <button class="sign-btn" id="create-btn" style="flex:1">
+              <div class="btn-glint"></div>&#127775;&nbsp; Create My Account
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     FIREBASE CONFIG — paste your values from Firebase Console
+     Project Settings -> Your Apps -> Web App -> SDK setup
+  ============================================================ */
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyDUFMHq2wIWsleGnt4e47G_Jq-Yc_hD4NM",
+  authDomain: "ai-personal-interview-28bb5.firebaseapp.com",
+  projectId: "ai-personal-interview-28bb5",
+  storageBucket: "ai-personal-interview-28bb5.firebasestorage.app",
+  messagingSenderId: "485537566038",
+  appId: "1:485537566038:web:6415da72123dd942ef9af7",
+  measurementId: "G-X2EZL7V67Y"
+  };
+  /* ============================================================ */
+
+  /* NEVER auto-redirect from login page — always show the form */
+  localStorage.removeItem('ai_logged_in');
+  localStorage.removeItem('ai_user_name');
+  localStorage.removeItem('ai_user_email');
+
+  const FIREBASE_READY = FIREBASE_CONFIG.apiKey !== "YOUR_API_KEY";
+
+  /* ── Waveform bars ── */
+  const wbc = document.getElementById("wave-bars");
+  [6,10,18,26,30,24,14,8,20,28,32,22,12,16,28,24,10,18,30,26,14,8,20].forEach((h,i)=>{
+    const b=document.createElement("div"); b.className="bar";
+    b.style.setProperty("--h",h+"px");
+    b.style.setProperty("--d",(0.45+Math.random()*0.75).toFixed(2)+"s");
+    b.style.animationDelay=(i*0.055).toFixed(2)+"s";
+    wbc.appendChild(b);
+  });
+
+  /* ── Toast notification ── */
+  function showToast(msg, type) {
+    let t = document.getElementById("toast");
+    if (!t) {
+      t = document.createElement("div"); t.id = "toast";
+      t.style.cssText = "position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);z-index:9999;padding:12px 26px;border-radius:12px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.3s;opacity:0;white-space:nowrap;backdrop-filter:blur(20px);border:1px solid;pointer-events:none;";
+      document.body.appendChild(t);
+    }
+    const styles = {
+      error:   {bg:"rgba(220,38,38,0.18)",  bc:"rgba(220,38,38,0.4)",  c:"#fca5a5"},
+      success: {bg:"rgba(34,197,94,0.15)",  bc:"rgba(34,197,94,0.35)", c:"#86efac"},
+      info:    {bg:"rgba(139,92,246,0.18)", bc:"rgba(139,92,246,0.4)", c:"#c4b5fd"}
+    };
+    const s = styles[type] || styles.info;
+    t.style.background=s.bg; t.style.borderColor=s.bc; t.style.color=s.c;
+    t.textContent = msg;
+    t.style.opacity="1"; t.style.transform="translateX(-50%) translateY(0)";
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=>{ t.style.opacity="0"; t.style.transform="translateX(-50%) translateY(-80px)"; }, 3500);
+  }
+
+  /* ── Firebase friendly error messages ── */
+  function fbErr(code) {
+    const map = {
+      "auth/user-not-found":        "No account found with this email.",
+      "auth/wrong-password":        "Incorrect password. Please try again.",
+      "auth/invalid-credential":    "Wrong email or password.",
+      "auth/invalid-email":         "Please enter a valid email address.",
+      "auth/too-many-requests":     "Too many attempts. Please wait a moment.",
+      "auth/network-request-failed":"Network error. Check your connection.",
+      "auth/popup-closed-by-user":  "Popup was closed. Please try again.",
+      "auth/popup-blocked":         "Popup blocked — allow popups for this site.",
+      "auth/operation-not-allowed": "This sign-in method is not enabled in Firebase Console.",
+      "auth/unauthorized-domain":   "Add localhost to Firebase Console → Auth → Authorized domains.",
+    };
+    return "⚠️ " + (map[code] || "Something went wrong: " + code);
+  }
+
+  /* ── Button state helpers ── */
+  function setBtnLoading(btn, loading) {
+    btn.disabled = loading;
+    if (loading) {
+      btn._orig = btn.innerHTML;
+      btn.innerHTML = '<div class="btn-glint"></div><span style="opacity:0.8">Signing in…</span>';
+    } else {
+      btn.innerHTML = btn._orig;
+    }
+  }
+  function setSocialLoading(btn, label) {
+    btn._orig = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spin"></div>' + label;
+  }
+  function resetBtn(btn) {
+    btn.disabled = false;
+    btn.innerHTML = btn._orig;
+  }
+
+  /* ── Input validation ── */
+  function validate() {
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value;
+    const eEl   = document.getElementById("email");
+    const pEl   = document.getElementById("password");
+    eEl.classList.remove("error"); pEl.classList.remove("error");
+    if (!email)                                      { showToast("⚠️ Please enter your email.", "error"); eEl.classList.add("error"); eEl.focus(); return null; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast("⚠️ Enter a valid email address.", "error"); eEl.classList.add("error"); eEl.focus(); return null; }
+    if (!pass)                                       { showToast("⚠️ Please enter your password.", "error"); pEl.classList.add("error"); pEl.focus(); return null; }
+    if (pass.length < 6)                             { showToast("⚠️ Password must be 6+ characters.", "error"); pEl.classList.add("error"); pEl.focus(); return null; }
+    return { email, pass };
+  }
+
+  /* ── After successful login — save session & redirect ── */
+  function onSuccess(name) {
+    localStorage.setItem("ai_logged_in", "true");
+    localStorage.setItem("ai_user_name", name || "User");
+    showToast("✅ Welcome, " + (name || "there") + "! Redirecting…", "success");
+    setTimeout(() => { window.location.href = "dashboard.html"; }, 1200);
+  }
+
+  /* ── Enter key submits form ── */
+  ["login-email", "login-password"].forEach(id => {
+  const input = document.getElementById(id);
+  if (input) {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        document.getElementById("sign-btn").click();
+      }
+    });
+  }
+});
+
+  /* ── Sign up link ── */
+ const signupLink = document.getElementById("signup-link");
+
+if (signupLink) {
+    signupLink.addEventListener("click", () => {
+        showToast("Sign-up page coming soon!", "info");
+    });
+}
+  /* ==============================================================
+     FIREBASE MODE — only runs when you paste your real config
+  ============================================================== */
+  if (FIREBASE_READY) {
+    Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js")
+    ]).then(([{ initializeApp }, {
+      getAuth, signInWithEmailAndPassword, signInWithPopup,
+      sendPasswordResetEmail, GoogleAuthProvider,
+      GithubAuthProvider, OAuthProvider
+    }]) => {
+
+      const app  = initializeApp(FIREBASE_CONFIG);
+      const auth = getAuth(app);
+      /* NOTE: NO onAuthStateChanged here — we never auto-redirect from login */
+
+      /* Email login */
+      document.getElementById("sign-btn").addEventListener("click", async () => {
+        const c = validate(); if (!c) return;
+        const btn = document.getElementById("sign-btn");
+        setBtnLoading(btn, true);
+        try {
+          const r = await signInWithEmailAndPassword(auth, c.email, c.pass);
+          onSuccess(r.user.displayName || r.user.email);
+        } catch(err) {
+          setBtnLoading(btn, false);
+          showToast(fbErr(err.code), "error");
+        }
+      });
+
+      /* Google */
+      document.getElementById("google-btn").addEventListener("click", async function() {
+        setSocialLoading(this, "Google");
+        try {
+          const r = await signInWithPopup(auth, new GoogleAuthProvider());
+          onSuccess(r.user.displayName || r.user.email);
+        } catch(err) { resetBtn(this); showToast(fbErr(err.code), "error"); }
+      });
+
+      /* GitHub */
+      document.getElementById("github-btn").addEventListener("click", async function() {
+        setSocialLoading(this, "GitHub");
+        try {
+          const r = await signInWithPopup(auth, new GithubAuthProvider());
+          onSuccess(r.user.displayName || r.user.email);
+        } catch(err) { resetBtn(this); showToast(fbErr(err.code), "error"); }
+      });
+
+      /* Microsoft */
+      document.getElementById("microsoft-btn").addEventListener("click", async function() {
+        setSocialLoading(this, "Microsoft");
+        try {
+          const r = await signInWithPopup(auth, new OAuthProvider("microsoft.com"));
+          onSuccess(r.user.displayName || r.user.email);
+        } catch(err) { resetBtn(this); showToast(fbErr(err.code), "error"); }
+      });
+
+      /* Forgot password */
+      document.getElementById("forgot-link").addEventListener("click", async e => {
+        e.preventDefault();
+        const email = document.getElementById("email").value.trim();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          showToast("⚠️ Enter your email above first.", "error");
+          document.getElementById("email").focus(); return;
+        }
+        try {
+          await sendPasswordResetEmail(auth, email);
+          showToast("📧 Reset email sent! Check your inbox.", "success");
+        } catch(err) { showToast(fbErr(err.code), "error"); }
+      });
+
+    }).catch(err => {
+      showToast("⚠️ Firebase failed to load. Check your internet.", "error");
+      console.error(err);
+    });
+
+  } else {
+    /* ==============================================================
+       DEMO MODE — Firebase not configured yet
+       Buttons work fully and redirect to homepage for UI testing
+    ============================================================== */
+    const warn = document.createElement("div");
+    warn.style.cssText = "position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(251,191,36,0.13);border-bottom:1px solid rgba(251,191,36,0.35);padding:10px 20px;font-size:12px;font-weight:600;font-family:Inter,sans-serif;color:#fde68a;display:flex;align-items:center;gap:10px;flex-wrap:wrap;";
+    warn.innerHTML = '⚙️ <strong>Demo Mode</strong> — Firebase not configured. All buttons redirect to home for UI testing. <a href="https://console.firebase.google.com" target="_blank" style="color:#fbbf24;">Set up Firebase →</a><button onclick="this.parentElement.remove()" style="margin-left:auto;background:none;border:none;color:#fde68a;cursor:pointer;font-size:18px;">✕</button>';
+    document.body.prepend(warn);
+
+    /* Email sign-in demo */
+    document.getElementById("sign-btn").addEventListener("click", () => {
+      const c = validate(); if (!c) return;
+      const btn = document.getElementById("sign-btn");
+      setBtnLoading(btn, true);
+      showToast("Signing in…", "info");
+      setTimeout(() => { onSuccess(c.email.split("@")[0]); }, 1200);
+    });
+
+    /* Social sign-in demo */
+    const socialMap = { "google-btn":"Google", "github-btn":"GitHub", "microsoft-btn":"Microsoft" };
+    Object.entries(socialMap).forEach(([id, label]) => {
+      document.getElementById(id).addEventListener("click", function() {
+        setSocialLoading(this, label);
+        showToast("Connecting with " + label + "…", "info");
+        setTimeout(() => { onSuccess(label + " User"); }, 1400);
+      });
+    });
+
+    /* Forgot password demo */
+    document.getElementById("forgot-link").addEventListener("click", e => {
+      e.preventDefault();
+      const email = document.getElementById("login-email") ? document.getElementById("login-email").value.trim() : document.getElementById("email") ? document.getElementById("email").value.trim() : "";
+      if (!email) { showToast("⚠️ Enter your email above first.", "error"); return; }
+      showToast("📧 Demo: Reset email sent to " + email, "success");
+    });
+  }
+
+  /* ================================================================
+     TAB TOGGLE — Switch between Sign In and Sign Up
+  ================================================================ */
+  window.switchTab = function(tab) {
+    const loginForm  = document.getElementById('form-login');
+    const signupForm = document.getElementById('form-signup');
+    const tabLogin   = document.getElementById('tab-login');
+    const tabSignup  = document.getElementById('tab-signup');
+    if (tab === 'login') {
+      loginForm.style.display  = 'block';
+      signupForm.style.display = 'none';
+      tabLogin.classList.add('active');
+      tabSignup.classList.remove('active');
+    } else {
+      loginForm.style.display  = 'none';
+      signupForm.style.display = 'block';
+      tabSignup.classList.add('active');
+      tabLogin.classList.remove('active');
+      goStep1();
+    }
+  };
+
+  /* ================================================================
+     SIGNUP STEP NAVIGATION
+  ================================================================ */
+  window.goStep2 = function() {
+    const name  = document.getElementById('su-name').value.trim();
+    const email = document.getElementById('su-email').value.trim();
+    const pass  = document.getElementById('su-password').value;
+    const conf  = document.getElementById('su-confirm').value;
+    ['su-name','su-email','su-password','su-confirm'].forEach(id => document.getElementById(id).classList.remove('error'));
+    if (!name)   { showToast('⚠️ Please enter your full name.','error'); document.getElementById('su-name').classList.add('error'); document.getElementById('su-name').focus(); return; }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('⚠️ Please enter a valid email.','error'); document.getElementById('su-email').classList.add('error'); document.getElementById('su-email').focus(); return; }
+    if (!pass || pass.length < 6) { showToast('⚠️ Password must be at least 6 characters.','error'); document.getElementById('su-password').classList.add('error'); document.getElementById('su-password').focus(); return; }
+    if (pass !== conf) { showToast('⚠️ Passwords do not match.','error'); document.getElementById('su-confirm').classList.add('error'); document.getElementById('su-confirm').focus(); return; }
+    document.getElementById('signup-step1').style.display = 'none';
+    document.getElementById('signup-step2').style.display = 'block';
+    document.getElementById('step-dot-1').classList.remove('active');
+    document.getElementById('step-dot-1').classList.add('done');
+    document.getElementById('step-dot-1').querySelector('.step-num').innerHTML = '&#10003;';
+    document.getElementById('step-dot-2').classList.add('active');
+  };
+
+  window.goStep1 = function() {
+    document.getElementById('signup-step1').style.display = 'block';
+    document.getElementById('signup-step2').style.display = 'none';
+    document.getElementById('step-dot-1').classList.add('active');
+    document.getElementById('step-dot-1').classList.remove('done');
+    document.getElementById('step-dot-1').querySelector('.step-num').innerHTML = '1';
+    document.getElementById('step-dot-2').classList.remove('active');
+  };
+
+  window.toggleSkill = function(chip) { chip.classList.toggle('selected'); };
+
+  /* ── Create Account button ── */
+  document.getElementById('create-btn').addEventListener('click', function() {
+    const role    = document.getElementById('su-role').value;
+    const company = document.getElementById('su-company').value;
+    const exp     = document.getElementById('su-exp').value;
+    const skills  = [...document.querySelectorAll('.skill-chip.selected')].map(c => c.textContent);
+    if (!role)    { showToast('⚠️ Please select your target role.','error'); return; }
+    if (!company) { showToast('⚠️ Please select your target company.','error'); return; }
+    if (!exp)     { showToast('⚠️ Please select your experience level.','error'); return; }
+    const name  = document.getElementById('su-name').value.trim();
+    const email = document.getElementById('su-email').value.trim();
+    this._orig = this.innerHTML;
+    this.disabled = true;
+    this.innerHTML = '<div class="btn-glint"></div><div class="spin"></div>&nbsp;Creating account…';
+    localStorage.setItem('ai_user_role',    role);
+    localStorage.setItem('ai_user_company', company);
+    localStorage.setItem('ai_user_exp',     exp);
+    localStorage.setItem('ai_user_skills',  JSON.stringify(skills));
+    setTimeout(() => { onSuccess(name || email.split('@')[0]); }, 1500);
+  });
+
+  /* ── Social signup buttons ── */
+  ['su-google-btn','su-github-btn','su-microsoft-btn'].forEach((id, i) => {
+    const labels = ['Google','GitHub','Microsoft'];
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', function() {
+      setSocialLoading(this, labels[i]);
+      showToast('Connecting with ' + labels[i] + '…','info');
+      setTimeout(() => { onSuccess(labels[i] + ' User'); }, 1400);
+    });
+  });
+
+  /* ── Enter key for step 1 ── */
+  ['su-name','su-email','su-password','su-confirm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') window.goStep2(); });
+  });
+
+  /* Fix: update validate() to use new login field IDs */
+  const _origValidate = window.validate;
+  window.validate = function() {
+    const email = document.getElementById("login-email") ? document.getElementById("login-email").value.trim() : "";
+    const pass  = document.getElementById("login-password") ? document.getElementById("login-password").value : "";
+    const eEl   = document.getElementById("login-email");
+    const pEl   = document.getElementById("login-password");
+    if (eEl) eEl.classList.remove("error");
+    if (pEl) pEl.classList.remove("error");
+    if (!email)                                      { showToast("⚠️ Please enter your email.", "error"); if(eEl){eEl.classList.add("error");eEl.focus();} return null; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast("⚠️ Enter a valid email address.", "error"); if(eEl){eEl.classList.add("error");eEl.focus();} return null; }
+    if (!pass)                                       { showToast("⚠️ Please enter your password.", "error"); if(pEl){pEl.classList.add("error");pEl.focus();} return null; }
+    if (pass.length < 6)                             { showToast("⚠️ Password must be 6+ characters.", "error"); if(pEl){pEl.classList.add("error");pEl.focus();} return null; }
+    return { email, pass };
+  };
+
+  /* Fix: Enter key for new login field IDs */
+  ["login-email","login-password"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("sign-btn").click(); });
+  });
+  </script>
+</body>
+</html>

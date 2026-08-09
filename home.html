@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InterviewAI — Ace Every Interview</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#060608;--card:rgba(255,255,255,0.03);
+  --purple:#7c3aed;--purple2:#a855f7;--pink:#ec4899;
+  --border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.4);
+  --fh:'Syne',sans-serif;--f:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--f);background:var(--bg);color:#fff;overflow-x:hidden;}
+/* AURORA */
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.ab{position:absolute;border-radius:50%;}
+.ab1{width:900px;height:900px;top:-300px;left:-200px;background:radial-gradient(circle,rgba(124,58,237,0.18) 0%,transparent 65%);animation:abl1 20s ease-in-out infinite alternate;}
+.ab2{width:700px;height:700px;bottom:-250px;right:-150px;background:radial-gradient(circle,rgba(236,72,153,0.12) 0%,transparent 65%);animation:abl2 25s ease-in-out infinite alternate;}
+.ab3{width:500px;height:500px;top:40%;left:40%;background:radial-gradient(circle,rgba(99,102,241,0.10) 0%,transparent 65%);animation:abl3 15s ease-in-out infinite alternate;}
+@keyframes abl1{from{transform:translate(0,0);}to{transform:translate(80px,60px) scale(1.15);}}
+@keyframes abl2{from{transform:translate(0,0);}to{transform:translate(-60px,-40px) scale(1.12);}}
+@keyframes abl3{from{transform:translate(-50%,-50%);}to{transform:translate(-50%,-50%) scale(1.25);}}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:160px;}
+.gridlines{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:70px 70px;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:68px;display:flex;align-items:center;padding:0 32px;background:rgba(6,6,8,0.75);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);transition:background 0.3s;}
+.ni{max-width:1200px;margin:0 auto;width:100%;display:flex;align-items:center;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.gem{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(124,58,237,0.5);flex-shrink:0;}
+.gem svg{width:20px;height:20px;}
+.brand{font-family:var(--fh);font-size:17px;font-weight:800;color:#fff;}
+.brandtag{font-size:8px;font-weight:600;letter-spacing:2px;color:#a78bfa;text-transform:uppercase;margin-top:1px;}
+.nav-links{display:flex;align-items:center;gap:2px;margin:0 auto;}
+.nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);text-decoration:none;padding:7px 14px;border-radius:8px;transition:all 0.2s;}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.06);}
+.nav-cta{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.btn-g{font-size:13px;font-weight:600;color:rgba(255,255,255,0.6);background:none;border:1px solid rgba(255,255,255,0.12);border-radius:9px;padding:8px 18px;cursor:pointer;font-family:var(--f);transition:all 0.22s;}
+.btn-g:hover{color:#fff;border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.05);}
+.btn-p{font-size:13px;font-weight:700;color:#fff;background:linear-gradient(105deg,#7c3aed,#a855f7 50%,#ec4899);border:none;border-radius:9px;padding:9px 22px;cursor:pointer;font-family:var(--f);position:relative;overflow:hidden;box-shadow:0 0 22px rgba(124,58,237,0.45);transition:transform 0.15s,box-shadow 0.2s;}
+.btn-p:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(124,58,237,0.6);}
+/* SHARED */
+.s{position:relative;z-index:2;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+.gt{background:linear-gradient(120deg,#ede9fe 0%,#c084fc 42%,#f472b6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.28);border-radius:100px;padding:5px 14px;margin-bottom:20px;}
+.pd{width:6px;height:6px;border-radius:50%;background:#a78bfa;box-shadow:0 0 8px #a78bfa;animation:pd 2s ease-in-out infinite;}
+@keyframes pd{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.sh{text-align:center;margin-bottom:60px;}
+.st{font-family:var(--fh);font-size:clamp(30px,4.5vw,48px);font-weight:800;letter-spacing:-1.5px;line-height:1.08;margin-bottom:14px;}
+.ss{font-size:16px;color:var(--muted);max-width:500px;margin:0 auto;line-height:1.7;}
+.rv{opacity:0;transform:translateY(28px);transition:opacity 0.65s ease,transform 0.65s ease;}
+.rv.up{opacity:1;transform:translateY(0);}
+.rv.d1{transition-delay:0.1s;}.rv.d2{transition-delay:0.2s;}.rv.d3{transition-delay:0.3s;}.rv.d4{transition-delay:0.4s;}
+.card{border-radius:18px;border:1px solid var(--border);background:var(--card);padding:24px;}
+.glint{position:absolute;top:0;left:-130%;width:65%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.25) 50%,transparent 70%);animation:glint 3s ease-in-out infinite;}
+@keyframes glint{0%{left:-130%;}45%{left:130%;}100%{left:130%;}}
+.pb{height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-top:6px;}
+.pbf{height:100%;border-radius:3px;background:linear-gradient(90deg,#7c3aed,#ec4899);}
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 32px 60px;}
+.hbadge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:7px 18px;margin-bottom:28px;font-size:13px;color:var(--muted);}
+.hhl{color:#c084fc;font-weight:700;}
+.htitle{font-family:var(--fh);font-size:clamp(48px,8vw,90px);font-weight:800;letter-spacing:-3px;line-height:0.98;margin-bottom:24px;}
+.hsub{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:560px;margin:0 auto 40px;line-height:1.7;}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:56px;}
+.btn-hero{font-size:15px;font-weight:800;color:#fff;background:linear-gradient(105deg,#7c3aed,#a855f7 50%,#ec4899);border:none;border-radius:14px;padding:16px 36px;cursor:pointer;font-family:var(--f);position:relative;overflow:hidden;box-shadow:0 4px 32px rgba(124,58,237,0.55);transition:transform 0.15s,box-shadow 0.2s;display:flex;align-items:center;gap:9px;}
+.btn-hero:hover{transform:translateY(-3px);box-shadow:0 10px 48px rgba(124,58,237,0.65);}
+.btn-hg{font-size:15px;font-weight:600;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.14);border-radius:14px;padding:15px 28px;cursor:pointer;font-family:var(--f);transition:all 0.22s;display:flex;align-items:center;gap:8px;}
+.btn-hg:hover{color:#fff;border-color:rgba(255,255,255,0.28);transform:translateY(-1px);}
+.hstats{display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap;}
+.hstat-v{font-family:var(--fh);font-size:34px;font-weight:800;letter-spacing:-1px;}
+.hstat-l{font-size:12px;color:var(--muted);font-weight:500;margin-top:2px;}
+.hdiv{width:1px;height:44px;background:rgba(255,255,255,0.08);}
+/* ===== FEATURES SECTION ===== */
+.features-s{padding:100px 0;}
+/* Big feature nav tabs */
+.fnav{display:flex;gap:0;border:1px solid var(--border);background:rgba(255,255,255,0.02);border-radius:16px;padding:6px;margin-bottom:40px;flex-wrap:wrap;gap:4px;}
+.ftab{flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;border-radius:12px;border:none;background:transparent;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.25s;font-family:var(--f);}
+.ftab:hover{color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.04);}
+.ftab.active{background:linear-gradient(135deg,rgba(124,58,237,0.22),rgba(236,72,153,0.12));color:#fff;box-shadow:inset 0 0 0 1px rgba(124,58,237,0.4);}
+.ftab-icon{font-size:22px;}
+.ftab-label{font-size:12px;font-weight:700;letter-spacing:0.3px;}
+.ftab-sub{font-size:10px;color:inherit;opacity:0.6;}
+/* Feature content area */
+.fpanel{display:none;}
+.fpanel.active{display:block;animation:fin 0.4s cubic-bezier(.34,1.2,.64,1);}
+@keyframes fin{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.fsplit{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:start;}
+.fsplit.rev{direction:rtl;}
+.fsplit.rev>*{direction:ltr;}
+.ftxt{}
+.fbadge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);border-radius:20px;padding:4px 12px;margin-bottom:14px;}
+.ftitle{font-family:var(--fh);font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:12px;}
+.fdesc{font-size:14px;color:var(--muted);line-height:1.75;margin-bottom:22px;}
+.fpts{display:flex;flex-direction:column;gap:9px;margin-bottom:24px;}
+.fp{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:rgba(255,255,255,0.7);}
+.fpdot{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#ec4899);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;margin-top:2px;}
+.fcta{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:#fff;background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);border:none;border-radius:12px;padding:12px 26px;cursor:pointer;font-family:var(--f);position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(124,58,237,0.4);transition:transform 0.15s,box-shadow 0.2s;}
+.fcta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,58,237,0.55);}
+/* INTERACTIVE SCREENS */
+.fscreen{border-radius:18px;border:1px solid rgba(255,255,255,0.1);background:rgba(10,9,18,0.98);overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.65),0 0 0 1px rgba(124,58,237,0.12);}
+.fbar{height:38px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;padding:0 14px;gap:6px;}
+.fdot{width:9px;height:9px;border-radius:50%;}
+.ftitle-bar{margin-left:8px;font-size:11px;color:rgba(255,255,255,0.2);font-weight:500;}
+.fbody{padding:20px;}
+
+/* ── DASHBOARD SCREEN ── */
+.dash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.dstat{border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:12px;text-align:center;transition:transform 0.2s,border-color 0.2s;cursor:default;}
+.dstat:hover{transform:translateY(-2px);border-color:rgba(124,58,237,0.3);}
+.dstat-v{font-family:var(--fh);font-size:20px;font-weight:800;letter-spacing:-0.5px;}
+.dstat-l{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.dskill-row{margin-bottom:6px;}
+.dskill-head{display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-bottom:3px;}
+.dskill-val{color:#c084fc;font-weight:700;}
+.dqa{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px;}
+.dqa-btn{border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.02);padding:10px;cursor:pointer;transition:all 0.2s;text-align:center;}
+.dqa-btn:hover{border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.07);transform:translateY(-1px);}
+.dqa-icon{font-size:18px;margin-bottom:4px;}
+.dqa-label{font-size:10px;font-weight:700;color:#fff;}
+.dqa-sub{font-size:9px;color:var(--muted);}
+.dqa-btn.primary{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.08);}
+
+/* ── SETUP SCREEN ── */
+.setup-opts{display:grid;gap:7px;margin-bottom:12px;}
+.s3{grid-template-columns:repeat(3,1fr);}
+.s4{grid-template-columns:repeat(4,1fr);}
+.s2{grid-template-columns:repeat(2,1fr);}
+.opt{border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.02);padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.22s;user-select:none;}
+.opt:hover{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.06);transform:translateY(-1px);}
+.opt.sel{border-color:rgba(124,58,237,0.6);background:rgba(124,58,237,0.14);box-shadow:0 0 14px rgba(124,58,237,0.15);}
+.opt-icon{font-size:18px;margin-bottom:5px;}
+.opt-t{font-size:11px;font-weight:700;color:#fff;}
+.opt-s{font-size:9px;color:var(--muted);}
+.setup-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:7px;margin-top:10px;}
+.co-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.co-tag{font-size:10px;font-weight:600;padding:4px 10px;border-radius:7px;border:1px solid var(--border);background:rgba(255,255,255,0.025);color:rgba(255,255,255,0.45);cursor:pointer;transition:all 0.2s;}
+.co-tag:hover,.co-tag.sel{border-color:rgba(124,58,237,0.45);background:rgba(124,58,237,0.1);color:#c084fc;}
+.setup-start{width:100%;padding:12px;border:none;border-radius:10px;background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);color:#fff;font-size:13px;font-weight:800;cursor:pointer;font-family:var(--f);position:relative;overflow:hidden;box-shadow:0 4px 20px rgba(124,58,237,0.4);transition:transform 0.15s;}
+.setup-start:hover{transform:translateY(-1px);}
+
+/* ── SESSION SCREEN ── */
+.session-layout{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:start;}
+.session-q{border-radius:10px;border:1px solid rgba(124,58,237,0.25);background:rgba(124,58,237,0.08);padding:12px;margin-bottom:8px;}
+.session-q-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#a78bfa;margin-bottom:5px;}
+.session-q-text{font-size:11px;color:#fff;line-height:1.5;}
+.timer-box{border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:10px;text-align:center;margin-bottom:8px;}
+.timer-val{font-family:var(--fh);font-size:26px;font-weight:800;color:#f87171;}
+.timer-sub{font-size:9px;color:var(--muted);}
+.ai-center{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.ai-orb-s{width:72px;height:72px;border-radius:50%;background:radial-gradient(circle at 38% 35%,rgba(196,162,255,0.9),rgba(124,58,237,0.97) 38%,rgba(88,28,220,0.99) 72%,rgba(49,10,120,1));box-shadow:0 0 30px rgba(124,58,237,0.65);animation:orb-p 2s ease-in-out infinite;}
+@keyframes orb-p{0%,100%{box-shadow:0 0 30px rgba(124,58,237,0.65);}50%{box-shadow:0 0 50px rgba(124,58,237,0.85);}}
+.orb-face-s{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;}
+.orb-eyes{display:flex;gap:16px;}
+.orb-eye{width:7px;height:7px;border-radius:50%;background:#fff;animation:blink 5s ease-in-out infinite;}
+@keyframes blink{0%,88%,100%{transform:scaleY(1);}92%,96%{transform:scaleY(0.07);}}
+.wavebars{display:flex;align-items:center;gap:2px;height:28px;}
+.wb{width:2px;border-radius:1px;background:linear-gradient(to top,#7c3aed,#c084fc);animation:wb var(--d,0.8s) ease-in-out infinite alternate;}
+@keyframes wb{from{height:3px;opacity:0.3;}to{height:var(--h,14px);opacity:1;}}
+.session-status{font-size:9px;font-weight:600;color:#a78bfa;display:flex;align-items:center;gap:5px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:#ec4899;box-shadow:0 0 6px #ec4899;animation:ld 1.2s ease-in-out infinite;}
+@keyframes ld{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.transcript-box{border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.02);padding:10px;}
+.t-ai{font-size:9px;font-weight:700;color:#a78bfa;margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;}
+.t-user{font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;margin-top:8px;}
+.t-text{font-size:10px;color:rgba(255,255,255,0.6);line-height:1.5;}
+.cursor{display:inline-block;width:2px;height:10px;background:#a78bfa;margin-left:2px;vertical-align:bottom;animation:cur 1s step-end infinite;}
+@keyframes cur{0%,100%{opacity:1;}50%{opacity:0;}}
+.session-controls{display:flex;gap:7px;justify-content:center;padding-top:10px;border-top:1px solid var(--border);margin-top:6px;grid-column:1/-1;}
+.sc-btn{padding:8px 14px;border-radius:8px;font-size:10px;font-weight:700;cursor:pointer;font-family:var(--f);transition:all 0.2s;}
+.sc-rec{background:linear-gradient(105deg,#ec4899,#f472b6);border:none;color:#fff;animation:rec-p 1.5s ease-in-out infinite;}
+@keyframes rec-p{0%,100%{box-shadow:0 0 10px rgba(236,72,153,0.4);}50%{box-shadow:0 0 20px rgba(236,72,153,0.7);}}
+.sc-next{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.35);color:#c084fc;}
+.sc-skip{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);color:rgba(255,255,255,0.35);}
+
+/* ── RESULTS SCREEN ── */
+.res-top{text-align:center;margin-bottom:14px;}
+.res-score{font-family:var(--fh);font-size:52px;font-weight:800;letter-spacing:-3px;line-height:1;}
+.res-grade{display:inline-block;margin-top:6px;background:rgba(34,197,94,0.12);border:2px solid rgba(34,197,94,0.3);border-radius:16px;padding:4px 16px;font-size:14px;font-weight:800;color:#34d399;}
+.res-cats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:12px;}
+.rcat{border-radius:9px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:10px;text-align:center;}
+.rcat-icon{font-size:16px;margin-bottom:4px;}
+.rcat-v{font-size:14px;font-weight:800;}
+.rcat-l{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;}
+.res-fb{display:flex;flex-direction:column;gap:6px;}
+.rfb{border-radius:8px;padding:8px 10px;font-size:11px;color:rgba(255,255,255,0.7);line-height:1.4;}
+.rfb.g{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.2);}
+.rfb.y{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);}
+.rfb.p{background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.2);}
+.res-btns{display:flex;gap:7px;margin-top:12px;}
+.rb{flex:1;padding:9px;border-radius:9px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--f);text-align:center;transition:all 0.2s;}
+.rb-p{background:linear-gradient(105deg,#7c3aed,#ec4899);border:none;color:#fff;box-shadow:0 3px 14px rgba(124,58,237,0.4);}
+.rb-g{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:rgba(255,255,255,0.6);}
+.rb-p:hover,.rb-g:hover{transform:translateY(-1px);}
+
+/* ── RESUME SCREEN ── */
+.res-upload{border-radius:14px;border:2px dashed rgba(124,58,237,0.3);background:rgba(124,58,237,0.04);padding:20px;text-align:center;margin-bottom:12px;cursor:pointer;transition:all 0.3s;}
+.res-upload:hover{border-color:rgba(124,58,237,0.6);background:rgba(124,58,237,0.08);}
+.res-upload-icon{font-size:32px;animation:float 3s ease-in-out infinite alternate;}
+@keyframes float{from{transform:translateY(0);}to{transform:translateY(-6px);}}
+.res-upload-t{font-size:12px;font-weight:700;color:#fff;margin-top:8px;}
+.res-upload-s{font-size:10px;color:var(--muted);margin-top:3px;}
+.res-score-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.18);border-radius:12px;padding:12px;margin-bottom:10px;}
+.res-gauge-v{font-family:var(--fh);font-size:28px;font-weight:800;letter-spacing:-1px;}
+.res-gauge-l{font-size:10px;color:var(--muted);}
+.res-gauge-title{font-family:var(--fh);font-size:13px;font-weight:700;margin-top:3px;}
+.skills-cloud{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.sk{font-size:9px;font-weight:600;padding:3px 8px;border-radius:6px;border:1px solid;}
+.sk.strong{background:rgba(124,58,237,0.12);border-color:rgba(124,58,237,0.3);color:#c084fc;}
+.sk.med{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:#fcd34d;}
+.sk.weak{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);color:#fca5a5;}
+.ai-qs-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;}
+.ai-q-item{background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.18);border-radius:8px;padding:8px 10px;margin-bottom:5px;}
+.ai-q-tag{font-size:8px;font-weight:700;color:#a78bfa;margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;}
+.ai-q-text{font-size:10px;color:rgba(255,255,255,0.65);line-height:1.5;}
+
+/* ── HOW IT WORKS ── */
+.how-s{padding:100px 0;}
+.steps-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;max-width:1000px;margin:0 auto;}
+.steps-row::before{content:'';position:absolute;top:27px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.4),rgba(236,72,153,0.4),transparent);z-index:0;}
+.step-c{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 10px;z-index:1;}
+.step-n{width:54px;height:54px;border-radius:50%;border:2px solid rgba(124,58,237,0.3);background:rgba(124,58,237,0.08);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;transition:all 0.3s;}
+.step-c:hover .step-n{border-color:rgba(124,58,237,0.7);box-shadow:0 0 24px rgba(124,58,237,0.35);}
+.step-t{font-family:var(--fh);font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
+.step-d{font-size:11px;color:var(--muted);line-height:1.55;}
+
+/* ── COMPANY SEARCH ── */
+.co-s{padding:100px 0;}
+.co-search-wrap{max-width:620px;margin:0 auto 36px;position:relative;}
+.co-input{width:100%;padding:16px 24px 16px 52px;font-size:15px;font-family:var(--f);color:#fff;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:16px;outline:none;transition:all 0.25s;}
+.co-input:focus{background:rgba(124,58,237,0.08);border-color:rgba(124,58,237,0.55);box-shadow:0 0 0 3px rgba(124,58,237,0.13);}
+.co-input::placeholder{color:rgba(255,255,255,0.25);}
+.co-si{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:18px;}
+.co-badge{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:rgba(124,58,237,0.18);color:#a78bfa;border:1px solid rgba(124,58,237,0.3);border-radius:6px;padding:4px 9px;}
+.co-cloud{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:900px;margin:0 auto 36px;}
+.ctag{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.22s;}
+.ctag:hover,.ctag.active{border-color:rgba(124,58,237,0.45);background:rgba(124,58,237,0.1);color:#c084fc;transform:translateY(-2px);}
+.no-res{text-align:center;color:var(--muted);font-size:14px;padding:20px;display:none;}
+.co-detail{border-radius:20px;border:1px solid rgba(124,58,237,0.2);background:rgba(124,58,237,0.05);padding:30px 34px;max-width:860px;margin:0 auto;display:none;animation:sli 0.4s cubic-bezier(.34,1.4,.64,1);}
+.co-detail.show{display:block;}
+@keyframes sli{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.cdh{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap;}
+.cdlogo{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.cdname{font-family:var(--fh);font-size:20px;font-weight:800;}
+.cdmeta{font-size:12px;color:var(--muted);margin-top:2px;}
+.cdtopics{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.cdtopic{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;border:1px solid;letter-spacing:0.5px;}
+.cdqs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.cdq{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 12px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;transition:all 0.2s;}
+.cdq:hover{border-color:rgba(124,58,237,0.3);color:rgba(255,255,255,0.85);}
+.cdq-l{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;}
+
+/* ── CATEGORIES ── */
+.cat-s{padding:100px 0;}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.ccard{border-radius:18px;border:1px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.025);padding:26px;position:relative;overflow:hidden;cursor:pointer;transition:all 0.3s;}
+.ccard:hover{border-color:var(--cc-b,rgba(124,58,237,0.35));transform:translateY(-4px);box-shadow:0 16px 48px rgba(0,0,0,0.35);}
+.ccard::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at top left,var(--cc-c,rgba(124,58,237,0.1)),transparent 65%);opacity:0;transition:opacity 0.3s;}
+.ccard:hover::before{opacity:1;}
+.cicon{width:50px;height:50px;border-radius:14px;background:var(--cc-bg,rgba(124,58,237,0.12));border:1px solid var(--cc-b,rgba(124,58,237,0.25));display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px;transition:transform 0.3s;}
+.ccard:hover .cicon{transform:scale(1.1) rotate(-3deg);}
+.ctitle{font-family:var(--fh);font-size:16px;font-weight:700;margin-bottom:7px;}
+.cdesc{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:12px;}
+.ccount{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--cc-a,#a78bfa);text-transform:uppercase;}
+.cbar{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:7px;overflow:hidden;}
+.cbarf{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--cc-g1,#7c3aed),var(--cc-g2,#ec4899));}
+
+/* ── TESTIMONIALS ── */
+.test-s{padding:100px 0;}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.tcard{border-radius:18px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:26px;transition:all 0.3s;}
+.tcard:hover{border-color:rgba(124,58,237,0.28);transform:translateY(-3px);}
+.stars{font-size:13px;letter-spacing:2px;margin-bottom:12px;}
+.tbody{font-size:13px;line-height:1.72;color:rgba(255,255,255,0.5);margin-bottom:18px;font-style:italic;}
+.thl{background:linear-gradient(90deg,#ddd6fe,#f9a8d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal;font-weight:600;}
+.tauthor{display:flex;align-items:center;gap:9px;}
+.tav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
+.tn{font-size:13px;font-weight:700;color:rgba(255,255,255,0.85);}
+.tr{font-size:11px;color:var(--muted);margin-top:1px;}
+
+/* ── LEADERBOARD ── */
+.lb-s{padding:60px 0 80px;}
+.lb-wrap{border-radius:22px;border:1px solid var(--border);background:rgba(255,255,255,0.02);overflow:hidden;max-width:680px;margin:0 auto;}
+.lbh{padding:22px 28px 16px;border-bottom:1px solid rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:space-between;}
+.lbt{font-family:var(--fh);font-size:16px;font-weight:700;}
+.lbp{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--muted);text-transform:uppercase;}
+.lbr{display:flex;align-items:center;gap:14px;padding:14px 28px;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.2s;}
+.lbr:hover{background:rgba(255,255,255,0.02);}
+.lbr:last-child{border-bottom:none;}
+.lbr.r1{background:rgba(124,58,237,0.07);border-left:2px solid #a855f7;}
+.lbrank{width:26px;font-size:13px;font-weight:800;color:var(--muted);text-align:center;flex-shrink:0;}
+.gold{color:#f59e0b;text-shadow:0 0 10px rgba(245,158,11,0.5);}
+.lbav{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;}
+.lbav.gl{box-shadow:0 0 14px rgba(124,58,237,0.5);}
+.lbi{flex:1;}
+.lbn{font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;gap:7px;}
+.lbs{font-size:11px;color:var(--muted);margin-top:1px;}
+.lbpts{font-size:15px;font-weight:800;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.lbbt{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.rnk-badge{font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;background:rgba(124,58,237,0.18);color:#a78bfa;border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:2px 8px;}
+
+/* ── PRICING ── */
+.price-s{padding:100px 0;}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;margin:0 auto;}
+.pcard{border-radius:22px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:36px 32px;transition:transform 0.25s;position:relative;overflow:hidden;}
+.pcard:hover{transform:translateY(-3px);}
+.pcard.pro{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.06);}
+.pcard.pro::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(124,58,237,0.14),transparent 70%);pointer-events:none;}
+.pop-b{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;background:linear-gradient(105deg,#7c3aed,#ec4899);color:#fff;border-radius:20px;padding:4px 12px;margin-bottom:16px;}
+.pname{font-family:var(--fh);font-size:20px;font-weight:800;margin-bottom:8px;}
+.pamt{font-family:var(--fh);font-size:46px;font-weight:800;letter-spacing:-2px;margin-bottom:4px;line-height:1;}
+.pamt span{font-size:18px;font-weight:500;color:var(--muted);letter-spacing:0;}
+.pper{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.pfeats{display:flex;flex-direction:column;gap:10px;margin-bottom:26px;}
+.pf{display:flex;align-items:flex-start;gap:9px;font-size:14px;color:rgba(255,255,255,0.6);line-height:1.4;}
+.pfc{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px;}
+.pfc.g{background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);}
+.pfc.p{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.3);}
+.pfc.x{color:rgba(255,255,255,0.2);}
+.pbtn{width:100%;padding:14px;border-radius:12px;font-size:14px;font-weight:700;font-family:var(--f);cursor:pointer;transition:all 0.22s;position:relative;overflow:hidden;}
+.pbtn.free{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);}
+.pbtn.free:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.pbtn.pro{background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);border:none;color:#fff;box-shadow:0 4px 24px rgba(124,58,237,0.45);}
+.pbtn.pro:hover{box-shadow:0 8px 36px rgba(124,58,237,0.6);transform:translateY(-1px);}
+
+/* ── FAQ ── */
+.faq-s{padding:100px 0;}
+.faqlist{max-width:700px;margin:0 auto;display:flex;flex-direction:column;gap:10px;}
+.faqitem{border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.025);overflow:hidden;}
+.faqq{padding:18px 22px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14px;font-weight:600;color:rgba(255,255,255,0.82);transition:color 0.2s;gap:12px;}
+.faqq:hover{color:#fff;}
+.faqa-icon{font-size:16px;color:var(--muted);transition:transform 0.3s;flex-shrink:0;}
+.faqitem.open .faqa-icon{transform:rotate(180deg);}
+.faqitem.open .faqq{color:#c084fc;}
+.faqa{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);}
+.faqitem.open .faqa{max-height:300px;}
+.faqa-inner{padding:0 22px 18px;font-size:14px;color:var(--muted);line-height:1.75;border-top:1px solid rgba(255,255,255,0.05);}
+
+/* ── CTA ── */
+.cta-s{padding:80px 0 120px;}
+.cta-card{border-radius:28px;border:1px solid rgba(124,58,237,0.25);background:rgba(124,58,237,0.06);padding:72px 40px;position:relative;overflow:hidden;max-width:840px;margin:0 auto;text-align:center;}
+.cta-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,0.15),transparent 70%);pointer-events:none;}
+.cta-h{font-family:var(--fh);font-size:clamp(30px,5vw,52px);font-weight:800;letter-spacing:-1.5px;margin-bottom:14px;line-height:1.08;}
+.cta-s2{font-size:16px;color:var(--muted);max-width:420px;margin:0 auto 34px;line-height:1.65;}
+.cta-tr{font-size:12px;color:rgba(255,255,255,0.22);margin-top:20px;}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:40px 32px;position:relative;z-index:2;}
+.footer-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px;}
+.fl{display:flex;align-items:center;gap:10px;}
+.fg{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;}
+.fg svg{width:15px;height:15px;}
+.fb{font-family:var(--fh);font-size:15px;font-weight:800;color:#fff;}
+.fc{font-size:12px;color:var(--muted);margin-top:2px;}
+.flinks{display:flex;gap:20px;}
+.flinks a{font-size:13px;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.flinks a:hover{color:#c084fc;}
+
+/* RESPONSIVE */
+@media(max-width:1000px){.fsplit{grid-template-columns:1fr;}.fsplit.rev{direction:ltr;}.cat-grid{grid-template-columns:1fr 1fr;}.tgrid{grid-template-columns:1fr 1fr;}.pgrid{grid-template-columns:1fr;}.steps-row{grid-template-columns:1fr 1fr;}.steps-row::before{display:none;}.nav-links{display:none;}.cdqs{grid-template-columns:1fr;}}
+@media(max-width:620px){.cat-grid{grid-template-columns:1fr;}.tgrid{grid-template-columns:1fr;}.dash-grid{grid-template-columns:1fr 1fr;}.res-cats{grid-template-columns:1fr 1fr;}.fnav{flex-direction:column;}.ftab{flex-direction:row;gap:8px;justify-content:flex-start;}.session-layout{grid-template-columns:1fr;}.session-layout .ai-center{flex-direction:row;}.hstats .hdiv{display:none;}.hstats{gap:20px;}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div><div class="ab ab3"></div></div>
+<div class="grain"></div>
+<div class="gridlines"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="ni">
+    <a class="nav-logo" href="#">
+      <div class="gem"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
+      <div><div class="brand">InterviewAI</div><div class="brandtag">Premium Platform</div></div>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How It Works</a>
+      <a href="#companies">Companies</a>
+      <a href="#categories">Practice</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta" id="nav-cta">
+      <button class="btn-g" onclick="window.location.href='ai_interviewer_login.html'">Sign In</button>
+      <button class="btn-p" onclick="window.location.href='ai_interviewer_login.html'">Get Started Free</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero s">
+  <div class="wrap">
+    <div class="hbadge rv"><span id="hface">😰</span> Turn <span class="hhl">interview anxiety</span> into <span class="hhl">offer letters</span></div>
+    <h1 class="htitle rv d1"><span class="gt">Ace Every</span><br>Interview.</h1>
+    <p class="hsub rv d2">Real-time AI coaching, voice analysis, company-specific questions, resume analysis and a full dashboard — everything to walk in confident and walk out with the offer.</p>
+    <div class="hero-cta rv d3">
+      <button class="btn-hero" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>🚀 Start Practicing Free</button>
+      <button class="btn-hg" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">▶ Explore Features</button>
+    </div>
+    <div class="hstats rv d4">
+      <div><div class="hstat-v gt">94%</div><div class="hstat-l">Offer success rate</div></div>
+      <div class="hdiv"></div>
+      <div><div class="hstat-v gt">12K+</div><div class="hstat-l">Pros coached</div></div>
+      <div class="hdiv"></div>
+      <div><div class="hstat-v gt">200+</div><div class="hstat-l">Companies covered</div></div>
+      <div class="hdiv"></div>
+      <div><div class="hstat-v gt">4.9★</div><div class="hstat-l">Avg rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FEATURES SHOWCASE ══ -->
+<section class="features-s s" id="features">
+<div class="wrap">
+  <div class="sh rv">
+    <span class="pill"><span class="pd"></span>Complete Platform</span>
+    <h2 class="st">5 powerful tools. <span class="gt">One platform.</span></h2>
+    <p class="ss">Everything from your dashboard to live mock interviews, AI results, and resume analysis — all built into InterviewAI.</p>
+  </div>
+
+  <!-- BIG FEATURE TABS -->
+  <div class="fnav rv">
+    <button class="ftab active" onclick="showF('dashboard',this)"><span class="ftab-icon">📊</span><span class="ftab-label">Dashboard</span><span class="ftab-sub">Track progress</span></button>
+    <button class="ftab" onclick="showF('setup',this)"><span class="ftab-icon">⚙️</span><span class="ftab-label">Interview Setup</span><span class="ftab-sub">Choose role & company</span></button>
+    <button class="ftab" onclick="showF('session',this)"><span class="ftab-icon">🎙️</span><span class="ftab-label">Live Session</span><span class="ftab-sub">Talk to AI interviewer</span></button>
+    <button class="ftab" onclick="showF('results',this)"><span class="ftab-icon">📈</span><span class="ftab-label">AI Results</span><span class="ftab-sub">Score & feedback</span></button>
+    <button class="ftab" onclick="showF('resume',this)"><span class="ftab-icon">📄</span><span class="ftab-label">Resume Analysis</span><span class="ftab-sub">Upload & get questions</span></button>
+  </div>
+
+  <!-- ═══ DASHBOARD PANEL ═══ -->
+  <div class="fpanel active" id="fp-dashboard">
+    <div class="fsplit">
+      <div class="ftxt">
+        <div class="fbadge">📊 Smart Dashboard</div>
+        <h3 class="ftitle">Your complete interview <span class="gt">command centre.</span></h3>
+        <p class="fdesc">The moment you log in, your personalised dashboard shows your readiness score, practice streak, skill progress, recent interview history, and quick-launch buttons for every tool.</p>
+        <div class="fpts">
+          <div class="fp"><div class="fpdot">✓</div>Live readiness score — updates after every session</div>
+          <div class="fp"><div class="fpdot">✓</div>Skill progress bars — DSA, System Design, Behavioural and more</div>
+          <div class="fp"><div class="fpdot">✓</div>Daily streak tracker with 7-day goal to keep you motivated</div>
+          <div class="fp"><div class="fpdot">✓</div>Recent interview history with scores at a glance</div>
+          <div class="fp"><div class="fpdot">✓</div>One-click launch to any feature from the dashboard</div>
+        </div>
+        <button class="fcta" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>Open Your Dashboard →</button>
+      </div>
+      <div>
+        <div class="fscreen">
+          <div class="fbar"><div class="fdot" style="background:#ff5f57"></div><div class="fdot" style="background:#febc2e"></div><div class="fdot" style="background:#28c840"></div><span class="ftitle-bar">InterviewAI — Dashboard</span></div>
+          <div class="fbody">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+              <div><div style="font-family:var(--fh);font-size:16px;font-weight:800;">Welcome back, Alex 👋</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Targeting SWE at Google</div></div>
+              <div style="display:flex;align-items:center;gap:6px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);border-radius:9px;padding:7px 12px;"><span>🔥</span><div><div style="font-size:14px;font-weight:800;color:#fbbf24;line-height:1;">7</div><div style="font-size:9px;color:var(--muted);">day streak</div></div></div>
+            </div>
+            <div class="dash-grid">
+              <div class="dstat"><div class="dstat-v gt">24</div><div class="dstat-l">Interviews</div></div>
+              <div class="dstat"><div class="dstat-v gt">78%</div><div class="dstat-l">Avg Score</div></div>
+              <div class="dstat"><div class="dstat-v gt">94%</div><div class="dstat-l">Best Score</div></div>
+              <div class="dstat"><div class="dstat-v gt">18h</div><div class="dstat-l">Practiced</div></div>
+            </div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:12px 0 8px;">Skill Progress</div>
+            <div class="dskill-row"><div class="dskill-head"><span>DSA & Coding</span><span class="dskill-val">74%</span></div><div class="pb"><div class="pbf" style="width:74%"></div></div></div>
+            <div class="dskill-row" style="margin-top:6px;"><div class="dskill-head"><span>System Design</span><span class="dskill-val">61%</span></div><div class="pb"><div class="pbf" style="width:61%"></div></div></div>
+            <div class="dskill-row" style="margin-top:6px;"><div class="dskill-head"><span>Behavioural</span><span class="dskill-val">88%</span></div><div class="pb"><div class="pbf" style="width:88%"></div></div></div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:12px 0 8px;">Quick Actions</div>
+            <div class="dqa">
+              <div class="dqa-btn primary" onclick="window.location.href='ai_interview_session.html'"><div class="dqa-icon">🎙️</div><div class="dqa-label">Start Interview</div><div class="dqa-sub">Begin mock session</div></div>
+              <div class="dqa-btn" onclick="window.location.href='resume.html'"><div class="dqa-icon">📄</div><div class="dqa-label">Resume Analysis</div><div class="dqa-sub">Upload & get insights</div></div>
+              <div class="dqa-btn" onclick="window.location.href='ai_interview_session.html'"><div class="dqa-icon">⚡</div><div class="dqa-label">Quick Practice</div><div class="dqa-sub">5 random questions</div></div>
+              <div class="dqa-btn" onclick="window.location.href='ai_interview_session.html'"><div class="dqa-icon">🏢</div><div class="dqa-label">Company Prep</div><div class="dqa-sub">Target a company</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SETUP PANEL ═══ -->
+  <div class="fpanel" id="fp-setup">
+    <div class="fsplit rev">
+      <div class="ftxt">
+        <div class="fbadge">⚙️ Smart Setup</div>
+        <h3 class="ftitle">Personalised to your <span class="gt">exact interview.</span></h3>
+        <p class="fdesc">Pick your role, experience, interview type and target company in under 60 seconds. The AI then builds a custom question set tailored exactly to what that company actually asks.</p>
+        <div class="fpts">
+          <div class="fp"><div class="fpdot">✓</div>6 target roles — Frontend, Backend, Full Stack, Data Analyst, Java, PM</div>
+          <div class="fp"><div class="fpdot">✓</div>4 experience levels — Fresher to 5+ years Senior</div>
+          <div class="fp"><div class="fpdot">✓</div>Technical, HR, or Mixed interview types</div>
+          <div class="fp"><div class="fpdot">✓</div>200+ company-specific question banks — FAANG to Indian startups</div>
+          <div class="fp"><div class="fpdot">✓</div>Choose 5 to 20 questions per session</div>
+        </div>
+        <button class="fcta" onclick="window.location.href='ai_interview_session.html'"><div class="glint"></div>Set Up Interview →</button>
+      </div>
+      <div>
+        <div class="fscreen">
+          <div class="fbar"><div class="fdot" style="background:#ff5f57"></div><div class="fdot" style="background:#febc2e"></div><div class="fdot" style="background:#28c840"></div><span class="ftitle-bar">Interview Setup</span></div>
+          <div class="fbody">
+            <div style="font-family:var(--fh);font-size:15px;font-weight:800;margin-bottom:14px;">Set Up Your <span class="gt">Mock Interview</span></div>
+            <div class="setup-label">Select Your Role</div>
+            <div class="setup-opts s3" id="setup-roles">
+              <div class="opt sel" onclick="selOpt(this,'setup-roles')"><div class="opt-icon">🖥️</div><div class="opt-t">Frontend</div><div class="opt-s">React, HTML, JS</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-roles')"><div class="opt-icon">⚙️</div><div class="opt-t">Backend</div><div class="opt-s">Node, Java, APIs</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-roles')"><div class="opt-icon">🔮</div><div class="opt-t">Full Stack</div><div class="opt-s">End-to-end</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-roles')"><div class="opt-icon">📊</div><div class="opt-t">Data Analyst</div><div class="opt-s">SQL, Python</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-roles')"><div class="opt-icon">☕</div><div class="opt-t">Java Dev</div><div class="opt-s">Spring, APIs</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-roles')"><div class="opt-icon">📋</div><div class="opt-t">PM</div><div class="opt-s">Strategy</div></div>
+            </div>
+            <div class="setup-label">Experience Level</div>
+            <div class="setup-opts s4" id="setup-exp">
+              <div class="opt" onclick="selOpt(this,'setup-exp')"><div class="opt-icon">🌱</div><div class="opt-t">Fresher</div><div class="opt-s">0 yrs</div></div>
+              <div class="opt sel" onclick="selOpt(this,'setup-exp')"><div class="opt-icon">🚀</div><div class="opt-t">1–2 Yrs</div><div class="opt-s">Junior</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-exp')"><div class="opt-icon">💪</div><div class="opt-t">3–5 Yrs</div><div class="opt-s">Mid</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-exp')"><div class="opt-icon">🏆</div><div class="opt-t">5+ Yrs</div><div class="opt-s">Senior</div></div>
+            </div>
+            <div class="setup-label">Interview Type</div>
+            <div class="setup-opts s3" id="setup-type">
+              <div class="opt" onclick="selOpt(this,'setup-type')"><div class="opt-icon">⚡</div><div class="opt-t">Technical</div><div class="opt-s">DSA, System Design</div></div>
+              <div class="opt sel" onclick="selOpt(this,'setup-type')"><div class="opt-icon">🤝</div><div class="opt-t">HR Round</div><div class="opt-s">Behavioural</div></div>
+              <div class="opt" onclick="selOpt(this,'setup-type')"><div class="opt-icon">🎯</div><div class="opt-t">Mixed</div><div class="opt-s">Tech + HR</div></div>
+            </div>
+            <div class="setup-label">Target Company</div>
+            <div class="co-tags">
+              <span class="co-tag sel" onclick="selCoTag(this)">🔵 Google</span>
+              <span class="co-tag" onclick="selCoTag(this)">🟠 Amazon</span>
+              <span class="co-tag" onclick="selCoTag(this)">🟦 Microsoft</span>
+              <span class="co-tag" onclick="selCoTag(this)">🟠 Swiggy</span>
+              <span class="co-tag" onclick="selCoTag(this)">💳 Razorpay</span>
+              <span class="co-tag" onclick="selCoTag(this)">⚡ Zepto</span>
+            </div>
+            <button class="setup-start" onclick="window.location.href='ai_interview_session.html'"><div class="glint"></div>🎙️ Start Interview Session</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SESSION PANEL ═══ -->
+  <div class="fpanel" id="fp-session">
+    <div class="fsplit">
+      <div class="ftxt">
+        <div class="fbadge">🎙️ Live AI Session</div>
+        <h3 class="ftitle">Practice with a real <span class="gt">AI interviewer.</span></h3>
+        <p class="fdesc">Our AI interviewer asks questions, listens to your answers through voice recognition, and transcribes everything in real time. Exactly like a real interview — without the pressure of being judged.</p>
+        <div class="fpts">
+          <div class="fp"><div class="fpdot">✓</div>Voice recognition — speak naturally, it transcribes live in Chrome</div>
+          <div class="fp"><div class="fpdot">✓</div>Animated AI avatar face reacts and listens as you speak</div>
+          <div class="fp"><div class="fpdot">✓</div>2-minute countdown timer per question — builds real stamina</div>
+          <div class="fp"><div class="fpdot">✓</div>Full question list in sidebar — skip, jump, or answer in order</div>
+          <div class="fp"><div class="fpdot">✓</div>All answers saved automatically for AI evaluation</div>
+        </div>
+        <button class="fcta" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>Try Live Session →</button>
+      </div>
+      <div>
+        <div class="fscreen">
+          <div class="fbar"><div class="fdot" style="background:#ff5f57"></div><div class="fdot" style="background:#febc2e"></div><div class="fdot" style="background:#28c840"></div><span class="ftitle-bar">Live Session · Google SWE · Q 3 of 10</span></div>
+          <div class="fbody">
+            <div class="session-layout">
+              <div>
+                <div class="session-q">
+                  <div class="session-q-label">Question 3 of 10</div>
+                  <div class="session-q-text">Given an array of integers, return the indices of two numbers that add up to a specific target.</div>
+                </div>
+                <div class="timer-box">
+                  <div class="timer-val" id="demo-timer">01:24</div>
+                  <div class="timer-sub">Time remaining</div>
+                  <div class="pb" style="margin-top:6px;"><div class="pbf" id="demo-timer-bar" style="width:70%;background:linear-gradient(90deg,#f87171,#fbbf24);"></div></div>
+                </div>
+              </div>
+              <div class="ai-center">
+                <div class="ai-orb-s" style="position:relative;display:flex;align-items:center;justify-content:center;">
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+                    <div class="orb-eyes"><div class="orb-eye"></div><div class="orb-eye" style="animation-delay:0.12s"></div></div>
+                    <div style="width:14px;height:4px;border-bottom:2px solid rgba(255,255,255,0.55);border-radius:0 0 8px 8px;animation:talk 2s ease-in-out infinite;"></div>
+                  </div>
+                </div>
+                <div class="wavebars" id="demo-waves"></div>
+                <div class="session-status"><div class="live-dot"></div>Recording...</div>
+              </div>
+              <div>
+                <div class="transcript-box">
+                  <div class="t-ai">AI Interviewer</div>
+                  <div class="t-text">Given an array of integers, return indices of two numbers that add to target...</div>
+                  <div class="t-user">Your Answer</div>
+                  <div class="t-text" id="demo-transcript">I would use a hash map to store values I've seen. For each number I check if target minus current exists in the map...<span class="cursor"></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="session-controls">
+              <button class="sc-btn sc-skip">Skip</button>
+              <button class="sc-btn sc-rec">🔴 Recording...</button>
+              <button class="sc-btn sc-next" onclick="window.location.href='ai_interviewer_login.html'">Next Question →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS PANEL ═══ -->
+  <div class="fpanel" id="fp-results">
+    <div class="fsplit rev">
+      <div class="ftxt">
+        <div class="fbadge">📈 AI Evaluation</div>
+        <h3 class="ftitle">Know exactly where <span class="gt">you stand.</span></h3>
+        <p class="fdesc">After every session, our AI evaluates your answers across 4 dimensions, highlights your strengths and weaknesses, gives a score to every single answer, and creates a personalised improvement plan.</p>
+        <div class="fpts">
+          <div class="fp"><div class="fpdot">✓</div>Overall score + letter grade after every completed session</div>
+          <div class="fp"><div class="fpdot">✓</div>4 category scores — Technical, Communication, Confidence, Problem Solving</div>
+          <div class="fp"><div class="fpdot">✓</div>Question-by-question breakdown — score + AI feedback on every answer</div>
+          <div class="fp"><div class="fpdot">✓</div>Personalised coaching tips and improvement suggestions</div>
+          <div class="fp"><div class="fpdot">✓</div>Downloadable PDF report to track your growth over time</div>
+        </div>
+        <button class="fcta" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>See Sample Report →</button>
+      </div>
+      <div>
+        <div class="fscreen">
+          <div class="fbar"><div class="fdot" style="background:#ff5f57"></div><div class="fdot" style="background:#febc2e"></div><div class="fdot" style="background:#28c840"></div><span class="ftitle-bar">Interview Results — Google SWE</span></div>
+          <div class="fbody">
+            <div class="res-top">
+              <div style="font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a78bfa;margin-bottom:8px;">Interview Complete 🎉</div>
+              <div class="res-score gt" id="demo-score">0%</div>
+              <div class="res-grade">Grade A</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:8px;">Google SWE · Technical · 10 Questions</div>
+            </div>
+            <div class="res-cats">
+              <div class="rcat"><div class="rcat-icon">⚡</div><div class="rcat-v gt">84%</div><div class="rcat-l">Technical</div></div>
+              <div class="rcat"><div class="rcat-icon">🗣️</div><div class="rcat-v gt">79%</div><div class="rcat-l">Comms</div></div>
+              <div class="rcat"><div class="rcat-icon">💪</div><div class="rcat-v gt">76%</div><div class="rcat-l">Confidence</div></div>
+              <div class="rcat"><div class="rcat-icon">🧠</div><div class="rcat-v gt">88%</div><div class="rcat-l">Problem</div></div>
+            </div>
+            <div class="res-fb">
+              <div class="rfb g">💪 Strong structure — great use of STAR framework</div>
+              <div class="rfb y">⚠️ Slow pacing at 1:24 — speak 15% faster</div>
+              <div class="rfb p">💡 Add measurable results to closing answers</div>
+            </div>
+            <div class="res-btns">
+              <button class="rb rb-p" onclick="window.location.href='ai_interview_session.html'"><div class="glint"></div>🔄 New Interview</button>
+              <button class="rb rb-g" onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
+              <button class="rb rb-g">📥 PDF Report</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ RESUME PANEL ═══ -->
+  <div class="fpanel" id="fp-resume">
+    <div class="fsplit">
+      <div class="ftxt">
+        <div class="fbadge">📄 Resume AI</div>
+        <h3 class="ftitle">Your resume generates <span class="gt">your interview questions.</span></h3>
+        <p class="fdesc">Upload your PDF resume and our AI extracts your skills, experience, and projects — then generates personalised questions based on YOUR actual background. The most targeted prep possible.</p>
+        <div class="fpts">
+          <div class="fp"><div class="fpdot">✓</div>Extracts skills, work experience, education, and projects automatically</div>
+          <div class="fp"><div class="fpdot">✓</div>Resume score with detailed verdict and improvement tips</div>
+          <div class="fp"><div class="fpdot">✓</div>Skill gap analysis against your target role and company</div>
+          <div class="fp"><div class="fpdot">✓</div>8+ interview questions generated from your actual experience</div>
+          <div class="fp"><div class="fpdot">✓</div>One click to practice those exact questions in a live session</div>
+        </div>
+        <button class="fcta" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>Analyse My Resume →</button>
+      </div>
+      <div>
+        <div class="fscreen">
+          <div class="fbar"><div class="fdot" style="background:#ff5f57"></div><div class="fdot" style="background:#febc2e"></div><div class="fdot" style="background:#28c840"></div><span class="ftitle-bar">Resume Analysis</span></div>
+          <div class="fbody">
+            <div class="res-score-row">
+              <svg width="72" height="72" viewBox="0 0 72 72"><circle cx="36" cy="36" r="28" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="7"/><circle cx="36" cy="36" r="28" fill="none" stroke="url(#rg)" stroke-width="7" stroke-dasharray="176" stroke-dashoffset="49" stroke-linecap="round" transform="rotate(-90 36 36)"/><defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs><text x="36" y="40" text-anchor="middle" font-size="12" font-weight="800" fill="white" font-family="Inter">72%</text></svg>
+              <div>
+                <div class="res-gauge-v gt">72%</div>
+                <div class="res-gauge-l">Resume Score</div>
+                <div class="res-gauge-title">Good — Minor Gaps Found</div>
+                <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;">
+                  <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);color:#c084fc;">PDF Parsed</span>
+                  <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);color:#fcd34d;">Frontend Dev</span>
+                  <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.22);color:#6ee7b7;">Google</span>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:6px;">Detected Skills</div>
+            <div class="skills-cloud">
+              <span class="sk strong">JavaScript</span><span class="sk strong">React</span><span class="sk strong">Node.js</span><span class="sk strong">Git</span><span class="sk med">Python</span><span class="sk med">TypeScript</span><span class="sk med">SQL</span><span class="sk weak">AWS</span><span class="sk weak">Kubernetes</span><span class="sk weak">System Design</span>
+            </div>
+            <div class="ai-qs-label">AI Questions From Your Resume</div>
+            <div class="ai-q-item"><div class="ai-q-tag">Based on your React experience</div><div class="ai-q-text">How do you manage global state in a large React application and what trade-offs do you consider?</div></div>
+            <div class="ai-q-item"><div class="ai-q-tag">Skill gap — Cloud & System Design</div><div class="ai-q-text">How would you deploy your Node.js app to AWS today — walk me through the steps?</div></div>
+            <button style="width:100%;padding:10px;border:none;border-radius:9px;background:linear-gradient(105deg,#7c3aed,#ec4899);color:#fff;font-size:11px;font-weight:800;cursor:pointer;margin-top:8px;font-family:var(--f);position:relative;overflow:hidden;" onclick="window.location.href='resume.html'"><div class="glint"></div>🎙️ Practice These Questions</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-s s" id="how">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>How It Works</span>
+      <h2 class="st">From sign-up to <span class="gt">job offer in 5 steps.</span></h2>
+    </div>
+    <div class="steps-row">
+      <div class="step-c rv"><div class="step-n">🔐</div><div class="step-t">Sign Up Free</div><div class="step-d">Create your profile, pick your target role and company in 60 seconds</div></div>
+      <div class="step-c rv d1"><div class="step-n">📄</div><div class="step-t">Upload Resume</div><div class="step-d">AI analyses your background and generates personalised questions just for you</div></div>
+      <div class="step-c rv d2"><div class="step-n">🎙️</div><div class="step-t">Practice Live</div><div class="step-d">Speak your answers to our AI interviewer and get real-time voice analysis</div></div>
+      <div class="step-c rv d3"><div class="step-n">📈</div><div class="step-t">Review Results</div><div class="step-d">See your score, weaknesses, and get a detailed AI coaching report</div></div>
+      <div class="step-c rv d4"><div class="step-n">🎉</div><div class="step-t">Get the Offer</div><div class="step-d">Walk in confident. Walk out with the offer you deserve</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPANY SEARCH -->
+<section class="co-s s" id="companies">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>Company Prep</span>
+      <h2 class="st">Prep for <span class="gt">any company.</span></h2>
+      <p class="ss">Search any company — get their real interview questions, round structure, difficulty, and exactly what they look for.</p>
+    </div>
+    <div class="co-search-wrap rv">
+      <span class="co-si">🔍</span>
+      <input class="co-input" id="co-search" type="text" placeholder="Search any company — Google, Swiggy, Stripe, TCS..."/>
+      <span class="co-badge">200+ companies</span>
+    </div>
+    <div class="co-cloud rv" id="co-cloud"></div>
+    <div class="no-res" id="no-res">No companies found. We're adding more every week! 🚀</div>
+    <div class="co-detail" id="co-detail"></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="cat-s s" id="categories">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>Interview Types</span>
+      <h2 class="st">Every interview type, <span class="gt">fully covered.</span></h2>
+      <p class="ss">From DSA to behavioural — dedicated AI coaches for every category so you're never caught off guard.</p>
+    </div>
+    <div class="cat-grid">
+      <div class="ccard rv" style="--cc-c:rgba(124,58,237,0.14);--cc-b:rgba(124,58,237,0.3);--cc-bg:rgba(124,58,237,0.12);--cc-a:#c084fc;--cc-g1:#7c3aed;--cc-g2:#a855f7;" onclick="window.location.href='ai_interviewer_login.html'"><div class="cicon">⚡</div><div class="ctitle">DSA & Coding</div><div class="cdesc">Arrays, trees, graphs, DP. AI evaluates your approach and time complexity in real-time.</div><div class="ccount">1,200+ questions</div><div class="cbar"><div class="cbarf" style="width:88%"></div></div></div>
+      <div class="ccard rv d1" style="--cc-c:rgba(99,102,241,0.14);--cc-b:rgba(99,102,241,0.3);--cc-bg:rgba(99,102,241,0.12);--cc-a:#a5b4fc;--cc-g1:#4f46e5;--cc-g2:#7c3aed;" onclick="window.location.href='ai_interviewer_login.html'"><div class="cicon">🏗️</div><div class="ctitle">System Design</div><div class="cdesc">Design Twitter, Uber, Netflix. AI grades your scalability and trade-off thinking.</div><div class="ccount">340+ scenarios</div><div class="cbar"><div class="cbarf" style="width:75%"></div></div></div>
+      <div class="ccard rv d2" style="--cc-c:rgba(236,72,153,0.14);--cc-b:rgba(236,72,153,0.3);--cc-bg:rgba(236,72,153,0.12);--cc-a:#f9a8d4;--cc-g1:#db2777;--cc-g2:#ec4899;" onclick="window.location.href='ai_interviewer_login.html'"><div class="cicon">🧠</div><div class="ctitle">Behavioural</div><div class="cdesc">STAR method coaching. AI detects weak answers and teaches you to make them compelling.</div><div class="ccount">600+ questions</div><div class="cbar"><div class="cbarf" style="width:92%"></div></div></div>
+      <div class="ccard rv d3" style="--cc-c:rgba(245,158,11,0.12);--cc-b:rgba(245,158,11,0.28);--cc-bg:rgba(245,158,11,0.1);--cc-a:#fcd34d;--cc-g1:#d97706;--cc-g2:#f59e0b;" onclick="window.location.href='ai_interviewer_login.html'"><div class="cicon">📊</div><div class="ctitle">Product Manager</div><div class="cdesc">Product sense, metrics, roadmaps. Scored how a real PM would evaluate your answers.</div><div class="ccount">280+ cases</div><div class="cbar"><div class="cbarf" style="width:68%"></div></div></div>
+      <div class="ccard rv d4" style="--cc-c:rgba(16,185,129,0.12);--cc-b:rgba(16,185,129,0.28);--cc-bg:rgba(16,185,129,0.1);--cc-a:#6ee7b7;--cc-g1:#059669;--cc-g2:#10b981;" onclick="window.location.href='ai_interviewer_login.html'"><div class="cicon">🤖</div><div class="ctitle">ML & Data Science</div><div class="cdesc">Statistics, model selection, SQL, and ML system design for data roles at FAANG.</div><div class="ccount">420+ questions</div><div class="cbar"><div class="cbarf" style="width:72%"></div></div></div>
+      <div class="ccard rv d4" style="--cc-c:rgba(14,165,233,0.12);--cc-b:rgba(14,165,233,0.28);--cc-bg:rgba(14,165,233,0.1);--cc-a:#7dd3fc;--cc-g1:#0284c7;--cc-g2:#0ea5e9;" onclick="window.location.href='ai_interviewer_login.html'"><div class="cicon">☁️</div><div class="ctitle">DevOps & Cloud</div><div class="cdesc">Kubernetes, CI/CD, AWS architecture. SRE rounds most other platforms completely ignore.</div><div class="ccount">180+ scenarios</div><div class="cbar"><div class="cbarf" style="width:61%"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="test-s s">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>Success Stories</span>
+      <h2 class="st">Real people. <span class="gt">Real offers.</span></h2>
+      <p class="ss">Over 12,000 professionals used InterviewAI to land roles at the world's best companies.</p>
+    </div>
+    <div class="tgrid">
+      <div class="tcard rv"><div class="stars">★★★★★</div><div class="tbody">"The voice analysis caught filler words I had no idea I was using. Two weeks of practice and my answers were <span class="thl">completely transformed</span>. Got the Google offer in 18 days."</div><div class="tauthor"><div class="tav" style="background:linear-gradient(135deg,#7c3aed,#db2777);box-shadow:0 0 12px rgba(124,58,237,0.45)">AB</div><div><div class="tn">Alex_Builds</div><div class="tr">Senior SWE · Google</div></div></div></div>
+      <div class="tcard rv d1"><div class="stars">★★★★★</div><div class="tbody">"The resume analysis generated exact questions I was asked in my Meta interview. It felt like <span class="thl">I was cheating — but completely legit.</span> PM offer after 3 weeks."</div><div class="tauthor"><div class="tav" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);box-shadow:0 0 12px rgba(14,165,233,0.4)">PR</div><div><div class="tn">Priya R.</div><div class="tr">Product Manager · Meta</div></div></div></div>
+      <div class="tcard rv d2"><div class="stars">★★★★★</div><div class="tbody">"The Razorpay-specific questions were perfect. I was asked <span class="thl">3 of the exact same questions</span> from my InterviewAI practice in the real interview."</div><div class="tauthor"><div class="tav" style="background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 0 12px rgba(5,150,105,0.4)">SK</div><div><div class="tn">Siddharth K.</div><div class="tr">SDE-2 · Razorpay</div></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LEADERBOARD -->
+<section class="lb-s s">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>Community</span>
+      <h2 class="st">Top Performers <span class="gt">This Week.</span></h2>
+    </div>
+    <div class="lb-wrap rv">
+      <div class="lbh"><div class="lbt">🏆 Weekly Leaderboard</div><div class="lbp">Live Rankings</div></div>
+      <div class="lbr r1"><div class="lbrank gold">👑</div><div class="lbav gl" style="background:linear-gradient(135deg,#7c3aed,#db2777)">AB</div><div class="lbi"><div class="lbn">Alex_Builds <span class="rnk-badge">#1</span></div><div class="lbs">98 sessions · Google SWE Track</div></div><div style="text-align:right"><div class="lbpts">9,840</div><div class="lbbt">XP points</div></div></div>
+      <div class="lbr"><div class="lbrank" style="color:#94a3b8">2</div><div class="lbav" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">PR</div><div class="lbi"><div class="lbn">Priya R.</div><div class="lbs">72 sessions · Meta PM Track</div></div><div style="text-align:right"><div class="lbpts">8,210</div><div class="lbbt">XP points</div></div></div>
+      <div class="lbr"><div class="lbrank" style="color:#92400e">3</div><div class="lbav" style="background:linear-gradient(135deg,#d97706,#f59e0b)">SK</div><div class="lbi"><div class="lbn">Siddharth K.</div><div class="lbs">65 sessions · Razorpay Track</div></div><div style="text-align:right"><div class="lbpts">7,560</div><div class="lbbt">XP points</div></div></div>
+      <div class="lbr"><div class="lbrank">4</div><div class="lbav" style="background:linear-gradient(135deg,#059669,#10b981)">AM</div><div class="lbi"><div class="lbn">Anika M.</div><div class="lbs">58 sessions · Amazon Leadership</div></div><div style="text-align:right"><div class="lbpts">6,990</div><div class="lbbt">XP points</div></div></div>
+      <div class="lbr"><div class="lbrank">5</div><div class="lbav" style="background:linear-gradient(135deg,#dc2626,#f43f5e)">RV</div><div class="lbi"><div class="lbn">Rahul V.</div><div class="lbs">51 sessions · Swiggy SDE Track</div></div><div style="text-align:right"><div class="lbpts">6,340</div><div class="lbbt">XP points</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="price-s s" id="pricing">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>Simple Pricing</span>
+      <h2 class="st">Start free. <span class="gt">Upgrade when ready.</span></h2>
+      <p class="ss">No credit card. No hidden fees. Just the tools to get hired.</p>
+    </div>
+    <div class="pgrid">
+      <div class="pcard rv">
+        <div class="pname">Free</div>
+        <div class="pamt">₹0<span>/mo</span></div>
+        <div class="pper">Forever free · No card needed</div>
+        <div class="pfeats">
+          <div class="pf"><div class="pfc g">✓</div>5 mock interviews / month</div>
+          <div class="pf"><div class="pfc g">✓</div>10 company question banks</div>
+          <div class="pf"><div class="pfc g">✓</div>Basic voice analysis</div>
+          <div class="pf"><div class="pfc g">✓</div>1 resume analysis</div>
+          <div class="pf"><div class="pfc g">✓</div>Readiness score dashboard</div>
+          <div class="pf"><div class="pfc x">—</div><span style="color:rgba(255,255,255,0.25)">Unlimited sessions</span></div>
+          <div class="pf"><div class="pfc x">—</div><span style="color:rgba(255,255,255,0.25)">All 200+ companies</span></div>
+        </div>
+        <button class="pbtn free" onclick="window.location.href='ai_interviewer_login.html'">Get Started Free</button>
+      </div>
+      <div class="pcard pro rv d2">
+        <div class="pop-b">⚡ Most Popular</div>
+        <div class="pname">Pro</div>
+        <div class="pamt">₹499<span>/mo</span></div>
+        <div class="pper">Billed monthly · Cancel anytime</div>
+        <div class="pfeats">
+          <div class="pf"><div class="pfc p">✓</div>Unlimited mock interviews</div>
+          <div class="pf"><div class="pfc p">✓</div>All 200+ company banks</div>
+          <div class="pf"><div class="pfc p">✓</div>Advanced voice + tone analysis</div>
+          <div class="pf"><div class="pfc p">✓</div>Unlimited resume uploads</div>
+          <div class="pf"><div class="pfc p">✓</div>Word-level answer feedback</div>
+          <div class="pf"><div class="pfc p">✓</div>Personalised prep roadmap</div>
+          <div class="pf"><div class="pfc p">✓</div>PDF reports + leaderboard</div>
+        </div>
+        <button class="pbtn pro" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>Start Pro — ₹499/mo</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-s s" id="faq">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="pill"><span class="pd"></span>FAQ</span>
+      <h2 class="st">Questions? <span class="gt">Answered.</span></h2>
+    </div>
+    <div class="faqlist rv" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-s s">
+  <div class="wrap">
+    <div class="cta-card rv">
+      <h2 class="cta-h">Your dream offer is <span class="gt">one practice away.</span></h2>
+      <p class="cta-s2">Stop overthinking. Start practicing. InterviewAI will get you there.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;">
+        <button class="btn-hero" onclick="window.location.href='ai_interviewer_login.html'"><div class="glint"></div>🚀 Start Free Today</button>
+        <button class="btn-hg" onclick="window.location.href='dashboard.html'">View Dashboard →</button>
+      </div>
+      <div class="cta-tr">✓ Free forever plan &nbsp;·&nbsp; ✓ No credit card &nbsp;·&nbsp; ✓ 94% offer rate &nbsp;·&nbsp; ✓ Cancel anytime</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-in">
+    <div class="fl">
+      <div class="fg"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
+      <div><div class="fb">InterviewAI</div><div class="fc">© 2026 InterviewAI. All rights reserved.</div></div>
+    </div>
+    <div class="flinks"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Support</a><a href="#">Twitter</a><a href="#">LinkedIn</a></div>
+  </div>
+</footer>
+
+<script>
+/* ── AUTH NAVBAR ── */
+const isLoggedIn = localStorage.getItem('ai_logged_in')=== 'true';
+const userName = localStorage.getItem('ai_user_name')||localStorage.getItem('ai_user_email')||'';
+if(isLoggedIn && userName){
+  const initial = userName.charAt(0).toUpperCase();
+  document.getElementById('nav-cta').innerHTML = `
+    <div style="position:relative;display:flex;align-items:center;gap:10px;">
+      <div id="uav" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;cursor:pointer;box-shadow:0 0 12px rgba(124,58,237,0.45);border:2px solid rgba(124,58,237,0.4);">${initial}</div>
+      <div id="umenu" style="display:none;position:absolute;top:44px;right:0;background:rgba(10,9,18,0.97);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:8px;min-width:180px;backdrop-filter:blur(20px);box-shadow:0 12px 40px rgba(0,0,0,0.5);z-index:200;">
+        <div style="padding:10px 12px 8px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:6px;"><div style="font-size:13px;font-weight:700;color:#fff;">${userName}</div><div style="font-size:11px;color:rgba(255,255,255,0.35);">Signed in</div></div>
+        <div onclick="window.location.href='dashboard.html'" style="padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.6);cursor:pointer;" onmouseover="this.style.background='rgba(124,58,237,0.12)';this.style.color='#c084fc';" onmouseout="this.style.background='none';this.style.color='rgba(255,255,255,0.6)';">📊 Dashboard</div>
+        <div id="lout" style="padding:9px 12px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.6);cursor:pointer;" onmouseover="this.style.background='rgba(220,38,38,0.12)';this.style.color='#fca5a5';" onmouseout="this.style.background='none';this.style.color='rgba(255,255,255,0.6)';">🚪 Sign Out</div>
+      </div>
+      <button class="btn-p" onclick="window.location.href='dashboard.html'">Dashboard</button>
+    </div>`;
+  document.getElementById('uav').addEventListener('click',e=>{e.stopPropagation();const m=document.getElementById('umenu');m.style.display=m.style.display==='none'?'block':'none';});
+  document.addEventListener('click',()=>{const m=document.getElementById('umenu');if(m)m.style.display='none';});
+  document.getElementById('lout').addEventListener('click',()=>{localStorage.clear();window.location.href='ai_interviewer_login.html';});
+}
+
+/* ── NAVBAR SCROLL ── */
+window.addEventListener('scroll',()=>{document.getElementById('navbar').style.background=window.scrollY>30?'rgba(6,6,8,0.95)':'rgba(6,6,8,0.75)';});
+
+/* ── HERO FACE ANIMATION ── */
+const faces=['😰','😬','🤔','💭','🎯','💪','😎','🎉'];
+let fi=0;setInterval(()=>{fi=(fi+1)%faces.length;document.getElementById('hface').textContent=faces[fi];},900);
+
+/* ── SCROLL REVEAL ── */
+const rvEls=document.querySelectorAll('.rv');
+const rvObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('up');rvObs.unobserve(e.target);}});},{threshold:0.1});
+rvEls.forEach(el=>rvObs.observe(el));
+
+/* ── FEATURE TABS ── */
+function showF(id,btn){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.fpanel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('fp-'+id).classList.add('active');
+}
+
+/* ── SETUP SCREEN INTERACTIONS ── */
+function selOpt(el,groupId){document.getElementById(groupId).querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+function selCoTag(el){document.querySelectorAll('.co-tag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');}
+
+/* ── DEMO TIMER ── */
+let demoSecs=84;
+setInterval(()=>{
+  demoSecs=Math.max(0,demoSecs-1);
+  const m=Math.floor(demoSecs/60),s=demoSecs%60;
+  const el=document.getElementById('demo-timer');
+  if(el)el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+  const bar=document.getElementById('demo-timer-bar');
+  if(bar)bar.style.width=(demoSecs/120*100)+'%';
+  if(demoSecs===0)demoSecs=120;
+},1000);
+
+/* ── DEMO SCORE COUNTER ── */
+setTimeout(()=>{
+  const el=document.getElementById('demo-score');
+  let n=0;const iv=setInterval(()=>{n=Math.min(n+2,82);if(el)el.textContent=n+'%';if(n>=82)clearInterval(iv);},18);
+},800);
+
+/* ── DEMO WAVEFORM ── */
+const wc=document.getElementById('demo-waves');
+if(wc){
+  [4,8,14,20,24,18,12,6,16,22,26,20,10,14,22,18,8,16,24,20,12,6,18].forEach((h,i)=>{
+    const b=document.createElement('div');b.className='wb';
+    b.style.setProperty('--h',h+'px');b.style.setProperty('--d',(0.4+Math.random()*0.7).toFixed(2)+'s');
+    b.style.animationDelay=(i*0.05).toFixed(2)+'s';wc.appendChild(b);
+  });
+}
+
+/* ── COMPANY DATA ── */
+const companies=[
+  {name:'Google',logo:'🔵',color:'#4285F4',bg:'rgba(66,133,244,0.15)',border:'rgba(66,133,244,0.3)',desc:'FAANG · Mountain View, CA',difficulty:'Hard',rounds:'5 rounds',topics:['DSA','System Design','Behavioural','Googleyness'],questions:[{cat:'DSA',q:'Two Sum — find indices of two numbers that add to target'},{cat:'DSA',q:'LRU Cache — design and implement'},{cat:'System Design',q:'Design Google Search autocomplete'},{cat:'Behavioural',q:'Tell me about a time you disagreed with your manager'}]},
+  {name:'Meta',logo:'🔷',color:'#1877F2',bg:'rgba(24,119,242,0.15)',border:'rgba(24,119,242,0.3)',desc:'FAANG · Menlo Park, CA',difficulty:'Hard',rounds:'4 rounds',topics:['DSA','System Design','Behavioural','Product Sense'],questions:[{cat:'DSA',q:'Diameter of a Binary Tree'},{cat:'System Design',q:'Design Facebook News Feed'},{cat:'Behavioural',q:'Your biggest professional failure?'},{cat:'System Design',q:'Design Instagram stories at scale'}]},
+  {name:'Amazon',logo:'🟠',color:'#FF9900',bg:'rgba(255,153,0,0.15)',border:'rgba(255,153,0,0.3)',desc:'FAANG · Seattle, WA',difficulty:'Medium-Hard',rounds:'5-6 rounds',topics:['DSA','System Design','Leadership Principles','Behavioural'],questions:[{cat:'Leadership',q:'Tell me about a time you took ownership of a failing project'},{cat:'DSA',q:'Merge K sorted lists'},{cat:'System Design',q:'Design Amazon order management'},{cat:'Leadership',q:'Decision with incomplete data?'}]},
+  {name:'Microsoft',logo:'🟦',color:'#00A4EF',bg:'rgba(0,164,239,0.15)',border:'rgba(0,164,239,0.3)',desc:'FAANG · Redmond, WA',difficulty:'Medium',rounds:'4-5 rounds',topics:['DSA','System Design','Behavioural','Growth Mindset'],questions:[{cat:'DSA',q:'Serialize and deserialize a binary tree'},{cat:'System Design',q:'Design Microsoft Teams at scale'},{cat:'Behavioural',q:'Learning a new technology quickly'},{cat:'DSA',q:'Find all anagrams in a string'}]},
+  {name:'Apple',logo:'🍎',color:'#888',bg:'rgba(100,100,100,0.15)',border:'rgba(100,100,100,0.3)',desc:'FAANG · Cupertino, CA',difficulty:'Hard',rounds:'6+ rounds',topics:['DSA','System Design','Domain','Behavioural'],questions:[{cat:'DSA',q:'Thread-safe LRU Cache'},{cat:'System Design',q:'Design Apple Pay system'},{cat:'Domain',q:'Improve iPhone camera pipeline?'},{cat:'Behavioural',q:'Disagreements about product direction?'}]},
+  {name:'Swiggy',logo:'🟠',color:'#FC8019',bg:'rgba(252,128,25,0.15)',border:'rgba(252,128,25,0.3)',desc:'Unicorn · Bangalore',difficulty:'Medium',rounds:'4 rounds',topics:['DSA','System Design','Product','Behavioural'],questions:[{cat:'System Design',q:'Design real-time order tracking'},{cat:'DSA',q:'Shortest path for delivery route'},{cat:'Product',q:'Improve Swiggy Instamart retention?'},{cat:'System Design',q:'Restaurant search and ranking'}]},
+  {name:'Razorpay',logo:'💳',color:'#2E73F8',bg:'rgba(46,115,248,0.15)',border:'rgba(46,115,248,0.3)',desc:'Fintech Unicorn · Bangalore',difficulty:'Medium-Hard',rounds:'5 rounds',topics:['DSA','System Design','Payments','Behavioural'],questions:[{cat:'System Design',q:'Payment gateway at 10M TPS'},{cat:'Domain',q:'Handle payment failures and retries?'},{cat:'DSA',q:'Design a rate limiter'},{cat:'System Design',q:'UPI reconciliation system'}]},
+  {name:'Zepto',logo:'⚡',color:'#6C3CE1',bg:'rgba(108,60,225,0.15)',border:'rgba(108,60,225,0.3)',desc:'Quick Commerce · Mumbai',difficulty:'Medium',rounds:'3-4 rounds',topics:['DSA','System Design','Product','Operations'],questions:[{cat:'System Design',q:'10-minute delivery routing'},{cat:'Product',q:'Increase average order value?'},{cat:'DSA',q:'Warehouse picking optimization'},{cat:'System Design',q:'Inventory for dark stores'}]},
+  {name:'TCS',logo:'🟦',color:'#0052CC',bg:'rgba(0,82,204,0.15)',border:'rgba(0,82,204,0.3)',desc:'IT Giant · Mumbai',difficulty:'Easy-Medium',rounds:'3 rounds',topics:['DSA basics','Verbal Reasoning','Aptitude','HR'],questions:[{cat:'Aptitude',q:'Time and work problems — standard TCS pattern'},{cat:'DSA',q:'Reverse a linked list'},{cat:'HR',q:'Why TCS? Where do you see yourself in 5 years?'},{cat:'Technical',q:'Explain OOPS concepts with examples'}]},
+  {name:'Infosys',logo:'🟤',color:'#007CC3',bg:'rgba(0,124,195,0.15)',border:'rgba(0,124,195,0.3)',desc:'IT Giant · Bengaluru',difficulty:'Easy-Medium',rounds:'3 rounds',topics:['Aptitude','Coding','HR','Communication'],questions:[{cat:'Aptitude',q:'Infosys Hackwithinfy pattern questions'},{cat:'Coding',q:'Find the second largest element in an array'},{cat:'HR',q:'Tell me about yourself and your strengths'},{cat:'Technical',q:'Difference between abstract class and interface'}]},
+  {name:'Stripe',logo:'💜',color:'#6772E5',bg:'rgba(103,114,229,0.15)',border:'rgba(103,114,229,0.3)',desc:'Fintech · San Francisco',difficulty:'Hard',rounds:'5 rounds',topics:['DSA','System Design','APIs','Reliability'],questions:[{cat:'System Design',q:'Stripe webhooks with guaranteed delivery'},{cat:'DSA',q:'Idempotent payment processing'},{cat:'System Design',q:'Fraud detection in real time'},{cat:'DSA',q:'Rate limiting at global scale'}]},
+  {name:'Netflix',logo:'🔴',color:'#E50914',bg:'rgba(229,9,20,0.15)',border:'rgba(229,9,20,0.3)',desc:'FAANG · Los Gatos, CA',difficulty:'Hard',rounds:'5+ rounds',topics:['System Design','DSA','Distributed Systems','Culture'],questions:[{cat:'System Design',q:'Netflix recommendation at scale'},{cat:'System Design',q:'Adaptive bitrate video streaming'},{cat:'DSA',q:'Movies within 2 degrees of an actor'},{cat:'Culture',q:'Disagreed with a widely held belief?'}]},
+];
+
+const coCloud=document.getElementById('co-cloud');
+const coDetail=document.getElementById('co-detail');
+const noRes=document.getElementById('no-res');
+let activeCo=null;
+
+function renderCloud(filter=''){
+  coCloud.innerHTML='';
+  const filtered=companies.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase()));
+  noRes.style.display=filtered.length===0?'block':'none';
+  filtered.forEach(c=>{const t=document.createElement('div');t.className='ctag'+(activeCo===c.name?' active':'');t.innerHTML=`<span>${c.logo}</span>${c.name}`;t.onclick=()=>showCo(c);coCloud.appendChild(t);});
+}
+
+function showCo(c){
+  activeCo=c.name;renderCloud(document.getElementById('co-search').value);
+  const topics=c.topics.map(t=>`<span class="cdtopic" style="color:${c.color};border-color:${c.border};background:${c.bg}">${t}</span>`).join('');
+  const qs=c.questions.map(q=>`<div class="cdq"><div class="cdq-l" style="color:${c.color}">${q.cat}</div>${q.q}</div>`).join('');
+  coDetail.innerHTML=`<div class="cdh"><div class="cdlogo" style="background:${c.bg};border:1px solid ${c.border}">${c.logo}</div><div><div class="cdname">${c.name}</div><div class="cdmeta">${c.desc} &nbsp;·&nbsp; ${c.difficulty} &nbsp;·&nbsp; ${c.rounds}</div></div><button onclick="window.location.href='ai_interviewer_login.html'" style="margin-left:auto;background:linear-gradient(105deg,#7c3aed,#ec4899);border:none;border-radius:10px;color:#fff;font-size:13px;font-weight:700;padding:10px 20px;cursor:pointer;font-family:var(--f);">Practice Now →</button></div><div class="cdtopics">${topics}</div><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px;">Sample Questions</div><div class="cdqs">${qs}</div>`;
+  coDetail.classList.add('show');
+}
+renderCloud();
+document.getElementById('co-search').addEventListener('input',e=>{activeCo=null;coDetail.classList.remove('show');renderCloud(e.target.value);});
+
+/* ── FAQ ── */
+const faqs=[
+  {q:'How is InterviewAI different from LeetCode or Pramp?',a:'LeetCode gives coding problems with no communication feedback. Pramp pairs you with strangers with no AI guidance. InterviewAI combines real-time voice analysis, company-specific questions, resume personalisation, a full dashboard, and instant expert feedback — all in one place.'},
+  {q:'Will this help if I have bad interview anxiety?',a:'Absolutely — this is exactly what we're built for. The more you practice in a real-feeling environment, the calmer you become. Our anxiety index tracks your stress patterns and gives targeted exercises. Most users feel significantly calmer after just 5 sessions.'},
+  {q:'How does the resume analysis work?',a:'Upload your PDF resume. Our AI extracts your skills, work experience, education, and projects. It then identifies skill gaps against your target role and generates personalised interview questions based on your actual background — not generic prep.'},
+  {q:'How does the company-specific question bank work?',a:'We have 200+ companies with their actual interview patterns — types of questions per round, what interviewers look for, and common mistakes. Selecting Google, Razorpay, or TCS means questions tailored to exactly what those companies ask.'},
+  {q:'Does it work for non-tech roles like PM or Data Science?',a:'Yes. Dedicated tracks for Product Management, Data Science, ML Engineering, Business Analysis, and DevOps. Each has its own AI coach with role-specific evaluation criteria.'},
+  {q:'Is there a free plan?',a:'Yes — 5 mock interviews/month, 10 company banks, basic voice analysis, 1 resume upload, and your readiness score dashboard. Genuinely useful with no time limit. Pro unlocks unlimited everything at ₹499/month.'},
+];
+const faqList=document.getElementById('faq-list');
+faqs.forEach(f=>{
+  const item=document.createElement('div');item.className='faqitem';
+  item.innerHTML=`<div class="faqq" onclick="this.parentElement.classList.toggle('open')">${f.q}<span class="faqa-icon">▾</span></div><div class="faqa"><div class="faqa-inner">${f.a}</div></div>`;
+  faqList.appendChild(item);rvObs.observe(item);
+});
+
+/* Ripple */
+document.querySelectorAll('.btn-hero,.btn-p,.pbtn').forEach(btn=>{btn.addEventListener('click',function(e){const r=document.createElement('span');const rect=this.getBoundingClientRect();r.style.cssText=`position:absolute;border-radius:50%;width:8px;height:8px;background:rgba(255,255,255,0.3);transform:scale(0);animation:rip 0.5s ease-out forwards;left:${e.clientX-rect.left-4}px;top:${e.clientY-rect.top-4}px;pointer-events:none;`;this.style.position='relative';this.appendChild(r);setTimeout(()=>r.remove(),600);});});
+const rs=document.createElement('style');rs.textContent='@keyframes rip{to{transform:scale(24);opacity:0;}} @keyframes talk{0%,100%{width:12px;height:3px;}30%{width:18px;height:7px;}60%{width:8px;height:2px;}}';document.head.appendChild(rs);
+</script>
+</body>
+</html>

@@ -1,0 +1,411 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InterviewAI — Resume Analysis</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#060608;--border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.4);--font-head:'Syne',sans-serif;--font:'Inter',sans-serif;}
+body{font-family:var(--font);background:var(--bg);color:#fff;min-height:100vh;}
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.ab{position:absolute;border-radius:50%;}
+.ab1{width:700px;height:700px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(124,58,237,0.16) 0%,transparent 65%);animation:ab1 18s ease-in-out infinite alternate;}
+.ab2{width:600px;height:600px;bottom:-200px;right:-100px;background:radial-gradient(circle,rgba(236,72,153,0.10) 0%,transparent 65%);animation:ab2 22s ease-in-out infinite alternate;}
+@keyframes ab1{from{transform:translate(0,0);}to{transform:translate(60px,40px) scale(1.1);}}
+@keyframes ab2{from{transform:translate(0,0);}to{transform:translate(-50px,-30px) scale(1.1);}}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:160px;}
+nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:center;padding:0 32px;background:rgba(6,6,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1100px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
+.logo-row{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-gem{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;}
+.logo-gem svg{width:17px;height:17px;}
+.logo-name{font-family:var(--font-head);font-size:16px;font-weight:800;color:#fff;}
+.back-btn{font-size:12px;font-weight:700;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:9px;padding:7px 16px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.back-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:48px 32px 80px;}
+.grad-text{background:linear-gradient(120deg,#ede9fe,#c084fc 42%,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-head{text-align:center;margin-bottom:48px;}
+.page-pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.28);border-radius:100px;padding:5px 14px;margin-bottom:18px;}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:#a78bfa;box-shadow:0 0 8px #a78bfa;animation:pd 2s ease-in-out infinite;}
+@keyframes pd{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.page-title{font-family:var(--font-head);font-size:40px;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;}
+.page-sub{font-size:15px;color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto;}
+
+/* UPLOAD ZONE */
+.upload-zone{border-radius:20px;border:2px dashed rgba(124,58,237,0.3);background:rgba(124,58,237,0.04);padding:56px 40px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;margin-bottom:24px;}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(124,58,237,0.6);background:rgba(124,58,237,0.08);}
+.upload-zone.has-file{border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.04);}
+.upload-icon{font-size:52px;margin-bottom:16px;animation:float 3s ease-in-out infinite alternate;}
+@keyframes float{from{transform:translateY(0);}to{transform:translateY(-8px);}}
+.upload-title{font-family:var(--font-head);font-size:20px;font-weight:700;color:#fff;margin-bottom:8px;}
+.upload-sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.upload-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);border:none;border-radius:12px;color:#fff;font-size:14px;font-weight:700;padding:12px 28px;cursor:pointer;font-family:var(--font);position:relative;overflow:hidden;box-shadow:0 4px 24px rgba(124,58,237,0.4);transition:transform 0.15s,box-shadow 0.2s;}
+.upload-btn:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(124,58,237,0.55);}
+.btn-glint{position:absolute;top:0;left:-110%;width:60%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.22) 50%,transparent 70%);animation:glint 4s ease-in-out infinite;}
+@keyframes glint{0%{left:-110%;}40%{left:120%;}100%{left:120%;}}
+.file-types{display:flex;gap:10px;justify-content:center;margin-top:18px;}
+.file-type{font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--muted);}
+#file-input{display:none;}
+.file-info{display:flex;align-items:center;gap:12px;padding:14px 18px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:12px;margin-bottom:20px;display:none;}
+.fi-icon{font-size:24px;}
+.fi-name{font-size:14px;font-weight:600;color:#fff;}
+.fi-size{font-size:12px;color:var(--muted);}
+.fi-remove{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:18px;transition:color 0.2s;}
+.fi-remove:hover{color:#f87171;}
+
+/* ANALYZING STATE */
+.analyzing-wrap{display:none;text-align:center;padding:48px 20px;}
+.analyze-orb{width:100px;height:100px;border-radius:50%;background:radial-gradient(circle at 38% 35%,rgba(196,162,255,0.9),rgba(124,58,237,0.97) 38%,rgba(88,28,220,0.99) 72%,rgba(49,10,120,1));box-shadow:0 0 40px rgba(124,58,237,0.6);margin:0 auto 24px;animation:orb-pulse 2s ease-in-out infinite;}
+@keyframes orb-pulse{0%,100%{transform:scale(1);box-shadow:0 0 40px rgba(124,58,237,0.6);}50%{transform:scale(1.05);box-shadow:0 0 60px rgba(124,58,237,0.8);}}
+.analyze-steps{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:24px auto 0;text-align:left;}
+.analyze-step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);transition:color 0.3s;}
+.analyze-step.done{color:#34d399;}
+.analyze-step.active{color:#fff;}
+.step-icon{font-size:16px;width:24px;text-align:center;}
+.analyze-progress{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin:20px 0;overflow:hidden;}
+.ap-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#ec4899);border-radius:2px;transition:width 0.8s ease;width:0%;}
+
+/* RESULTS */
+.results-wrap{display:none;}
+/* Resume score */
+.resume-score-row{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;background:rgba(124,58,237,0.06);border:1px solid rgba(124,58,237,0.18);border-radius:20px;padding:28px 32px;margin-bottom:24px;}
+.rs-gauge{position:relative;width:110px;height:110px;flex-shrink:0;}
+.rs-score{font-family:var(--font-head);font-size:44px;font-weight:800;letter-spacing:-2px;}
+.rs-label{font-size:13px;color:var(--muted);margin-top:4px;}
+.rs-right{}
+.rs-title{font-family:var(--font-head);font-size:20px;font-weight:800;margin-bottom:8px;}
+.rs-meta{display:flex;gap:16px;flex-wrap:wrap;}
+.rs-tag{font-size:12px;font-weight:600;padding:4px 12px;border-radius:8px;}
+/* 3 col grid */
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.card{border-radius:18px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:22px;}
+.card-title{font-family:var(--font-head);font-size:14px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.tag-cloud{display:flex;flex-wrap:wrap;gap:7px;}
+.skill-tag{font-size:11px;font-weight:600;padding:5px 11px;border-radius:8px;border:1px solid;transition:all 0.2s;}
+.skill-tag:hover{transform:translateY(-1px);}
+.tag-strong{background:rgba(124,58,237,0.12);border-color:rgba(124,58,237,0.3);color:#c084fc;}
+.tag-medium{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.25);color:#fcd34d;}
+.tag-weak{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.2);color:#fca5a5;}
+.exp-item{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.05);}
+.exp-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.exp-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:2px;}
+.exp-company{font-size:12px;color:#a78bfa;margin-bottom:2px;}
+.exp-period{font-size:11px;color:var(--muted);}
+.edu-item{padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.02);margin-bottom:8px;}
+.edu-degree{font-size:13px;font-weight:600;color:#fff;}
+.edu-school{font-size:11px;color:var(--muted);margin-top:2px;}
+/* Skill gap */
+.gap-section{margin-bottom:24px;}
+.gap-list{display:flex;flex-direction:column;gap:10px;}
+.gap-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);}
+.gap-skill{font-size:13px;font-weight:600;color:#fff;flex:1;}
+.gap-have{font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;}
+.gap-have.yes{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.25);color:#34d399;}
+.gap-have.no{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#f87171;}
+.gap-have.partial{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.22);color:#fbbf24;}
+.gap-bar{width:100px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.gap-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#7c3aed,#ec4899);}
+/* AI Questions */
+.ai-questions{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.ai-q{padding:14px 16px;border-radius:12px;border:1px solid rgba(124,58,237,0.18);background:rgba(124,58,237,0.05);display:flex;align-items:flex-start;gap:10px;cursor:pointer;transition:all 0.2s;}
+.ai-q:hover{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.1);}
+.ai-q-num{width:24px;height:24px;border-radius:50%;background:rgba(124,58,237,0.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#c084fc;flex-shrink:0;margin-top:1px;}
+.ai-q-text{font-size:13px;color:rgba(255,255,255,0.75);line-height:1.55;}
+.ai-q-tag{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#a78bfa;margin-bottom:3px;}
+/* Action buttons */
+.action-row{display:flex;gap:12px;flex-wrap:wrap;}
+.action-btn{flex:1;min-width:160px;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all 0.22s;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;}
+.action-primary{background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);border:none;color:#fff;box-shadow:0 4px 24px rgba(124,58,237,0.45);}
+.action-primary:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(124,58,237,0.6);}
+.action-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:rgba(255,255,255,0.65);}
+.action-ghost:hover{background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.2);}
+#toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);z-index:9999;padding:12px 26px;border-radius:12px;font-size:14px;font-weight:600;font-family:var(--font);transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.3s;opacity:0;white-space:nowrap;backdrop-filter:blur(20px);border:1px solid;pointer-events:none;}
+@media(max-width:768px){.three-col{grid-template-columns:1fr;}.resume-score-row{grid-template-columns:1fr;text-align:center;}.rs-meta{justify-content:center;}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
+<div class="grain"></div>
+<nav><div class="nav-inner">
+  <a class="logo-row" href="dashboard.html">
+    <div class="logo-gem"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
+    <span class="logo-name">InterviewAI</span>
+  </a>
+  <button class="back-btn" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+</div></nav>
+
+<div class="page">
+  <div class="page-head">
+    <div class="page-pill"><span class="pill-dot"></span>AI Resume Analysis</div>
+    <h1 class="page-title">Upload Your <span class="grad-text">Resume</span></h1>
+    <p class="page-sub">Our AI extracts your skills, experience and education — then generates personalised interview questions and identifies skill gaps.</p>
+  </div>
+
+  <!-- UPLOAD SECTION -->
+  <div id="upload-section">
+    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('file-input').click()" ondragover="handleDrag(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+      <div class="upload-icon" id="upload-icon">📄</div>
+      <div class="upload-title" id="upload-title">Drop your resume here</div>
+      <div class="upload-sub" id="upload-sub">Upload your PDF or DOCX resume and our AI will analyse it in seconds — extracting skills, experience, and generating custom interview questions.</div>
+      <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('file-input').click()"><div class="btn-glint"></div>📂 Browse Files</button>
+      <div class="file-types">
+        <span class="file-type">PDF</span>
+        <span class="file-type">DOCX</span>
+        <span class="file-type">TXT</span>
+        <span class="file-type">Max 10MB</span>
+      </div>
+    </div>
+    <input type="file" id="file-input" accept=".pdf,.doc,.docx,.txt" onchange="handleFile(this.files[0])"/>
+
+    <div class="file-info" id="file-info">
+      <span class="fi-icon">📄</span>
+      <div><div class="fi-name" id="fi-name">resume.pdf</div><div class="fi-size" id="fi-size">2.4 MB</div></div>
+      <button class="fi-remove" onclick="removeFile()">✕</button>
+    </div>
+
+    <button class="upload-btn" id="analyze-btn" style="width:100%;justify-content:center;display:none;" onclick="startAnalysis()">
+      <div class="btn-glint"></div>🤖 Analyse Resume with AI
+    </button>
+  </div>
+
+  <!-- ANALYZING -->
+  <div class="analyzing-wrap" id="analyzing-wrap">
+    <div class="analyze-orb"></div>
+    <div style="font-family:var(--font-head);font-size:22px;font-weight:800;">Analysing your resume...</div>
+    <div style="font-size:14px;color:var(--muted);margin-top:6px;">This takes about 10 seconds</div>
+    <div class="analyze-progress"><div class="ap-fill" id="ap-fill"></div></div>
+    <div class="analyze-steps" id="analyze-steps">
+      <div class="analyze-step" id="as1"><span class="step-icon">⏳</span>Parsing document structure</div>
+      <div class="analyze-step" id="as2"><span class="step-icon">⏳</span>Extracting skills and technologies</div>
+      <div class="analyze-step" id="as3"><span class="step-icon">⏳</span>Analysing work experience</div>
+      <div class="analyze-step" id="as4"><span class="step-icon">⏳</span>Identifying skill gaps</div>
+      <div class="analyze-step" id="as5"><span class="step-icon">⏳</span>Generating interview questions</div>
+      <div class="analyze-step" id="as6"><span class="step-icon">⏳</span>Calculating resume score</div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results-wrap" id="results-wrap">
+    <!-- Resume Score -->
+    <div class="resume-score-row">
+      <div>
+        <svg width="110" height="110" viewBox="0 0 110 110">
+          <circle cx="55" cy="55" r="44" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="9"/>
+          <circle cx="55" cy="55" r="44" fill="none" stroke="url(#rg)" stroke-width="9" stroke-dasharray="276" id="resume-gauge" stroke-dashoffset="276" stroke-linecap="round" transform="rotate(-90 55 55)"/>
+          <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+        </svg>
+      </div>
+      <div class="rs-right">
+        <div class="rs-score grad-text" id="rs-score">0%</div>
+        <div class="rs-label">Resume Score</div>
+        <div class="rs-title" id="rs-verdict">Analysing...</div>
+        <div class="rs-meta" id="rs-meta"></div>
+      </div>
+    </div>
+
+    <!-- Skills, Experience, Education -->
+    <div class="three-col">
+      <div class="card">
+        <div class="card-title">⚡ Skills Detected</div>
+        <div class="tag-cloud" id="skills-cloud"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">💼 Work Experience</div>
+        <div id="exp-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🎓 Education</div>
+        <div id="edu-list"></div>
+        <div class="card-title" style="margin-top:18px;">📁 Projects</div>
+        <div id="proj-list"></div>
+      </div>
+    </div>
+
+    <!-- Skill Gap -->
+    <div class="card gap-section">
+      <div class="card-title">🎯 Skill Gap Analysis — <span id="gap-role-label" style="color:#a78bfa">Your Target Role</span></div>
+      <div class="gap-list" id="gap-list"></div>
+    </div>
+
+    <!-- AI Generated Questions -->
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">🤖 AI-Generated Interview Questions Based On Your Resume</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">These questions are personalised based on your actual experience and skills — expect these in real interviews.</p>
+      <div class="ai-questions" id="ai-questions"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <button class="action-btn action-primary" onclick="practiceNow()"><div class="btn-glint"></div>🎙️ Practice These Questions</button>
+      <button class="action-btn action-ghost" onclick="saveAnalysis()">💾 Save Analysis</button>
+      <button class="action-btn action-ghost" onclick="resetUpload()">📄 Upload New Resume</button>
+      <button class="action-btn action-ghost" onclick="window.location.href='dashboard.html'">📊 Dashboard</button>
+    </div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+if(localStorage.getItem('ai_logged_in')!=='true'){window.location.replace('ai_interviewer_login.html');}
+let uploadedFile=null;
+
+function handleDrag(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag');}
+function handleDragLeave(e){document.getElementById('upload-zone').classList.remove('drag');}
+function handleDrop(e){e.preventDefault();document.getElementById('upload-zone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);}
+
+function handleFile(f){
+  if(!f)return;
+  const allowed=['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document','text/plain'];
+  if(!allowed.includes(f.type)&&!f.name.match(/\.(pdf|doc|docx|txt)$/i)){showToast('⚠️ Please upload a PDF, DOCX, or TXT file','error');return;}
+  if(f.size>10*1024*1024){showToast('⚠️ File must be under 10MB','error');return;}
+  uploadedFile=f;
+  document.getElementById('upload-zone').classList.add('has-file');
+  document.getElementById('upload-icon').textContent='✅';
+  document.getElementById('upload-title').textContent='Resume uploaded!';
+  document.getElementById('upload-sub').textContent=f.name+' is ready for analysis.';
+  const fi=document.getElementById('file-info');
+  fi.style.display='flex';
+  document.getElementById('fi-name').textContent=f.name;
+  document.getElementById('fi-size').textContent=(f.size/1024/1024).toFixed(2)+' MB';
+  document.getElementById('analyze-btn').style.display='flex';
+  showToast('✅ File ready — click Analyse to continue','success');
+}
+
+function removeFile(){
+  uploadedFile=null;
+  document.getElementById('upload-zone').classList.remove('has-file');
+  document.getElementById('upload-icon').textContent='📄';
+  document.getElementById('upload-title').textContent='Drop your resume here';
+  document.getElementById('upload-sub').textContent='Upload your PDF or DOCX resume and our AI will analyse it in seconds.';
+  document.getElementById('file-info').style.display='none';
+  document.getElementById('analyze-btn').style.display='none';
+  document.getElementById('file-input').value='';
+}
+
+function startAnalysis(){
+  document.getElementById('upload-section').style.display='none';
+  document.getElementById('analyzing-wrap').style.display='block';
+  const steps=[
+    {id:'as1',text:'✅ Document structure parsed',pct:18},
+    {id:'as2',text:'✅ 14 skills extracted',pct:35},
+    {id:'as3',text:'✅ Work experience analysed',pct:55},
+    {id:'as4',text:'✅ Skill gaps identified',pct:72},
+    {id:'as5',text:'✅ 8 interview questions generated',pct:88},
+    {id:'as6',text:'✅ Resume score calculated',pct:100},
+  ];
+  let i=0;
+  const fill=document.getElementById('ap-fill');
+  function nextStep(){
+    if(i>0){const prev=document.getElementById(steps[i-1].id);prev.classList.remove('active');prev.classList.add('done');prev.querySelector('.step-icon').textContent='✅';prev.querySelector('span+text')||prev.childNodes[1];prev.childNodes[1].textContent=' '+steps[i-1].text.replace('✅ ','');}
+    if(i<steps.length){const cur=document.getElementById(steps[i].id);cur.classList.add('active');cur.querySelector('.step-icon').textContent='⚡';fill.style.width=steps[i].pct+'%';i++;setTimeout(nextStep,900+(Math.random()*400));}
+    else{setTimeout(showResults,600);}
+  }
+  nextStep();
+}
+
+function showResults(){
+  document.getElementById('analyzing-wrap').style.display='none';
+  document.getElementById('results-wrap').style.display='block';
+  const role=localStorage.getItem('ai_user_role')||localStorage.getItem('interview_role')||'Software Engineer';
+  const company=localStorage.getItem('ai_user_company')||'General';
+  const resumeScore=62+Math.floor(Math.random()*28);
+
+  /* Score gauge */
+  setTimeout(()=>{
+    let n=0;const el=document.getElementById('rs-score');
+    const interval=setInterval(()=>{n=Math.min(n+2,resumeScore);el.textContent=n+'%';if(n>=resumeScore)clearInterval(interval);},18);
+    const offset=276-(276*resumeScore/100);
+    document.getElementById('resume-gauge').style.transition='stroke-dashoffset 1.4s cubic-bezier(.34,1.2,.64,1)';
+    document.getElementById('resume-gauge').setAttribute('stroke-dashoffset',offset);
+    document.getElementById('rs-verdict').textContent=resumeScore>=80?'Strong Resume 💪':resumeScore>=65?'Good Resume — Minor Gaps':resumeScore>=50?'Average — Improvements Needed':'Needs Work — Let\'s Improve It';
+    const tags=[{text:'PDF Parsed',color:'rgba(124,58,237,0.12)',border:'rgba(124,58,237,0.3)',c:'#c084fc'},{text:role,color:'rgba(245,158,11,0.1)',border:'rgba(245,158,11,0.25)',c:'#fcd34d'},{text:company,color:'rgba(34,197,94,0.08)',border:'rgba(34,197,94,0.22)',c:'#6ee7b7'}];
+    document.getElementById('rs-meta').innerHTML=tags.map(t=>`<span class="rs-tag" style="background:${t.color};border:1px solid ${t.border};color:${t.c}">${t.text}</span>`).join('');
+  },300);
+
+  /* Skills */
+  const allSkills=[
+    {s:'JavaScript',lvl:'strong'},{s:'React',lvl:'strong'},{s:'Node.js',lvl:'strong'},{s:'Python',lvl:'medium'},
+    {s:'SQL',lvl:'medium'},{s:'Git',lvl:'strong'},{s:'REST APIs',lvl:'strong'},{s:'TypeScript',lvl:'medium'},
+    {s:'MongoDB',lvl:'medium'},{s:'Docker',lvl:'weak'},{s:'AWS',lvl:'weak'},{s:'System Design',lvl:'weak'},
+    {s:'DSA',lvl:'medium'},{s:'HTML/CSS',lvl:'strong'},{s:'Testing',lvl:'medium'},
+  ];
+  const cloud=document.getElementById('skills-cloud');
+  allSkills.forEach(sk=>{
+    const el=document.createElement('span');el.className='skill-tag tag-'+sk.lvl;el.textContent=sk.s;cloud.appendChild(el);
+  });
+
+  /* Experience */
+  const exps=[
+    {title:'Software Developer',company:'TechCorp Solutions',period:'2022 — Present (2 yrs)'},
+    {title:'Junior Developer',company:'StartupXYZ',period:'2021 — 2022 (1 yr)'},
+    {title:'Intern — Frontend',company:'Digital Agency',period:'2020 — 2021 (6 mo)'},
+  ];
+  document.getElementById('exp-list').innerHTML=exps.map(e=>`<div class="exp-item"><div class="exp-title">${e.title}</div><div class="exp-company">${e.company}</div><div class="exp-period">${e.period}</div></div>`).join('');
+
+  /* Education */
+  document.getElementById('edu-list').innerHTML=`<div class="edu-item"><div class="edu-degree">B.Tech — Computer Science</div><div class="edu-school">VIT University · 2017–2021</div></div><div class="edu-item"><div class="edu-degree">Higher Secondary — PCM</div><div class="edu-school">State Board · 2017</div></div>`;
+
+  /* Projects */
+  document.getElementById('proj-list').innerHTML=`<div style="display:flex;flex-direction:column;gap:6px;"><div style="font-size:12px;font-weight:600;color:#fff">E-commerce Platform</div><div style="font-size:11px;color:var(--muted)">React, Node.js, MongoDB</div></div><div style="margin-top:8px;display:flex;flex-direction:column;gap:6px;"><div style="font-size:12px;font-weight:600;color:#fff">Chat Application</div><div style="font-size:11px;color:var(--muted)">Socket.io, Express</div></div>`;
+
+  /* Skill Gap */
+  document.getElementById('gap-role-label').textContent=role;
+  const gaps=[
+    {skill:'System Design',have:'partial',pct:35,required:'High'},
+    {skill:'Data Structures & Algorithms',have:'partial',pct:50,required:'High'},
+    {skill:'Cloud (AWS/GCP)',have:'no',pct:20,required:'Medium'},
+    {skill:'Kubernetes / Docker',have:'partial',pct:30,required:'Medium'},
+    {skill:'TypeScript',have:'partial',pct:55,required:'High'},
+    {skill:'Testing & TDD',have:'yes',pct:70,required:'Medium'},
+    {skill:'REST & GraphQL APIs',have:'yes',pct:85,required:'High'},
+    {skill:'Database Design',have:'yes',pct:72,required:'High'},
+  ];
+  const gl=document.getElementById('gap-list');
+  gaps.forEach(g=>{
+    gl.innerHTML+=`<div class="gap-item"><div class="gap-skill">${g.skill} <span style="font-size:10px;color:var(--muted)">(${g.required} priority)</span></div><span class="gap-have ${g.have}">${g.have==='yes'?'✓ Have':g.have==='partial'?'⚡ Partial':'✗ Missing'}</span><div class="gap-bar"><div class="gap-fill" style="width:${g.pct}%"></div></div></div>`;
+  });
+
+  /* AI Questions */
+  const qList=[
+    {tag:'Based on your React experience',q:'You listed React as a key skill. Walk me through how you manage global state in a large React application and what trade-offs you consider.'},
+    {tag:'Based on TechCorp role',q:'At TechCorp Solutions, what was the most complex technical problem you encountered and how did you approach solving it?'},
+    {tag:'Project deep-dive',q:'Your e-commerce project uses MongoDB. How did you design the database schema and what indexing strategy did you use for performance?'},
+    {tag:'Skill gap — System Design',q:'Your resume shows limited system design exposure. How would you design a URL shortener like Bit.ly that handles 10M requests per day?'},
+    {tag:'Leadership & collaboration',q:'Describe a time in your 2 years at TechCorp where you had to collaborate with non-technical stakeholders to deliver a feature.'},
+    {tag:'Based on Node.js experience',q:'How do you handle error management and logging in a production Node.js application?'},
+    {tag:'Career progression',q:'You went from intern to developer in 1 year. What specific actions did you take to accelerate your growth?'},
+    {tag:'Based on skill gap — Cloud',q:'Cloud is listed as a gap on your profile. If you had to deploy your Node.js app to AWS today, what steps would you take?'},
+  ];
+  const ql=document.getElementById('ai-questions');
+  qList.forEach((q,i)=>{
+    ql.innerHTML+=`<div class="ai-q"><div class="ai-q-num">${i+1}</div><div><div class="ai-q-tag">${q.tag}</div><div class="ai-q-text">${q.q}</div></div></div>`;
+  });
+
+  /* Save to localStorage */
+  localStorage.setItem('resume_score',resumeScore);
+  localStorage.setItem('resume_skills',JSON.stringify(allSkills.map(s=>s.s)));
+  localStorage.setItem('resume_analyzed','true');
+}
+
+function practiceNow(){
+  localStorage.setItem('interview_type','Technical');
+  localStorage.setItem('interview_role',localStorage.getItem('ai_user_role')||'Software Engineer');
+  localStorage.setItem('interview_count','8');
+  window.location.href='ai_interview_session.html';
+}
+
+function saveAnalysis(){showToast('✅ Analysis saved to your dashboard!','success');}
+function resetUpload(){document.getElementById('results-wrap').style.display='none';document.getElementById('upload-section').style.display='block';removeFile();}
+
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  const m={error:{bg:'rgba(220,38,38,0.18)',bc:'rgba(220,38,38,0.4)',c:'#fca5a5'},success:{bg:'rgba(34,197,94,0.15)',bc:'rgba(34,197,94,0.35)',c:'#86efac'},info:{bg:'rgba(124,58,237,0.18)',bc:'rgba(124,58,237,0.4)',c:'#c4b5fd'}};
+  const s=m[type]||m.info;t.style.background=s.bg;t.style.borderColor=s.bc;t.style.color=s.c;t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(-80px)';},3500);
+}
+</script>
+</body>
+</html>

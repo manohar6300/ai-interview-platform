@@ -1,0 +1,417 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InterviewAI — Live Session</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#060608;--purple:#7c3aed;--pink:#ec4899;--border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.4);--font-head:'Syne',sans-serif;--font:'Inter',sans-serif;}
+body{font-family:var(--font);background:var(--bg);color:#fff;height:100vh;overflow:hidden;}
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.ab{position:absolute;border-radius:50%;}
+.ab1{width:600px;height:600px;top:-200px;left:-100px;background:radial-gradient(circle,rgba(124,58,237,0.16) 0%,transparent 65%);animation:ab1 18s ease-in-out infinite alternate;}
+.ab2{width:500px;height:500px;bottom:-150px;right:-100px;background:radial-gradient(circle,rgba(236,72,153,0.10) 0%,transparent 65%);animation:ab2 22s ease-in-out infinite alternate;}
+@keyframes ab1{from{transform:translate(0,0);}to{transform:translate(50px,30px) scale(1.1);}}
+@keyframes ab2{from{transform:translate(0,0);}to{transform:translate(-40px,-25px) scale(1.1);}}
+/* SESSION LAYOUT */
+.session-layout{display:grid;grid-template-columns:300px 1fr 320px;grid-template-rows:60px 1fr 80px;height:100vh;position:relative;z-index:1;}
+/* TOPBAR */
+.session-topbar{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:rgba(10,9,18,0.9);border-bottom:1px solid var(--border);backdrop-filter:blur(20px);}
+.session-brand{display:flex;align-items:center;gap:10px;}
+.logo-gem{width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;}
+.logo-gem svg{width:16px;height:16px;}
+.brand-name{font-family:var(--font-head);font-size:15px;font-weight:800;}
+.session-info{display:flex;align-items:center;gap:16px;}
+.info-chip{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:5px 12px;}
+.info-chip .dot{width:6px;height:6px;border-radius:50%;}
+.live-dot{background:#ec4899;box-shadow:0 0 6px #ec4899;animation:live 1.5s ease-in-out infinite;}
+@keyframes live{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.end-btn{font-size:12px;font-weight:700;color:#fca5a5;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.25);border-radius:8px;padding:6px 16px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.end-btn:hover{background:rgba(220,38,38,0.2);border-color:rgba(220,38,38,0.45);}
+/* LEFT PANEL — Questions */
+.left-panel{background:rgba(10,9,18,0.7);border-right:1px solid var(--border);padding:20px;overflow-y:auto;backdrop-filter:blur(10px);}
+.panel-title{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;}
+.q-list{display:flex;flex-direction:column;gap:6px;}
+.q-item{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.05);cursor:pointer;transition:all 0.2s;}
+.q-item.current{border-color:rgba(124,58,237,0.5);background:rgba(124,58,237,0.1);}
+.q-item.done{border-color:rgba(34,197,94,0.25);background:rgba(34,197,94,0.05);}
+.q-item.locked{opacity:0.4;cursor:not-allowed;}
+.q-num{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:3px;}
+.q-item.current .q-num{color:#a78bfa;}
+.q-item.done .q-num{color:#34d399;}
+.q-preview{font-size:12px;color:rgba(255,255,255,0.6);line-height:1.4;}
+.q-item.current .q-preview{color:#fff;}
+/* Current Q card */
+.current-q-card{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.25);border-radius:14px;padding:16px;margin-bottom:16px;}
+.cq-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a78bfa;margin-bottom:8px;}
+.cq-text{font-size:14px;font-weight:600;color:#fff;line-height:1.55;}
+/* Timer */
+.timer-wrap{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;margin-bottom:16px;}
+.timer-val{font-family:var(--font-head);font-size:32px;font-weight:800;letter-spacing:-1px;transition:color 0.5s;}
+.timer-label{font-size:10px;color:var(--muted);margin-top:2px;}
+.timer-red{color:#f87171!important;}
+.timer-track{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin-top:10px;overflow:hidden;}
+.timer-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#7c3aed,#ec4899);transition:width 1s linear;}
+/* CENTER — AI Avatar */
+.center-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:20px;position:relative;}
+.ai-orb-wrap{position:relative;width:160px;height:160px;}
+.orb-ring{position:absolute;border-radius:50%;border:1px solid rgba(124,58,237,0.25);}
+.orb-ring:nth-child(1){inset:0;animation:rp 3s ease-in-out infinite;}
+.orb-ring:nth-child(2){inset:-14px;border-color:rgba(124,58,237,0.13);animation:rp 3.5s ease-in-out infinite;animation-delay:0.5s;}
+.orb-ring:nth-child(3){inset:-30px;border-color:rgba(124,58,237,0.06);animation:rp 4s ease-in-out infinite;animation-delay:1s;}
+@keyframes rp{0%,100%{opacity:0.6;transform:scale(1);}50%{opacity:1;transform:scale(1.04);}}
+.ai-orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 35%,rgba(210,180,255,0.95),rgba(124,58,237,0.97) 38%,rgba(88,28,220,0.99) 72%,rgba(49,10,120,1));box-shadow:0 0 50px rgba(124,58,237,0.65),0 0 100px rgba(124,58,237,0.2),inset 0 0 30px rgba(255,255,255,0.1);overflow:hidden;}
+.orb-face{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.face-eyes{display:flex;gap:26px;}
+.eye{width:10px;height:10px;border-radius:50%;background:#fff;box-shadow:0 0 12px rgba(255,255,255,0.9);animation:blink 5s ease-in-out infinite;}
+.eye:nth-child(2){animation-delay:0.12s;}
+@keyframes blink{0%,88%,100%{transform:scaleY(1);}92%,96%{transform:scaleY(0.07);}}
+.eye-inner{width:5px;height:5px;background:#c4b5fd;border-radius:50%;margin:2px auto 0;}
+.face-mouth{width:18px;height:5px;border-bottom:2px solid rgba(255,255,255,0.55);border-radius:0 0 10px 10px;animation:talk 2.4s ease-in-out infinite;}
+.face-mouth.active{animation-duration:0.6s;}
+@keyframes talk{0%,100%{width:14px;height:4px;}30%{width:22px;height:8px;}60%{width:10px;height:2px;}}
+.orb-shimmer{position:absolute;top:-20px;left:-20px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.12);filter:blur(10px);animation:shimmer 7s ease-in-out infinite alternate;}
+@keyframes shimmer{from{transform:translate(0,0);}to{transform:translate(70px,60px);}}
+/* Voice waves */
+.voice-waves{display:flex;align-items:center;gap:3px;height:40px;}
+.vbar{width:3px;border-radius:2px;background:linear-gradient(to top,#7c3aed,#c084fc);transition:height 0.15s ease;}
+.ai-label{text-align:center;}
+.ai-name{font-family:var(--font-head);font-size:16px;font-weight:700;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ai-status{font-size:12px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px;justify-content:center;}
+.status-dot{width:6px;height:6px;border-radius:50%;background:#34d399;box-shadow:0 0 8px #34d399;animation:live 1.5s ease-in-out infinite;}
+.progress-indicator{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;}
+.prog-dot{width:10px;height:10px;border-radius:50%;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);transition:all 0.3s;}
+.prog-dot.done{background:#34d399;border-color:#34d399;box-shadow:0 0 8px #34d399;}
+.prog-dot.current{background:linear-gradient(135deg,#7c3aed,#ec4899);border-color:transparent;box-shadow:0 0 12px rgba(124,58,237,0.5);animation:prog-pulse 1.5s ease-in-out infinite;}
+@keyframes prog-pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
+/* RIGHT PANEL — Transcript */
+.right-panel{background:rgba(10,9,18,0.7);border-left:1px solid var(--border);padding:20px;display:flex;flex-direction:column;overflow:hidden;backdrop-filter:blur(10px);}
+.transcript-area{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.transcript-area::-webkit-scrollbar{width:3px;}
+.transcript-area::-webkit-scrollbar-thumb{background:rgba(124,58,237,0.3);border-radius:2px;}
+.msg{border-radius:12px;padding:10px 13px;animation:msg-in 0.3s cubic-bezier(.34,1.4,.64,1);}
+@keyframes msg-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.msg-ai{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);}
+.msg-user{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);}
+.msg-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.msg-ai .msg-label{color:#a78bfa;}
+.msg-user .msg-label{color:rgba(255,255,255,0.3);}
+.msg-text{font-size:12px;line-height:1.6;color:rgba(255,255,255,0.75);}
+.recording-indicator{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:1px solid rgba(236,72,153,0.25);background:rgba(236,72,153,0.07);font-size:12px;font-weight:600;color:#f9a8d4;display:none;}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#ec4899;box-shadow:0 0 8px #ec4899;animation:live 0.8s ease-in-out infinite;}
+/* BOTTOM CONTROLS */
+.controls{grid-column:1/-1;background:rgba(10,9,18,0.95);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:16px;padding:0 24px;backdrop-filter:blur(20px);}
+.ctrl-btn{padding:10px 22px;border-radius:12px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden;}
+.ctrl-record{background:linear-gradient(105deg,#ec4899,#f472b6);border:none;color:#fff;box-shadow:0 0 20px rgba(236,72,153,0.4);}
+.ctrl-record:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(236,72,153,0.55);}
+.ctrl-record.recording{background:linear-gradient(105deg,#dc2626,#f43f5e);animation:rec-pulse 1.5s ease-in-out infinite;}
+@keyframes rec-pulse{0%,100%{box-shadow:0 0 20px rgba(220,38,38,0.4);}50%{box-shadow:0 0 40px rgba(220,38,38,0.6);}}
+.ctrl-stop{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:rgba(255,255,255,0.6);}
+.ctrl-stop:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.ctrl-next{background:linear-gradient(105deg,#7c3aed,#a855f7);border:none;color:#fff;box-shadow:0 0 20px rgba(124,58,237,0.4);}
+.ctrl-next:hover{transform:translateY(-1px);box-shadow:0 0 30px rgba(124,58,237,0.55);}
+.ctrl-next:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+.ctrl-skip{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.35);font-size:12px;}
+.ctrl-skip:hover{color:rgba(255,255,255,0.6);}
+.btn-glint{position:absolute;top:0;left:-110%;width:60%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.2) 50%,transparent 70%);animation:glint 4s ease-in-out infinite;}
+@keyframes glint{0%{left:-110%;}40%{left:120%;}100%{left:120%;}}
+@media(max-width:900px){.session-layout{grid-template-columns:1fr;grid-template-rows:60px 1fr auto auto 80px;}.left-panel,.right-panel{max-height:200px;}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
+
+<div class="session-layout">
+  <!-- TOPBAR -->
+  <div class="session-topbar">
+    <div class="session-brand">
+      <div class="logo-gem"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
+      <span class="brand-name">InterviewAI</span>
+    </div>
+    <div class="session-info">
+      <div class="info-chip"><div class="dot live-dot"></div>Live Session</div>
+      <div class="info-chip" id="role-chip">Role: Loading...</div>
+      <div class="info-chip" id="company-chip">Company: General</div>
+      <div class="info-chip" id="q-chip">Q 1 / 10</div>
+    </div>
+    <button class="end-btn" onclick="endInterview()">End Session</button>
+  </div>
+
+  <!-- LEFT: Questions -->
+  <div class="left-panel">
+    <div class="panel-title">Questions</div>
+    <div class="current-q-card">
+      <div class="cq-label" id="cq-label">Question 1</div>
+      <div class="cq-text" id="cq-text">Loading question...</div>
+    </div>
+    <div class="timer-wrap">
+      <div class="timer-val" id="timer-val">02:00</div>
+      <div class="timer-label">Time remaining</div>
+      <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+    </div>
+    <div class="panel-title">All Questions</div>
+    <div class="q-list" id="q-list"></div>
+  </div>
+
+  <!-- CENTER: AI Avatar -->
+  <div class="center-panel">
+    <div class="ai-orb-wrap">
+      <div class="orb-ring"></div><div class="orb-ring"></div><div class="orb-ring"></div>
+      <div class="ai-orb">
+        <div class="orb-shimmer"></div>
+        <div class="orb-face">
+          <div class="face-eyes">
+            <div class="eye"><div class="eye-inner"></div></div>
+            <div class="eye"><div class="eye-inner"></div></div>
+          </div>
+          <div class="face-mouth" id="face-mouth"></div>
+        </div>
+      </div>
+    </div>
+    <div class="voice-waves" id="voice-waves"></div>
+    <div class="ai-label">
+      <div class="ai-name">AI Interviewer</div>
+      <div class="ai-status"><div class="status-dot"></div><span id="ai-status-text">Ready to begin</span></div>
+    </div>
+    <div class="progress-indicator" id="progress-dots"></div>
+  </div>
+
+  <!-- RIGHT: Transcript -->
+  <div class="right-panel">
+    <div class="panel-title">Live Transcript</div>
+    <div class="transcript-area" id="transcript"></div>
+    <div class="recording-indicator" id="rec-indicator">
+      <div class="rec-dot"></div>Recording your answer...
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <button class="ctrl-btn ctrl-skip" onclick="skipQuestion()">Skip</button>
+    <button class="ctrl-btn ctrl-record" id="record-btn" onclick="toggleRecording()">
+      <div class="btn-glint"></div>🎙️ Start Recording
+    </button>
+    <button class="ctrl-btn ctrl-stop" onclick="stopRecording()" id="stop-btn" style="display:none">⏹ Stop</button>
+    <button class="ctrl-btn ctrl-next" id="next-btn" onclick="nextQuestion()" disabled>
+      <div class="btn-glint"></div>Next Question →
+    </button>
+  </div>
+</div>
+
+<script>
+if(localStorage.getItem('ai_logged_in')!=='true'){window.location.replace('ai_interviewer_login.html');}
+
+const role = localStorage.getItem('interview_role')||'Software Engineer';
+const exp  = localStorage.getItem('interview_exp')||'1-2 Years';
+const type = localStorage.getItem('interview_type')||'Technical';
+const co   = localStorage.getItem('interview_company')||'General';
+const totalQ = parseInt(localStorage.getItem('interview_count')||'10');
+
+document.getElementById('role-chip').textContent = 'Role: '+role.split(' ')[0];
+document.getElementById('company-chip').textContent = 'Company: '+co;
+
+/* QUESTION BANK */
+const qBanks = {  
+  Technical:{
+    'Frontend Developer':['Explain the difference between let, const, and var in JavaScript.','What is the Virtual DOM in React and how does it improve performance?','Describe CSS specificity and how it works.','What are closures in JavaScript? Give an example.','Explain the event loop in JavaScript.','What is the difference between == and === in JavaScript?','How does async/await work in JavaScript?','Explain the box model in CSS.','What are React hooks and why were they introduced?','How does browser rendering work from HTML to pixels?'],
+    'Backend Developer':['Explain REST vs GraphQL — when would you choose each?','How does database indexing work and when would you use it?','What is the difference between SQL and NoSQL databases?','Explain how JWT authentication works.','What are microservices and what problems do they solve?','How would you handle database transactions?','Explain caching strategies — Redis, CDN, application cache.','What is a race condition and how do you prevent it?','Describe the CAP theorem.','How would you design a rate limiter?'],
+    'Full Stack Developer':['Walk me through a full-stack feature you built from scratch.','How do you handle authentication between frontend and backend?','What is CORS and how do you handle it?','Explain the difference between server-side and client-side rendering.','How would you optimise a slow API endpoint?','Describe your approach to error handling across the stack.','What is a WebSocket and when would you use it over HTTP?','How do you manage environment variables securely?','Explain CI/CD — what does your deployment pipeline look like?','How do you approach database schema design?'],
+    'Data Analyst':['What is the difference between INNER JOIN and LEFT JOIN?','Explain what a GROUP BY clause does in SQL.','How would you handle missing data in a dataset?','What is the difference between mean, median, and mode?','Explain what a pivot table is and when you would use it.','How do you identify outliers in data?','What tools have you used for data visualisation?','Explain correlation vs causation.','How would you measure the success of a product feature?','Describe a time you found an insight that surprised stakeholders.'],
+    'Java Developer':['Explain the difference between an abstract class and an interface.','What is garbage collection in Java and how does it work?','Explain the SOLID principles.','What is the difference between HashMap and TreeMap?','What are Java streams and how do they improve code quality?','Explain Spring Boot dependency injection.','What is the difference between checked and unchecked exceptions?','How does Java handle multithreading?','What is the difference between ArrayList and LinkedList?','Explain the concept of immutability and why it matters.'],
+    'Product Manager':['How would you prioritise a backlog with limited engineering resources?','Walk me through how you would define success metrics for a new feature.','Tell me about a time a product launch did not go as planned.','How do you handle conflicting stakeholder priorities?','How would you improve retention on a mobile app?','Describe your approach to user research.','How do you decide when a product is ready to ship?','Explain how you would run an A/B test.','What makes a great product requirements document?','How would you approach pricing for a new B2B SaaS product?']
+  },
+  HR:{
+    default:['Tell me about yourself and your background.','Why are you looking for a new opportunity?','Where do you see yourself in 5 years?','Describe your biggest professional achievement.','Tell me about a time you handled a difficult team conflict.','How do you prioritise when you have multiple deadlines?','What is your greatest weakness and how do you work on it?','Why do you want to work at this company specifically?','Describe your ideal work environment.','How do you handle constructive criticism?']
+  },
+  Mixed:{
+    default:['Tell me about yourself and a key technical project you are proud of.','What is your approach to debugging a production issue at 3 AM?','Describe a time you had to learn a new technology quickly.','How do you balance technical debt with delivering new features?','Tell me about a time you disagreed with a technical decision and what happened.','How do you mentor junior developers?','Describe your approach to code reviews.','What makes you a strong candidate for this role specifically?','How do you stay current with technology trends?','What is the most complex technical problem you have ever solved?']
+  }
+};
+
+function getQuestions(){
+  const bank=qBanks[type];
+  if(!bank) return qBanks.Technical[Object.keys(qBanks.Technical)[0]];
+  return bank[role]||bank.default||qBanks.Technical[Object.keys(qBanks.Technical)[0]];
+}
+
+const questions=getQuestions().slice(0,totalQ);
+const answers=new Array(questions.length).fill('');
+let currentQ=0, isRecording=false, recognition=null, timerInterval=null, timeLeft=120;
+
+/* Build Q list */
+function buildQList(){
+  const list=document.getElementById('q-list');
+  list.innerHTML='';
+  questions.forEach((q,i)=>{
+    const el=document.createElement('div');
+    el.className='q-item'+(i===currentQ?' current':i<currentQ?' done':' locked');
+    el.id='q-item-'+i;
+    el.innerHTML=`<div class="q-num">Q${i+1} ${i<currentQ?'✓':i===currentQ?'← Now':''}</div><div class="q-preview">${q.substring(0,60)}...</div>`;
+    el.onclick=()=>{if(i<=currentQ)jumpTo(i);};
+    list.appendChild(el);
+  });
+}
+
+/* Build progress dots */
+function buildDots(){
+  const wrap=document.getElementById('progress-dots');
+  wrap.innerHTML='';
+  questions.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='prog-dot'+(i<currentQ?' done':i===currentQ?' current':'');
+    d.id='dot-'+i;
+    wrap.appendChild(d);
+  });
+}
+
+/* Show current question */
+function showQuestion(){
+  document.getElementById('q-chip').textContent='Q '+(currentQ+1)+' / '+totalQ;
+  document.getElementById('cq-label').textContent='Question '+(currentQ+1)+' of '+totalQ;
+  document.getElementById('cq-text').textContent=questions[currentQ];
+  document.getElementById('face-mouth').classList.add('active');
+  document.getElementById('ai-status-text').textContent='Asking question '+(currentQ+1)+'...';
+  addMessage('ai',questions[currentQ]);
+  setTimeout(()=>{document.getElementById('face-mouth').classList.remove('active');document.getElementById('ai-status-text').textContent='Listening for your answer...';},2000);
+  buildQList();buildDots();
+  resetTimer();
+}
+
+/* Timer */
+function startTimer(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    timeLeft--;
+    const m=Math.floor(timeLeft/60), s=timeLeft%60;
+    const tv=document.getElementById('timer-val');
+    tv.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    document.getElementById('timer-fill').style.width=(timeLeft/120*100)+'%';
+    if(timeLeft<=30) tv.classList.add('timer-red');
+    else tv.classList.remove('timer-red');
+    if(timeLeft<=0){clearInterval(timerInterval);stopRecording();autoNext();}
+  },1000);
+}
+
+function resetTimer(){timeLeft=120;clearInterval(timerInterval);document.getElementById('timer-val').textContent='02:00';document.getElementById('timer-fill').style.width='100%';document.getElementById('timer-val').classList.remove('timer-red');}
+
+function autoNext(){if(currentQ<questions.length-1){setTimeout(()=>nextQuestion(),1000);}else{setTimeout(()=>endInterview(),1500);}}
+
+/* Recording */
+function toggleRecording(){
+  if(!isRecording) startRecording();
+  else stopRecording();
+}
+
+function startRecording(){
+  isRecording=true;
+  document.getElementById('record-btn').classList.add('recording');
+  document.getElementById('record-btn').innerHTML='<div class="btn-glint"></div>🔴 Recording...';
+  document.getElementById('stop-btn').style.display='inline-flex';
+  document.getElementById('next-btn').disabled=false;
+  document.getElementById('rec-indicator').style.display='flex';
+  document.getElementById('ai-status-text').textContent='Recording your answer...';
+  animateVoiceBars(true);
+  startTimer();
+
+  if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    recognition=new SR();
+    recognition.continuous=true;recognition.interimResults=true;recognition.lang='en-US';
+    let finalText='';
+    recognition.onresult=function(e){
+      let interim='';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal) finalText+=e.results[i][0].transcript+' ';
+        else interim+=e.results[i][0].transcript;
+      }
+      const display=finalText+interim;
+      answers[currentQ]=finalText.trim();
+      updateLiveTranscript(display);
+    };
+    recognition.onerror=function(){};
+    recognition.start();
+  } else {
+    answers[currentQ]='[Voice recognition not available in this browser — Chrome recommended]';
+    updateLiveTranscript('Listening... (use Chrome for full voice support)');
+  }
+}
+
+function stopRecording(){
+  if(!isRecording) return;
+  isRecording=false;
+  document.getElementById('record-btn').classList.remove('recording');
+  document.getElementById('record-btn').innerHTML='<div class="btn-glint"></div>🎙️ Record Again';
+  document.getElementById('stop-btn').style.display='none';
+  document.getElementById('rec-indicator').style.display='none';
+  document.getElementById('ai-status-text').textContent='Answer recorded ✓';
+  animateVoiceBars(false);
+  clearInterval(timerInterval);
+  if(recognition){try{recognition.stop();}catch(e){}}
+  if(answers[currentQ]) addMessage('user',answers[currentQ]);
+}
+
+function updateLiveTranscript(text){
+  const t=document.getElementById('transcript');
+  let live=document.getElementById('live-transcript');
+  if(!live){live=document.createElement('div');live.id='live-transcript';live.className='msg msg-user';live.innerHTML='<div class="msg-label">You (live)</div><div class="msg-text" id="live-text"></div>';t.appendChild(live);}
+  document.getElementById('live-text').textContent=text;
+  t.scrollTop=t.scrollHeight;
+}
+
+function addMessage(role,text){
+  const t=document.getElementById('transcript');
+  const el=document.createElement('div');
+  el.className='msg msg-'+role;
+  el.innerHTML=`<div class="msg-label">${role==='ai'?'AI Interviewer':'Your Answer'}</div><div class="msg-text">${text}</div>`;
+  const live=document.getElementById('live-transcript');
+  if(live && role==='user'){live.remove();}
+  t.appendChild(el);
+  t.scrollTop=t.scrollHeight;
+}
+
+/* Voice bars animation */
+const waveEl=document.getElementById('voice-waves');
+for(let i=0;i<18;i++){const b=document.createElement('div');b.className='vbar';b.style.height='4px';waveEl.appendChild(b);}
+let waveAnim=null;
+function animateVoiceBars(on){
+  clearInterval(waveAnim);
+  const bars=waveEl.querySelectorAll('.vbar');
+  if(on){waveAnim=setInterval(()=>{bars.forEach(b=>{b.style.height=(4+Math.random()*32)+'px';});},80);}
+  else{bars.forEach(b=>{b.style.height='4px';});}
+}
+
+function nextQuestion(){
+  stopRecording();
+  if(currentQ<questions.length-1){
+    currentQ++;
+    showQuestion();
+  } else {
+    endInterview();
+  }
+}
+
+function skipQuestion(){
+  answers[currentQ]=answers[currentQ]||'[Skipped]';
+  nextQuestion();
+}
+
+function jumpTo(i){currentQ=i;stopRecording();showQuestion();}
+
+function endInterview(){
+  stopRecording();clearInterval(timerInterval);
+  localStorage.setItem('interview_questions',JSON.stringify(questions));
+  localStorage.setItem('interview_answers',JSON.stringify(answers));
+  localStorage.setItem('interview_date',new Date().toLocaleDateString());
+  window.location.href='ai_interview_results.html';
+}
+
+/* Init */
+document.getElementById('q-chip').textContent='Q 1 / '+totalQ;
+showQuestion();
+</script>
+</body>
+</html>

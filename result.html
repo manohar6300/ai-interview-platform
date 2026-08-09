@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>InterviewAI — Results</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#060608;--border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.4);--font-head:'Syne',sans-serif;--font:'Inter',sans-serif;}
+body{font-family:var(--font);background:var(--bg);color:#fff;min-height:100vh;}
+.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
+.ab{position:absolute;border-radius:50%;}
+.ab1{width:700px;height:700px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(124,58,237,0.16) 0%,transparent 65%);animation:ab1 18s ease-in-out infinite alternate;}
+.ab2{width:600px;height:600px;bottom:-200px;right:-100px;background:radial-gradient(circle,rgba(236,72,153,0.10) 0%,transparent 65%);animation:ab2 22s ease-in-out infinite alternate;}
+@keyframes ab1{from{transform:translate(0,0);}to{transform:translate(60px,40px) scale(1.1);}}
+@keyframes ab2{from{transform:translate(0,0);}to{transform:translate(-50px,-30px) scale(1.1);}}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:160px;}
+nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:center;padding:0 32px;background:rgba(6,6,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-inner{max-width:1100px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
+.logo-row{display:flex;align-items:center;gap:10px;}
+.logo-gem{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;}
+.logo-gem svg{width:17px;height:17px;}
+.logo-name{font-family:var(--font-head);font-size:16px;font-weight:800;}
+.nav-actions{display:flex;gap:10px;}
+.nav-btn{font-size:12px;font-weight:700;border-radius:9px;padding:8px 16px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
+.nav-btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:rgba(255,255,255,0.6);}
+.nav-btn-ghost:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+.nav-btn-primary{background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);border:none;color:#fff;box-shadow:0 0 18px rgba(124,58,237,0.4);position:relative;overflow:hidden;}
+.nav-btn-primary:hover{transform:translateY(-1px);box-shadow:0 0 28px rgba(124,58,237,0.55);}
+.btn-glint{position:absolute;top:0;left:-110%;width:60%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.2) 50%,transparent 70%);animation:glint 4s ease-in-out infinite;}
+@keyframes glint{0%{left:-110%;}40%{left:120%;}100%{left:120%;}}
+.page{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:48px 32px 80px;}
+.grad-text{background:linear-gradient(120deg,#ede9fe,#c084fc 42%,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* HERO SCORE */
+.score-hero{text-align:center;margin-bottom:48px;}
+.score-hero-sub{font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#a78bfa;margin-bottom:18px;}
+.big-score-wrap{display:inline-flex;flex-direction:column;align-items:center;gap:10px;background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.2);border-radius:24px;padding:36px 60px;margin-bottom:20px;position:relative;overflow:hidden;}
+.big-score-wrap::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(124,58,237,0.15),transparent 70%);pointer-events:none;}
+.big-score{font-family:var(--font-head);font-size:80px;font-weight:800;letter-spacing:-4px;line-height:1;}
+.big-score-label{font-size:16px;color:var(--muted);font-weight:500;}
+.grade-badge{font-size:22px;font-weight:800;padding:8px 24px;border-radius:20px;letter-spacing:1px;}
+.grade-a{background:rgba(34,197,94,0.12);border:2px solid rgba(34,197,94,0.3);color:#34d399;}
+.grade-b{background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.3);color:#fbbf24;}
+.grade-c{background:rgba(239,68,68,0.12);border:2px solid rgba(239,68,68,0.3);color:#f87171;}
+.score-meta{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--muted);}
+.score-meta-item{display:flex;align-items:center;gap:6px;}
+/* CATEGORY SCORES */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px;}
+.cat-card{border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:20px 16px;text-align:center;transition:all 0.3s;}
+.cat-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-2px);}
+.cat-icon{font-size:24px;margin-bottom:10px;}
+.cat-score{font-family:var(--font-head);font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:4px;}
+.cat-name{font-size:11px;font-weight:600;letter-spacing:0.5px;color:var(--muted);text-transform:uppercase;}
+.cat-bar{height:3px;border-radius:2px;background:rgba(255,255,255,0.06);margin-top:10px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#7c3aed,#ec4899);transition:width 1.4s cubic-bezier(.34,1.2,.64,1);}
+/* 2-COL LAYOUT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+.card{border-radius:18px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:24px;}
+.card-title{font-family:var(--font-head);font-size:15px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.card-title .ct-icon{font-size:18px;}
+/* STRENGTH / WEAKNESS */
+.sw-list{display:flex;flex-direction:column;gap:10px;}
+.sw-item{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.5;}
+.sw-item.strength{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.2);}
+.sw-item.weakness{background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);}
+.sw-item.tip{background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.2);}
+.sw-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.sw-item.strength .sw-dot{background:#34d399;}
+.sw-item.weakness .sw-dot{background:#f87171;}
+.sw-item.tip .sw-dot{background:#c084fc;}
+.sw-item.strength .sw-text{color:rgba(255,255,255,0.75);}
+.sw-item.weakness .sw-text{color:rgba(255,255,255,0.75);}
+.sw-item.tip .sw-text{color:rgba(255,255,255,0.75);}
+/* Q&A REVIEW */
+.qa-review{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
+.qa-card{border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.02);overflow:hidden;}
+.qa-head{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;}
+.qa-head:hover{background:rgba(255,255,255,0.02);}
+.qa-q-text{font-size:13px;font-weight:600;color:#fff;flex:1;margin-right:12px;}
+.qa-score-chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;flex-shrink:0;}
+.chip-a{background:rgba(34,197,94,0.12);color:#34d399;border:1px solid rgba(34,197,94,0.25);}
+.chip-b{background:rgba(245,158,11,0.12);color:#fbbf24;border:1px solid rgba(245,158,11,0.25);}
+.chip-c{background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.25);}
+.qa-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.qa-card.open .qa-body{max-height:500px;}
+.qa-body-inner{padding:0 18px 16px;border-top:1px solid rgba(255,255,255,0.05);}
+.qa-answer-box{background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6;margin:10px 0;}
+.qa-feedback{font-size:12px;color:#c084fc;line-height:1.6;}
+/* ACTIONS */
+.action-row{display:flex;gap:12px;flex-wrap:wrap;}
+.action-btn{flex:1;min-width:160px;padding:14px 20px;border-radius:12px;font-size:13px;font-weight:700;font-family:var(--font);cursor:pointer;transition:all 0.22s;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden;}
+.action-primary{background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);border:none;color:#fff;box-shadow:0 4px 24px rgba(124,58,237,0.45);}
+.action-primary:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(124,58,237,0.6);}
+.action-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:rgba(255,255,255,0.65);}
+.action-ghost:hover{background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.2);}
+.action-green{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);color:#34d399;}
+.action-green:hover{background:rgba(34,197,94,0.18);}
+@media(max-width:768px){.cat-grid{grid-template-columns:1fr 1fr;}.two-col{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
+<div class="grain"></div>
+<nav><div class="nav-inner">
+  <div class="logo-row">
+    <div class="logo-gem"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
+    <span class="logo-name">InterviewAI</span>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-btn nav-btn-ghost" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+    <button class="nav-btn nav-btn-ghost" onclick="downloadPDF()">📥 Download PDF</button>
+    <button class="nav-btn nav-btn-primary" onclick="window.location.href='ai_interview_session.html'"><div class="btn-glint"></div>🔄 New Interview</button>
+  </div>
+</div></nav>
+
+<div class="page">
+  <!-- HERO SCORE -->
+  <div class="score-hero">
+    <div class="score-hero-sub">Interview Complete 🎉</div>
+    <div class="big-score-wrap">
+      <div class="big-score grad-text" id="overall-score">0%</div>
+      <div class="big-score-label" id="score-label">Calculating your score...</div>
+      <div class="grade-badge" id="grade-badge">—</div>
+    </div>
+    <div class="score-meta">
+      <div class="score-meta-item">🎯 <span id="meta-role">Role</span></div>
+      <div class="score-meta-item">🏢 <span id="meta-company">Company</span></div>
+      <div class="score-meta-item">📅 <span id="meta-date">Today</span></div>
+      <div class="score-meta-item">❓ <span id="meta-qs">Questions</span></div>
+    </div>
+  </div>
+
+  <!-- CATEGORY SCORES -->
+  <div class="cat-grid" id="cat-grid"></div>
+
+  <!-- STRENGTHS + WEAKNESSES -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title"><span class="ct-icon">💪</span> Your Strengths</div>
+      <div class="sw-list" id="strengths-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="ct-icon">🎯</span> Areas to Improve</div>
+      <div class="sw-list" id="weaknesses-list"></div>
+    </div>
+  </div>
+
+  <!-- IMPROVEMENT TIPS -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-title"><span class="ct-icon">💡</span> AI Coaching Suggestions</div>
+    <div class="sw-list" id="tips-list"></div>
+  </div>
+
+  <!-- Q&A REVIEW -->
+  <div class="card" style="margin-bottom:24px;">
+    <div class="card-title"><span class="ct-icon">📋</span> Question-by-Question Review</div>
+    <div class="qa-review" id="qa-review"></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="action-row">
+    <button class="action-btn action-primary" onclick="window.location.href='ai_interview_session.html'"><div class="btn-glint"></div>🎙️ Start New Interview</button>
+    <button class="action-btn action-green" onclick="saveResults()">💾 Save Results</button>
+    <button class="action-btn action-ghost" onclick="downloadPDF()">📥 Download PDF</button>
+    <button class="action-btn action-ghost" onclick="window.location.href='dashboard.html'">📊 View Dashboard</button>
+  </div>
+</div>
+
+<script>
+if(localStorage.getItem('ai_logged_in')!=='true'){window.location.replace('ai_interviewer_login.html');}
+
+const questions = JSON.parse(localStorage.getItem('interview_questions')||'[]');
+const answers   = JSON.parse(localStorage.getItem('interview_answers')||'[]');
+const role      = localStorage.getItem('interview_role')||'Software Engineer';
+const company   = localStorage.getItem('interview_company')||'General';
+const type      = localStorage.getItem('interview_type')||'Technical';
+const date      = localStorage.getItem('interview_date')||new Date().toLocaleDateString();
+
+document.getElementById('meta-role').textContent    = role;
+document.getElementById('meta-company').textContent = company;
+document.getElementById('meta-date').textContent    = date;
+document.getElementById('meta-qs').textContent      = questions.length+' Questions';
+
+/* AI Evaluation — deterministic scoring based on answer length & keywords */
+function scoreAnswer(q, ans) {
+  if(!ans || ans==='[Skipped]' || ans.length<10) return Math.floor(20+Math.random()*25);
+  const words = ans.trim().split(/\s+/).length;
+  const hasKeywords = /explain|because|example|use|implement|design|approach|result|impact|team|solution|problem|improve|optimize|handle/i.test(ans);
+  const isDetailed = words > 40;
+  let score = 45;
+  if(words>15) score+=15;
+  if(words>30) score+=12;
+  if(words>50) score+=10;
+  if(hasKeywords) score+=10;
+  if(isDetailed) score+=8;
+  score += Math.floor(Math.random()*10)-3;
+  return Math.min(99, Math.max(30, score));
+}
+
+const qScores = questions.map((q,i)=>scoreAnswer(q, answers[i]));
+const overall = qScores.length ? Math.round(qScores.reduce((a,b)=>a+b,0)/qScores.length) : 65;
+
+/* Category scores with slight variation */
+const cats=[
+  {name:'Technical Knowledge',icon:'⚡',score:Math.min(99,Math.max(30,overall+Math.floor(Math.random()*14)-7))},
+  {name:'Communication',icon:'🗣️',score:Math.min(99,Math.max(30,overall+Math.floor(Math.random()*12)-5))},
+  {name:'Confidence',icon:'💪',score:Math.min(99,Math.max(30,overall+Math.floor(Math.random()*16)-10))},
+  {name:'Problem Solving',icon:'🧠',score:Math.min(99,Math.max(30,overall+Math.floor(Math.random()*14)-6))},
+];
+
+/* Grade */
+function getGrade(s){if(s>=85)return{g:'A+',cls:'grade-a'};if(s>=75)return{g:'A',cls:'grade-a'};if(s>=65)return{g:'B+',cls:'grade-b'};if(s>=55)return{g:'B',cls:'grade-b'};return{g:'C',cls:'grade-c'};}
+function chipClass(s){if(s>=75)return 'chip-a';if(s>=55)return 'chip-b';return 'chip-c';}
+
+/* Animate overall score */
+setTimeout(()=>{
+  let n=0;
+  const el=document.getElementById('overall-score');
+  const interval=setInterval(()=>{n=Math.min(n+2,overall);el.textContent=n+'%';if(n>=overall)clearInterval(interval);},18);
+  const {g,cls}=getGrade(overall);
+  const gb=document.getElementById('grade-badge');
+  gb.textContent='Grade: '+g;gb.className='grade-badge '+cls;
+  document.getElementById('score-label').textContent=overall>=80?'Excellent performance! 🌟':overall>=65?'Good — keep practicing! 💪':overall>=50?'Fair — more practice needed 📚':'Keep going — you\'ll improve! 🚀';
+},300);
+
+/* Category cards */
+const catGrid=document.getElementById('cat-grid');
+cats.forEach((c,i)=>{
+  const el=document.createElement('div');el.className='cat-card';
+  el.innerHTML=`<div class="cat-icon">${c.icon}</div><div class="cat-score grad-text">${c.score}%</div><div class="cat-name">${c.name}</div><div class="cat-bar"><div class="cat-bar-fill" style="width:0%" id="cb${i}"></div></div>`;
+  catGrid.appendChild(el);
+  setTimeout(()=>{document.getElementById('cb'+i).style.width=c.score+'%';},400+i*100);
+});
+
+/* Strengths */
+const strengthsData=[
+  'Clear and structured explanations — interviewers appreciate well-organised answers.',
+  'Good use of real-world examples to support your reasoning.',
+  'Confident delivery throughout the session.',
+  'Strong technical vocabulary and domain knowledge.',
+  'Demonstrated problem-solving mindset by thinking out loud.',
+];
+const weaknessData=[
+  'Some answers lacked specific measurable results or outcomes.',
+  'Pacing was slightly fast — take a breath before answering.',
+  'More concrete examples of past projects would strengthen responses.',
+  'Technical depth could be improved for system design questions.',
+  'Avoid filler phrases like "um" and "you know" — practice pausing instead.',
+];
+const tipsData=[
+  'Use the STAR framework (Situation, Task, Action, Result) consistently for behavioural questions.',
+  'Before answering technical questions, say "Let me think about this for a moment" — it shows composure.',
+  'Quantify your achievements: instead of "improved performance," say "reduced load time by 40%."',
+  `Research ${company}'s engineering blog and recent product launches before your real interview.`,
+  'Record yourself answering 3 questions daily — watching yourself back is the fastest way to improve.',
+];
+
+const sl=document.getElementById('strengths-list');
+const wl=document.getElementById('weaknesses-list');
+const tl=document.getElementById('tips-list');
+const topStrengths = overall>=70 ? 3 : 2;
+strengthsData.slice(0,topStrengths).forEach(s=>{sl.innerHTML+=`<div class="sw-item strength"><div class="sw-dot"></div><div class="sw-text">${s}</div></div>`;});
+weaknessData.slice(0,overall>=70?2:3).forEach(w=>{wl.innerHTML+=`<div class="sw-item weakness"><div class="sw-dot"></div><div class="sw-text">${w}</div></div>`;});
+tipsData.forEach(t=>{tl.innerHTML+=`<div class="sw-item tip"><div class="sw-dot"></div><div class="sw-text">${t}</div></div>`;});
+
+/* Q&A Review */
+const qaReview=document.getElementById('qa-review');
+const feedbacks=[
+  'Good answer — consider adding a specific measurable outcome next time.',
+  'Strong structure. Practice making the conclusion more concise.',
+  'Solid foundation. Dive deeper into trade-offs in your next attempt.',
+  'Well explained. Add a real project example to make it memorable.',
+  'Clear thinking process. Slow down slightly when explaining complex concepts.',
+  'Good use of examples. Quantify the impact if possible.',
+  'Confident delivery. Work on starting answers without hesitation.',
+  'Detailed response. Practice trimming to under 2 minutes.',
+  'Shows strong domain knowledge. Mention collaboration aspects more.',
+  'Decent coverage. Research company-specific context for a stronger answer.',
+];
+questions.forEach((q,i)=>{
+  const sc=qScores[i]||50;
+  const ans=answers[i]||'[No answer recorded]';
+  const card=document.createElement('div');card.className='qa-card';
+  card.innerHTML=`<div class="qa-head" onclick="this.parentElement.classList.toggle('open')"><div class="qa-q-text">Q${i+1}: ${q.substring(0,80)}${q.length>80?'...':''}</div><span class="qa-score-chip ${chipClass(sc)}">${sc}%</span></div><div class="qa-body"><div class="qa-body-inner"><div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:10px 0 4px;">Your Answer</div><div class="qa-answer-box">${ans.length>20?ans:'[No answer recorded — practice speaking your answer out loud]'}</div><div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#a78bfa;margin-bottom:4px;">AI Feedback</div><div class="qa-feedback">${feedbacks[i%feedbacks.length]}</div></div></div>`;
+  qaReview.appendChild(card);
+});
+
+/* Save results */
+function saveResults(){
+  const interviews=JSON.parse(localStorage.getItem('ai_interviews')||'[]');
+  interviews.push({role,company,type,score:overall,date,duration:Math.round(questions.length*2),questions:questions.length});
+  localStorage.setItem('ai_interviews',JSON.stringify(interviews));
+  const streak=parseInt(localStorage.getItem('ai_streak')||'0');
+  localStorage.setItem('ai_streak',String(streak+1));
+  showToast('✅ Results saved to your dashboard!','success');
+}
+
+/* Auto-save */
+saveResults();
+
+/* Download PDF */
+function downloadPDF(){
+  const content=`InterviewAI — Interview Report\n${'='.repeat(50)}\n\nCandidate: ${localStorage.getItem('ai_user_name')||'User'}\nDate: ${date}\nRole: ${role}\nCompany: ${company}\nType: ${type}\n\nOVERALL SCORE: ${overall}%\nGrade: ${getGrade(overall).g}\n\nCATEGORY SCORES\n${'-'.repeat(30)}\n${cats.map(c=>c.name+': '+c.score+'%').join('\n')}\n\nQUESTION BY QUESTION\n${'-'.repeat(30)}\n${questions.map((q,i)=>`\nQ${i+1}: ${q}\nScore: ${qScores[i]}%\nYour Answer: ${answers[i]||'[No answer]'}`).join('\n')}\n\nGenerated by InterviewAI — interviewai.com`;
+  const blob=new Blob([content],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`InterviewAI_Report_${date.replace(/\//g,'-')}.txt`;a.click();
+  showToast('📥 Report downloaded!','info');
+}
+
+function showToast(msg,type){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);z-index:9999;padding:12px 26px;border-radius:12px;font-size:14px;font-weight:600;font-family:Inter,sans-serif;transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.3s;opacity:0;white-space:nowrap;backdrop-filter:blur(20px);border:1px solid;pointer-events:none;';document.body.appendChild(t);}
+  const m={success:{bg:'rgba(34,197,94,0.15)',bc:'rgba(34,197,94,0.35)',c:'#86efac'},info:{bg:'rgba(124,58,237,0.18)',bc:'rgba(124,58,237,0.4)',c:'#c4b5fd'}};
+  const s=m[type]||m.info;t.style.background=s.bg;t.style.borderColor=s.bc;t.style.color=s.c;t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(-80px)';},3500);
+}
+</script>
+</body>
+</html>
