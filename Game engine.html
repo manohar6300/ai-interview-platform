@@ -1,0 +1,263 @@
+/* ══════════════════════════════════════════════════════════
+   CAREER QUEST — GAME ENGINE
+   Shared by every page. Pure localStorage-backed state.
+   No page should read/write these keys directly — go through
+   the functions here so XP/level/badge logic stays consistent.
+══════════════════════════════════════════════════════════ */
+(function(window){
+
+  const KEYS = {
+    xp: 'cq_xp',
+    level: 'cq_level',
+    badges: 'cq_badges',
+    streak: 'cq_streak',
+    lastActive: 'cq_last_active',
+    mission: 'cq_daily_mission',
+    missionDate: 'cq_daily_mission_date',
+    path: 'cq_path',          // 'ninja' | 'slayer' | 'pirate'
+    questProgress: 'cq_quest_progress', // highest unlocked level index (1-8)
+  };
+
+  /* ── QUEST LEVELS ── */
+  const LEVELS = [
+    {id:1, name:'Beginner',            icon:'🌱', track:'HR',       desc:'Warm up with easy behavioural questions.'},
+    {id:2, name:'Technical Training',  icon:'⚡', track:'Technical', desc:'Core technical fundamentals.'},
+    {id:3, name:'DSA Battle',          icon:'💥', track:'Technical', desc:'Data structures & algorithms under pressure.'},
+    {id:4, name:'System Design',       icon:'🏗️', track:'Technical', desc:'Architect systems at scale.'},
+    {id:5, name:'Behavioral Training', icon:'🗣️', track:'HR',       desc:'Master the STAR method.'},
+    {id:6, name:'Interview Arena',     icon:'⚔️', track:'Mixed',    desc:'Full mock interview, mixed difficulty.'},
+    {id:7, name:'Boss Interview',      icon:'🐉', track:'Mixed',    desc:'The hardest simulated interview yet.'},
+    {id:8, name:'Job Ready',           icon:'🏆', track:'Mixed',    desc:'Final gauntlet — you are ready.'},
+  ];
+
+  /* ── XP → LEVEL CURVE ──
+     Player Level (not quest level) grows with total XP earned. */
+  function xpForLevel(lvl){
+    if(lvl <= 1) return 0;   // Level 1 starts at 0 XP — this is the floor new users see
+    return Math.round(100 * Math.pow(lvl, 1.55));
+  }
+  function levelFromXP(xp){
+    let lvl = 1;
+    while(xp >= xpForLevel(lvl+1) && lvl < 50){ lvl++; }
+    return lvl;
+  }
+
+  /* ── BADGES ── */
+  const BADGE_DEFS = [
+    {id:'first_blood',   name:'First Steps',       icon:'👣', desc:'Complete your first interview.'},
+    {id:'streak_3',      name:'Warming Up',        icon:'🔥', desc:'Reach a 3-day streak.'},
+    {id:'streak_7',      name:'On Fire',           icon:'🔥', desc:'Reach a 7-day streak.'},
+    {id:'high_scorer',   name:'Sharp Shooter',     icon:'🎯', desc:'Score 85% or higher in an interview.'},
+    {id:'perfectionist', name:'Perfectionist',     icon:'💎', desc:'Score 95% or higher in an interview.'},
+    {id:'dsa_slayer',    name:'DSA Slayer',        icon:'⚔️', desc:'Clear the DSA Battle quest.'},
+    {id:'system_architect', name:'System Architect', icon:'🏗️', desc:'Clear the System Design quest.'},
+    {id:'boss_slayer',   name:'Boss Slayer',       icon:'🐉', desc:'Defeat the Boss Interview.'},
+    {id:'job_ready',     name:'Job Ready',         icon:'🏆', desc:'Complete every quest level.'},
+    {id:'resume_master', name:'Resume Master',     icon:'📄', desc:'Run a resume analysis.'},
+    {id:'ten_interviews',name:'Dedicated Trainee', icon:'📈', desc:'Complete 10 interviews total.'},
+  ];
+
+  /* ── DAILY MISSIONS (rotated by day-of-year) ── */
+  const MISSION_POOL = [
+    {id:'m1', text:'Complete 1 interview today',      xp:50,  check:(s)=>s.interviewsToday>=1},
+    {id:'m2', text:'Score 70% or higher in a session', xp:60,  check:(s)=>s.bestScoreToday>=70},
+    {id:'m3', text:'Practice a Technical question set',xp:40,  check:(s)=>s.typesToday.includes('Technical')},
+    {id:'m4', text:'Run a Resume Analysis',            xp:35,  check:(s)=>s.resumeToday},
+    {id:'m5', text:'Keep your streak alive',           xp:30,  check:(s)=>s.streakTouchedToday},
+  ];
+
+  function todayStr(){ return new Date().toDateString(); }
+  function dayOfYear(){
+    const now = new Date();
+    const start = new Date(now.getFullYear(),0,0);
+    return Math.floor((now - start) / 86400000);
+  }
+
+  function getState(){
+    return {
+      xp: parseInt(localStorage.getItem(KEYS.xp) || '0'),
+      badges: JSON.parse(localStorage.getItem(KEYS.badges) || '[]'),
+      streak: parseInt(localStorage.getItem(KEYS.streak) || '0'),
+      lastActive: localStorage.getItem(KEYS.lastActive) || '',
+      questProgress: parseInt(localStorage.getItem(KEYS.questProgress) || '1'),
+      path: localStorage.getItem(KEYS.path) || '',
+    };
+  }
+
+  /* ── STREAK ── touch once per calendar day ── */
+  function touchStreak(){
+    const last = localStorage.getItem(KEYS.lastActive);
+    const today = todayStr();
+    if(last === today) return { changed:false, streak: parseInt(localStorage.getItem(KEYS.streak)||'0') };
+    let streak = parseInt(localStorage.getItem(KEYS.streak) || '0');
+    if(last){
+      const lastDate = new Date(last);
+      const diffDays = Math.round((new Date(today) - lastDate) / 86400000);
+      streak = diffDays === 1 ? streak + 1 : 1;
+    } else {
+      streak = 1;
+    }
+    localStorage.setItem(KEYS.streak, String(streak));
+    localStorage.setItem(KEYS.lastActive, today);
+    return { changed:true, streak };
+  }
+
+  /* ── XP / LEVEL ── */
+  function addXP(amount){
+    const before = parseInt(localStorage.getItem(KEYS.xp) || '0');
+    const after = before + amount;
+    localStorage.setItem(KEYS.xp, String(after));
+    const lvlBefore = levelFromXP(before);
+    const lvlAfter  = levelFromXP(after);
+    return {
+      before, after, gained: amount,
+      levelBefore: lvlBefore, levelAfter: lvlAfter,
+      leveledUp: lvlAfter > lvlBefore,
+    };
+  }
+
+  function xpProgress(xp){
+    const lvl = levelFromXP(xp);
+    const cur = xpForLevel(lvl);
+    const next = xpForLevel(lvl+1);
+    const pct = Math.min(100, Math.round(((xp - cur) / (next - cur)) * 100));
+    return { level: lvl, xp, curFloor: cur, nextCeil: next, pct };
+  }
+
+  /* ── BADGES ── */
+  function unlockBadge(id){
+    const badges = JSON.parse(localStorage.getItem(KEYS.badges) || '[]');
+    if(badges.includes(id)) return { newly:false, id };
+    badges.push(id);
+    localStorage.setItem(KEYS.badges, JSON.stringify(badges));
+    return { newly:true, id, def: BADGE_DEFS.find(b=>b.id===id) };
+  }
+
+  function hasBadge(id){
+    const badges = JSON.parse(localStorage.getItem(KEYS.badges) || '[]');
+    return badges.includes(id);
+  }
+
+  /* ── QUEST PROGRESS ── */
+  function unlockNextLevel(currentLevelId){
+    const progress = parseInt(localStorage.getItem(KEYS.questProgress) || '1');
+    if(currentLevelId >= progress && currentLevelId < 8){
+      localStorage.setItem(KEYS.questProgress, String(currentLevelId + 1));
+      return currentLevelId + 1;
+    }
+    return progress;
+  }
+
+  /* ── DAILY MISSION ── */
+  function getTodayMission(){
+    const today = todayStr();
+    const storedDate = localStorage.getItem(KEYS.missionDate);
+    if(storedDate === today){
+      return JSON.parse(localStorage.getItem(KEYS.mission));
+    }
+    const mission = MISSION_POOL[dayOfYear() % MISSION_POOL.length];
+    localStorage.setItem(KEYS.mission, JSON.stringify(mission));
+    localStorage.setItem(KEYS.missionDate, today);
+    return mission;
+  }
+
+  function getTodayStats(){
+    const interviews = JSON.parse(localStorage.getItem('ai_interviews') || '[]');
+    const today = todayStr();
+    const todays = interviews.filter(iv => new Date(iv.date).toDateString ? false : false); // dates stored as locale strings; fallback below
+    // interview.date is stored via toLocaleDateString() — compare loosely
+    const todaysLoose = interviews.filter(iv => iv.date === new Date().toLocaleDateString());
+    return {
+      interviewsToday: todaysLoose.length,
+      bestScoreToday: todaysLoose.length ? Math.max(...todaysLoose.map(i=>i.score||0)) : 0,
+      typesToday: todaysLoose.map(i=>i.type),
+      resumeToday: localStorage.getItem('resume_analyzed_date') === today,
+      streakTouchedToday: localStorage.getItem(KEYS.lastActive) === today,
+    };
+  }
+
+  // Because MISSION_POOL functions can't survive JSON round-trip, re-map by id when checking.
+  function getTodayMissionWithCheck(){
+    const stored = getTodayMission();
+    const full = MISSION_POOL.find(m=>m.id===stored.id) || stored;
+    const stats = getTodayStats();
+    return { ...full, done: full.check ? full.check(stats) : false };
+  }
+
+  /* ── AI COMPANION MESSAGE ── */
+  function companionMessage(catScores){
+    // catScores: {Technical, Communication, Confidence, 'Problem Solving'} (0-100 each), optional
+    if(!catScores){
+      const p = xpProgress(getState().xp);
+      if(p.level <= 2) return "Every master was once a beginner. Let's start your first quest! 🌱";
+      if(p.pct >= 80) return `So close to Level ${p.level+1}! One more quest should push you over. 🔥`;
+      return "Your journey continues — check today's mission for bonus XP. ⚔️";
+    }
+    const entries = Object.entries(catScores);
+    const weakest = entries.reduce((a,b)=> a[1]<=b[1] ? a : b);
+    const strongest = entries.reduce((a,b)=> a[1]>=b[1] ? a : b);
+    if(strongest[1] - weakest[1] < 10){
+      return `Solid, balanced performance across the board! Keep training every skill evenly. ⚖️`;
+    }
+    return `Your ${strongest[0]} is strong! 💪 Your next mission: sharpen your ${weakest[0]}. 🎯`;
+  }
+
+  /* ── PUBLIC API ── */
+  window.CareerQuest = {
+    KEYS, LEVELS, BADGE_DEFS, MISSION_POOL,
+    xpForLevel, levelFromXP, xpProgress,
+    getState, touchStreak, addXP,
+    unlockBadge, hasBadge,
+    unlockNextLevel,
+    getTodayMission: getTodayMissionWithCheck,
+    getTodayStats,
+    companionMessage,
+
+    /* Call once per page load (after auth guard) to keep streak/mission fresh */
+    init(){
+      touchStreak();
+      getTodayMission();
+    },
+
+    /* Call after an interview/quest completes. Returns a full reward summary. */
+    reward({score, questLevelId, isResume}={}){
+      const result = { xpGained:0, leveledUp:false, levelAfter:null, newBadges:[], questUnlocked:null };
+
+      let xp = 20; // base
+      if(typeof score === 'number'){
+        xp += Math.round(score * 0.6);
+        if(score >= 85) { const r = unlockBadge('high_scorer'); if(r.newly) result.newBadges.push(r.def); }
+        if(score >= 95) { const r = unlockBadge('perfectionist'); if(r.newly) result.newBadges.push(r.def); }
+      }
+      if(isResume){
+        xp = 35;
+        const r = unlockBadge('resume_master'); if(r.newly) result.newBadges.push(r.def);
+        localStorage.setItem('resume_analyzed_date', todayStr());
+      }
+
+      const interviews = JSON.parse(localStorage.getItem('ai_interviews') || '[]');
+      if(interviews.length === 1){ const r = unlockBadge('first_blood'); if(r.newly) result.newBadges.push(r.def); }
+      if(interviews.length >= 10){ const r = unlockBadge('ten_interviews'); if(r.newly) result.newBadges.push(r.def); }
+
+      const streakInfo = touchStreak();
+      if(streakInfo.streak >= 3){ const r = unlockBadge('streak_3'); if(r.newly) result.newBadges.push(r.def); }
+      if(streakInfo.streak >= 7){ const r = unlockBadge('streak_7'); if(r.newly) result.newBadges.push(r.def); }
+
+      if(questLevelId){
+        const unlocked = unlockNextLevel(questLevelId);
+        if(unlocked > questLevelId) result.questUnlocked = unlocked;
+        if(questLevelId === 3){ const r = unlockBadge('dsa_slayer'); if(r.newly) result.newBadges.push(r.def); }
+        if(questLevelId === 4){ const r = unlockBadge('system_architect'); if(r.newly) result.newBadges.push(r.def); }
+        if(questLevelId === 7){ const r = unlockBadge('boss_slayer'); if(r.newly) result.newBadges.push(r.def); }
+        if(questLevelId === 8){ const r = unlockBadge('job_ready'); if(r.newly) result.newBadges.push(r.def); }
+      }
+
+      const xpResult = addXP(xp);
+      result.xpGained = xp;
+      result.leveledUp = xpResult.leveledUp;
+      result.levelAfter = xpResult.levelAfter;
+      return result;
+    }
+  };
+
+})(window);

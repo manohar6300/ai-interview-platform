@@ -1,0 +1,251 @@
+/* ══════════════════════════════════════════════════════════
+   CAREER QUEST — ANIME GAME THEME
+   Layers on top of each page's existing dark/purple CSS.
+   Does not redefine :root, body, or layout — only adds new
+   game-specific components so nothing existing breaks.
+══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Baloo+2:wght@600;700;800&display=swap');
+
+:root{
+  --cq-gold:#fbbf24;
+  --cq-cyan:#22d3ee;
+  --cq-red:#f43f5e;
+  --cq-xp:#a855f7;
+  --cq-glow:0 0 18px rgba(168,85,247,0.55);
+}
+
+.cq-font{ font-family:'Baloo 2','Rajdhani',var(--fh,'Syne'),sans-serif; }
+
+/* ── HUD BAR (top of Dashboard / all game pages) ── */
+.cq-hud{
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  background:linear-gradient(120deg,rgba(124,58,237,0.14),rgba(236,72,153,0.10));
+  border:1px solid rgba(168,85,247,0.35);
+  border-radius:18px; padding:16px 20px; margin-bottom:22px;
+  position:relative; overflow:hidden;
+}
+.cq-hud::before{
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(circle at 15% 30%, rgba(255,255,255,0.08), transparent 40%);
+  pointer-events:none;
+}
+.cq-avatar-ring{
+  width:58px; height:58px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:26px; flex-shrink:0;
+  background:conic-gradient(from 0deg,var(--cq-xp),var(--cq-cyan),var(--cq-gold),var(--cq-xp));
+  padding:3px; box-shadow:var(--cq-glow);
+  animation:cqSpin 6s linear infinite;
+}
+.cq-avatar-ring .inner{
+  width:100%; height:100%; border-radius:50%; background:#0d0b14;
+  display:flex; align-items:center; justify-content:center;
+  animation:cqSpinCounter 6s linear infinite;
+}
+@keyframes cqSpin{ to{ transform:rotate(360deg);} }
+@keyframes cqSpinCounter{ to{ transform:rotate(-360deg);} }
+
+.cq-level-block{ flex:1; min-width:180px; }
+.cq-level-label{
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:15px;
+  color:#fff; display:flex; align-items:center; gap:8px; margin-bottom:6px;
+}
+.cq-level-pill{
+  background:linear-gradient(105deg,var(--purple,#7c3aed),var(--pink,#ec4899));
+  padding:2px 10px; border-radius:20px; font-size:12px; font-weight:800;
+}
+.cq-xp-track{ height:10px; border-radius:6px; background:rgba(255,255,255,0.08); overflow:hidden; position:relative; }
+.cq-xp-fill{
+  height:100%; border-radius:6px;
+  background:linear-gradient(90deg,var(--cq-xp),var(--cq-cyan));
+  transition:width 1s cubic-bezier(.34,1.2,.64,1);
+  position:relative; overflow:hidden;
+}
+.cq-xp-fill::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.5) 50%,transparent 70%);
+  animation:cqShimmer 2.4s ease-in-out infinite;
+}
+@keyframes cqShimmer{ 0%{transform:translateX(-100%);} 100%{transform:translateX(100%);} }
+.cq-xp-text{ font-size:11px; color:var(--muted,rgba(255,255,255,.5)); margin-top:4px; }
+
+.cq-streak{
+  display:flex; align-items:center; gap:6px; font-weight:800; font-family:'Baloo 2',sans-serif;
+  background:rgba(244,63,94,0.12); border:1px solid rgba(244,63,94,0.35);
+  padding:8px 14px; border-radius:14px; font-size:15px; color:#fca5a5;
+  flex-shrink:0;
+}
+.cq-streak .flame{ animation:cqFlicker 1.4s ease-in-out infinite; }
+@keyframes cqFlicker{ 0%,100%{transform:scale(1) rotate(-2deg);} 50%{transform:scale(1.15) rotate(2deg);} }
+
+/* ── DAILY MISSION CARD ── */
+.cq-mission{
+  background:linear-gradient(120deg,rgba(251,191,36,0.10),rgba(124,58,237,0.08));
+  border:1px solid rgba(251,191,36,0.3); border-radius:16px; padding:16px 18px;
+  display:flex; align-items:center; gap:14px; margin-bottom:22px;
+}
+.cq-mission-badge{
+  width:40px; height:40px; border-radius:10px; flex-shrink:0;
+  background:linear-gradient(135deg,var(--cq-gold),#f97316);
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  box-shadow:0 0 16px rgba(251,191,36,0.5);
+}
+.cq-mission-text{ flex:1; }
+.cq-mission-title{ font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--cq-gold); font-weight:700; margin-bottom:2px; }
+.cq-mission-desc{ font-size:14px; font-weight:600; color:#fff; }
+.cq-mission-xp{
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:13px;
+  color:var(--cq-gold); background:rgba(251,191,36,0.12);
+  padding:6px 12px; border-radius:10px; flex-shrink:0; white-space:nowrap;
+}
+.cq-mission.done{ border-color:rgba(34,197,94,0.4); }
+.cq-mission.done .cq-mission-badge{ background:linear-gradient(135deg,#22c55e,#16a34a); box-shadow:0 0 16px rgba(34,197,94,0.5); }
+.cq-mission.done .cq-mission-xp{ color:#86efac; background:rgba(34,197,94,0.12); }
+
+/* ── BADGE CHIP / GRID ── */
+.cq-badge-strip{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
+.cq-badge{
+  width:56px; height:56px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  font-size:24px; background:rgba(255,255,255,0.04); border:1px solid var(--border,rgba(255,255,255,0.08));
+  position:relative; cursor:default; transition:transform .2s;
+}
+.cq-badge.unlocked{
+  background:linear-gradient(135deg,rgba(168,85,247,0.25),rgba(236,72,153,0.2));
+  border-color:rgba(168,85,247,0.5); box-shadow:0 0 14px rgba(168,85,247,0.35);
+}
+.cq-badge.locked{ filter:grayscale(1) opacity(0.35); }
+.cq-badge:hover{ transform:translateY(-3px); }
+.cq-badge-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:14px; }
+.cq-badge-card{
+  background:rgba(255,255,255,0.03); border:1px solid var(--border,rgba(255,255,255,0.08));
+  border-radius:16px; padding:18px 14px; text-align:center; transition:transform .2s;
+}
+.cq-badge-card.unlocked{ border-color:rgba(168,85,247,0.4); background:linear-gradient(160deg,rgba(168,85,247,0.1),rgba(236,72,153,0.06)); }
+.cq-badge-card:hover{ transform:translateY(-4px); }
+.cq-badge-card .icon{ font-size:34px; margin-bottom:8px; }
+.cq-badge-card.locked .icon{ filter:grayscale(1) opacity(0.3); }
+.cq-badge-card .name{ font-weight:700; font-size:13px; margin-bottom:4px; }
+.cq-badge-card .desc{ font-size:11px; color:var(--muted,rgba(255,255,255,.5)); line-height:1.4; }
+
+/* ── AI COMPANION ── */
+.cq-companion{
+  display:flex; gap:14px; align-items:flex-start;
+  background:rgba(34,211,238,0.06); border:1px solid rgba(34,211,238,0.3);
+  border-radius:16px; padding:16px 18px; margin-bottom:22px;
+}
+.cq-companion-avatar{
+  width:46px; height:46px; border-radius:50%; flex-shrink:0;
+  background:radial-gradient(circle at 35% 30%,#7dd3fc,#0891b2);
+  display:flex; align-items:center; justify-content:center; font-size:22px;
+  box-shadow:0 0 16px rgba(34,211,238,0.5); animation:cqBob 2.6s ease-in-out infinite;
+}
+@keyframes cqBob{ 0%,100%{transform:translateY(0);} 50%{transform:translateY(-4px);} }
+.cq-companion-bubble{
+  flex:1; background:rgba(255,255,255,0.04); border-radius:12px 12px 12px 2px;
+  padding:12px 14px; font-size:13.5px; line-height:1.55; color:#e0f2fe; position:relative;
+}
+.cq-companion-name{ font-size:11px; font-weight:800; letter-spacing:0.5px; color:var(--cq-cyan); margin-bottom:4px; text-transform:uppercase; }
+
+/* ── QUEST MAP ── */
+.cq-map{ display:flex; flex-direction:column; gap:0; position:relative; }
+.cq-node{
+  display:flex; align-items:center; gap:16px; padding:16px 18px; border-radius:16px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border,rgba(255,255,255,0.08));
+  margin-bottom:14px; position:relative; transition:transform .2s;
+  cursor:pointer;
+}
+.cq-node:hover{ transform:translateX(4px); }
+.cq-node.locked{ opacity:0.45; cursor:not-allowed; }
+.cq-node.locked:hover{ transform:none; }
+.cq-node.current{
+  border-color:rgba(251,191,36,0.6); background:linear-gradient(120deg,rgba(251,191,36,0.1),rgba(124,58,237,0.08));
+  box-shadow:0 0 22px rgba(251,191,36,0.25);
+}
+.cq-node.done{ border-color:rgba(34,197,94,0.4); }
+.cq-node-icon{
+  width:52px; height:52px; border-radius:14px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:26px;
+  background:rgba(124,58,237,0.15); border:1px solid rgba(124,58,237,0.3);
+}
+.cq-node.done .cq-node-icon{ background:rgba(34,197,94,0.15); border-color:rgba(34,197,94,0.4); }
+.cq-node.current .cq-node-icon{ background:rgba(251,191,36,0.18); border-color:rgba(251,191,36,0.5); animation:cqPulse 1.6s ease-in-out infinite; }
+@keyframes cqPulse{ 0%,100%{box-shadow:0 0 0 rgba(251,191,36,0);} 50%{box-shadow:0 0 18px rgba(251,191,36,0.5);} }
+.cq-node-info{ flex:1; min-width:0; }
+.cq-node-level{ font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted,rgba(255,255,255,.4)); font-weight:700; }
+.cq-node-name{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:16px; color:#fff; }
+.cq-node-desc{ font-size:12px; color:var(--muted,rgba(255,255,255,.5)); margin-top:2px; }
+.cq-node-status{ font-size:11px; font-weight:800; padding:6px 12px; border-radius:10px; flex-shrink:0; white-space:nowrap; }
+.cq-node-status.done{ background:rgba(34,197,94,0.15); color:#86efac; }
+.cq-node-status.current{ background:rgba(251,191,36,0.18); color:var(--cq-gold); }
+.cq-node-status.locked{ background:rgba(255,255,255,0.06); color:var(--muted,rgba(255,255,255,.4)); }
+.cq-connector{ width:2px; height:14px; background:rgba(255,255,255,0.1); margin-left:44px; margin-top:-14px; margin-bottom:0; }
+
+/* ── LEVEL UP MODAL ── */
+.cq-levelup-overlay{
+  position:fixed; inset:0; z-index:9999; display:none;
+  align-items:center; justify-content:center;
+  background:rgba(5,4,10,0.82); backdrop-filter:blur(6px);
+}
+.cq-levelup-overlay.show{ display:flex; animation:cqFadeIn .3s ease; }
+@keyframes cqFadeIn{ from{opacity:0;} to{opacity:1;} }
+.cq-levelup-card{
+  text-align:center; position:relative;
+  animation:cqPop .55s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes cqPop{ 0%{transform:scale(0.4) rotate(-8deg); opacity:0;} 60%{transform:scale(1.08) rotate(2deg);} 100%{transform:scale(1) rotate(0); opacity:1;} }
+.cq-levelup-burst{
+  width:180px; height:180px; border-radius:50%; margin:0 auto 18px;
+  background:conic-gradient(from 0deg,var(--cq-gold),var(--cq-xp),var(--cq-cyan),var(--cq-gold));
+  display:flex; align-items:center; justify-content:center; position:relative;
+  animation:cqSpin 3s linear infinite; box-shadow:0 0 60px rgba(251,191,36,0.5);
+}
+.cq-levelup-burst .num{
+  width:88%; height:88%; border-radius:50%; background:#0d0b14;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:44px; color:#fff;
+  animation:cqSpinCounter 3s linear infinite;
+}
+.cq-levelup-title{
+  font-family:'Baloo 2',sans-serif; font-weight:800; font-size:34px;
+  background:linear-gradient(105deg,var(--cq-gold),var(--pink,#ec4899));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  margin-bottom:8px; letter-spacing:1px;
+}
+.cq-levelup-sub{ color:#e5e7eb; font-size:14px; margin-bottom:22px; }
+.cq-levelup-close{
+  background:linear-gradient(105deg,#7c3aed,#ec4899); border:none; color:#fff;
+  font-weight:800; padding:12px 32px; border-radius:12px; cursor:pointer; font-size:14px;
+  box-shadow:0 4px 24px rgba(124,58,237,0.5);
+}
+
+/* ── BADGE UNLOCK TOAST ── */
+.cq-badge-toast{
+  position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-100px);
+  z-index:9998; display:flex; align-items:center; gap:12px;
+  background:linear-gradient(120deg,rgba(168,85,247,0.95),rgba(236,72,153,0.9));
+  padding:12px 20px; border-radius:14px; box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  opacity:0; transition:all .4s cubic-bezier(.34,1.2,.64,1);
+}
+.cq-badge-toast.show{ transform:translateX(-50%) translateY(0); opacity:1; }
+.cq-badge-toast .icon{ font-size:26px; }
+.cq-badge-toast .label{ font-size:10px; text-transform:uppercase; letter-spacing:1px; opacity:.85; }
+.cq-badge-toast .name{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:14px; }
+
+/* ── PATH SELECT (ninja / slayer / pirate flavor, original characters) ── */
+.cq-path-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+.cq-path-card{
+  border-radius:16px; padding:20px 16px; text-align:center; cursor:pointer;
+  border:1px solid var(--border,rgba(255,255,255,0.08)); background:rgba(255,255,255,0.03);
+  transition:transform .2s;
+}
+.cq-path-card:hover{ transform:translateY(-4px); }
+.cq-path-card.selected{ border-color:rgba(251,191,36,0.6); box-shadow:0 0 20px rgba(251,191,36,0.25); }
+.cq-path-card .avatar{ font-size:44px; margin-bottom:10px; }
+.cq-path-card .name{ font-family:'Baloo 2',sans-serif; font-weight:800; font-size:15px; margin-bottom:4px; }
+.cq-path-card .tag{ font-size:11px; color:var(--muted,rgba(255,255,255,.5)); }
+
+@media(max-width:640px){
+  .cq-hud{ flex-direction:column; align-items:stretch; }
+  .cq-node{ flex-wrap:wrap; }
+}

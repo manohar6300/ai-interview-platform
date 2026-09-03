@@ -1,0 +1,81 @@
+/* ══════════════════════════════════════════════════════════
+   CAREER QUEST — UI HELPERS
+   Injects and controls the Level-Up overlay + Badge toast.
+   Include after game-engine.js on any page that can trigger
+   a reward (session end, resume analysis, etc).
+══════════════════════════════════════════════════════════ */
+(function(window){
+
+  function ensureDom(){
+    if(!document.getElementById('cq-levelup-overlay')){
+      const overlay = document.createElement('div');
+      overlay.id = 'cq-levelup-overlay';
+      overlay.className = 'cq-levelup-overlay';
+      overlay.innerHTML = `
+        <div class="cq-levelup-card">
+          <div class="cq-levelup-burst"><div class="num" id="cq-levelup-num">1</div></div>
+          <div class="cq-levelup-title">LEVEL UP!</div>
+          <div class="cq-levelup-sub" id="cq-levelup-sub">You've grown stronger.</div>
+          <button class="cq-levelup-close" onclick="CareerQuestUI.closeLevelUp()">Continue Quest →</button>
+        </div>`;
+      document.body.appendChild(overlay);
+    }
+    if(!document.getElementById('cq-badge-toast')){
+      const toast = document.createElement('div');
+      toast.id = 'cq-badge-toast';
+      toast.className = 'cq-badge-toast';
+      toast.innerHTML = `
+        <div class="icon" id="cq-badge-toast-icon">🏅</div>
+        <div>
+          <div class="label">Badge Unlocked</div>
+          <div class="name" id="cq-badge-toast-name">—</div>
+        </div>`;
+      document.body.appendChild(toast);
+    }
+  }
+
+  function showLevelUp(level){
+    ensureDom();
+    document.getElementById('cq-levelup-num').textContent = level;
+    document.getElementById('cq-levelup-sub').textContent = `You reached Level ${level}! New content unlocked.`;
+    document.getElementById('cq-levelup-overlay').classList.add('show');
+  }
+
+  function closeLevelUp(){
+    const el = document.getElementById('cq-levelup-overlay');
+    if(el) el.classList.remove('show');
+  }
+
+  let toastQueue = [];
+  let toastShowing = false;
+  function showBadgeToast(badgeDef){
+    if(!badgeDef) return;
+    toastQueue.push(badgeDef);
+    if(!toastShowing) drainQueue();
+  }
+  function drainQueue(){
+    if(toastQueue.length === 0){ toastShowing = false; return; }
+    toastShowing = true;
+    ensureDom();
+    const badge = toastQueue.shift();
+    document.getElementById('cq-badge-toast-icon').textContent = badge.icon;
+    document.getElementById('cq-badge-toast-name').textContent = badge.name;
+    const t = document.getElementById('cq-badge-toast');
+    t.classList.add('show');
+    setTimeout(()=>{
+      t.classList.remove('show');
+      setTimeout(drainQueue, 400);
+    }, 2600);
+  }
+
+  /* Convenience: play a full reward sequence (badges first, then level-up if any) */
+  function playReward(rewardResult){
+    (rewardResult.newBadges || []).forEach(b => showBadgeToast(b));
+    if(rewardResult.leveledUp){
+      setTimeout(()=> showLevelUp(rewardResult.levelAfter), (rewardResult.newBadges||[]).length * 3000 + 300);
+    }
+  }
+
+  window.CareerQuestUI = { showLevelUp, closeLevelUp, showBadgeToast, playReward, ensureDom };
+
+})(window);
