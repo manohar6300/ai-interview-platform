@@ -1,861 +1,2298 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>InterviewAI — Dashboard</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InterviewAI — Anime Career Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
 :root{
-  --bg:#060608;
-  --card:rgba(255,255,255,0.035);
-  --border:rgba(255,255,255,0.08);
-  --purple:#7c3aed;
-  --pink:#ec4899;
-  --muted:rgba(255,255,255,0.42);
-  --fh:'Syne',sans-serif;
-  --f:'Inter',sans-serif;
+    --bg:#050712;
+    --bg2:#0a0d1d;
+    --panel:rgba(15,18,40,.78);
+    --panel2:rgba(19,23,50,.9);
+    --border:rgba(255,255,255,.09);
+    --purple:#8b5cf6;
+    --violet:#a855f7;
+    --pink:#ec4899;
+    --blue:#38bdf8;
+    --cyan:#22d3ee;
+    --green:#34d399;
+    --yellow:#fbbf24;
+    --red:#fb7185;
+    --white:#f8fafc;
+    --muted:#8f98b8;
+    --font:'Inter',sans-serif;
+    --head:'Syne',sans-serif;
 }
-html,body{height:100%;font-family:var(--f);background:var(--bg);color:#fff;overflow-x:hidden;}
 
-/* ── AURORA BG ── */
-.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
-.ab{position:absolute;border-radius:50%;}
-.ab1{width:700px;height:700px;top:-200px;left:-150px;
-  background:radial-gradient(circle,rgba(124,58,237,0.18) 0%,transparent 65%);
-  animation:ab1 18s ease-in-out infinite alternate;}
-.ab2{width:600px;height:600px;bottom:-200px;right:-100px;
-  background:radial-gradient(circle,rgba(236,72,153,0.12) 0%,transparent 65%);
-  animation:ab2 22s ease-in-out infinite alternate;}
-@keyframes ab1{from{transform:translate(0,0);}to{transform:translate(60px,40px) scale(1.1);}}
-@keyframes ab2{from{transform:translate(0,0);}to{transform:translate(-50px,-30px) scale(1.1);}}
-.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.3;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  background-size:160px;}
+html{
+    scroll-behavior:smooth;
+}
 
-/* ── LAYOUT ── */
-.layout{display:flex;min-height:100vh;position:relative;z-index:1;}
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 15% 10%,rgba(124,58,237,.18),transparent 30%),
+        radial-gradient(circle at 85% 25%,rgba(236,72,153,.12),transparent 30%),
+        radial-gradient(circle at 50% 100%,rgba(37,99,235,.12),transparent 35%),
+        var(--bg);
+    color:var(--white);
+    font-family:var(--font);
+}
 
-/* ── SIDEBAR ── */
+button,
+a{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+a{
+    color:inherit;
+    text-decoration:none;
+}
+
+/* =====================================================
+   LAYOUT
+===================================================== */
+
+.layout{
+    min-height:100vh;
+}
+
 .sidebar{
-  width:240px;flex-shrink:0;
-  background:rgba(8,7,16,0.95);
-  border-right:1px solid var(--border);
-  padding:24px 16px;
-  display:flex;flex-direction:column;gap:4px;
-  position:fixed;top:0;left:0;bottom:0;
-  z-index:50;backdrop-filter:blur(24px);
-  overflow-y:auto;
-}
-.sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px;padding:4px 8px;}
-.gem{width:36px;height:36px;border-radius:9px;
-  background:linear-gradient(135deg,#7c3aed,#db2777);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 20px rgba(124,58,237,0.5);flex-shrink:0;}
-.gem svg{width:20px;height:20px;}
-.brand{font-family:var(--fh);font-size:16px;font-weight:800;color:#fff;}
-.brand-tag{font-size:8px;font-weight:600;letter-spacing:2px;color:#a78bfa;text-transform:uppercase;margin-top:1px;}
-
-.nav-label{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:rgba(255,255,255,0.2);padding:14px 12px 6px;margin-top:4px;}
-.nav-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:10px;
-  font-size:13px;font-weight:500;
-  color:rgba(255,255,255,0.5);
-  cursor:pointer;transition:all 0.2s;
-  text-decoration:none;border:1px solid transparent;
-}
-.nav-item:hover{color:#fff;background:rgba(255,255,255,0.05);}
-.nav-item.active{
-  color:#c084fc;
-  background:rgba(124,58,237,0.15);
-  border-color:rgba(124,58,237,0.25);
-}
-.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
-
-.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);}
-.user-pill{
-  display:flex;align-items:center;gap:10px;
-  padding:12px;border-radius:12px;
-  background:rgba(255,255,255,0.03);
-  border:1px solid var(--border);
-}
-.uav{
-  width:34px;height:34px;border-radius:50%;
-  background:linear-gradient(135deg,#7c3aed,#db2777);
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:800;color:#fff;flex-shrink:0;
-  box-shadow:0 0 12px rgba(124,58,237,0.4);
-}
-.uname{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px;}
-.urole{font-size:10px;color:var(--muted);margin-top:1px;}
-.logout-btn{
-  background:none;border:none;color:rgba(255,255,255,0.28);
-  cursor:pointer;font-size:16px;margin-left:auto;
-  transition:color 0.2s;flex-shrink:0;padding:4px;
-}
-.logout-btn:hover{color:#f472b6;}
-
-/* ── MAIN AREA ── */
-.main{
-  margin-left:240px;
-  padding:32px 32px 48px;
-  min-height:100vh;
-  flex:1;
-  max-width:calc(100vw - 240px);
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    width:245px;
+    padding:24px 16px;
+    background:rgba(5,7,18,.92);
+    border-right:1px solid var(--border);
+    backdrop-filter:blur(25px);
+    z-index:100;
+    display:flex;
+    flex-direction:column;
 }
 
-/* ── TOP BAR ── */
-.topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:32px;gap:16px;flex-wrap:wrap;
-}
-.topbar-title{font-family:var(--fh);font-size:24px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;}
-.topbar-sub{font-size:13px;color:var(--muted);margin-top:4px;}
-.topbar-right{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.streak-pill{
-  display:flex;align-items:center;gap:8px;
-  background:rgba(245,158,11,0.1);
-  border:1px solid rgba(245,158,11,0.28);
-  border-radius:12px;padding:8px 14px;
-}
-.streak-fire{font-size:18px;}
-.streak-num{font-size:16px;font-weight:800;color:#fbbf24;line-height:1;}
-.streak-lbl{font-size:10px;color:rgba(255,255,255,0.4);margin-top:1px;}
-.start-btn{
-  display:flex;align-items:center;gap:7px;
-  font-size:13px;font-weight:700;color:#fff;
-  background:linear-gradient(105deg,#7c3aed,#a855f7 50%,#ec4899);
-  border:none;border-radius:10px;padding:10px 20px;
-  cursor:pointer;font-family:var(--f);
-  position:relative;overflow:hidden;
-  box-shadow:0 0 22px rgba(124,58,237,0.4);
-  transition:transform 0.15s,box-shadow 0.2s;
-  white-space:nowrap;
-}
-.start-btn:hover{transform:translateY(-1px);box-shadow:0 0 32px rgba(124,58,237,0.55);}
-.btn-glint{position:absolute;top:0;left:-110%;width:60%;height:100%;
-  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.22) 50%,transparent 70%);
-  animation:glint 4s ease-in-out infinite;}
-@keyframes glint{0%{left:-110%;}40%{left:120%;}100%{left:120%;}}
-
-/* ── STAT CARDS ── */
-.stats-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px;
-  margin-bottom:24px;
-}
-.stat-card{
-  border-radius:16px;
-  border:1px solid var(--border);
-  background:var(--card);
-  padding:20px 18px;
-  display:flex;flex-direction:column;gap:8px;
-  position:relative;overflow:hidden;
-  transition:border-color 0.3s,transform 0.2s;
-  min-width:0;
-}
-.stat-card:hover{border-color:rgba(124,58,237,0.35);transform:translateY(-2px);}
-.stat-card::after{
-  content:'';position:absolute;top:-20px;right:-20px;
-  width:70px;height:70px;border-radius:50%;opacity:0.35;
-}
-.sc1::after{background:radial-gradient(circle,rgba(124,58,237,0.8),transparent 70%);}
-.sc2::after{background:radial-gradient(circle,rgba(236,72,153,0.8),transparent 70%);}
-.sc3::after{background:radial-gradient(circle,rgba(245,158,11,0.8),transparent 70%);}
-.sc4::after{background:radial-gradient(circle,rgba(16,185,129,0.8),transparent 70%);}
-.stat-icon{font-size:20px;line-height:1;}
-.stat-value{
-  font-family:var(--fh);font-size:30px;font-weight:800;
-  letter-spacing:-1px;line-height:1;
-  background:linear-gradient(90deg,#c084fc,#f472b6);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-.stat-label{font-size:12px;color:var(--muted);font-weight:500;line-height:1.3;}
-.stat-trend{font-size:11px;font-weight:600;color:#34d399;}
-
-/* ── TWO COL ── */
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
-.three-col{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-bottom:24px;}
-
-/* ── CARD ── */
-.card{
-  border-radius:18px;
-  border:1px solid var(--border);
-  background:var(--card);
-  padding:22px;
-  min-width:0;
-}
-.card-header{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:18px;
-}
-.card-title{font-family:var(--fh);font-size:15px;font-weight:700;color:#fff;}
-.card-badge{
-  font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;
-  color:#a78bfa;background:rgba(124,58,237,0.12);
-  border:1px solid rgba(124,58,237,0.25);border-radius:20px;padding:3px 10px;
-  white-space:nowrap;
-}
-
-/* ── QUICK ACTIONS ── */
-.qa-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.qa-btn{
-  border-radius:12px;
-  border:1px solid var(--border);
-  background:rgba(255,255,255,0.02);
-  padding:16px 14px;
-  cursor:pointer;transition:all 0.22s;
-  text-align:left;display:flex;flex-direction:column;gap:6px;
-}
-.qa-btn:hover{
-  border-color:rgba(124,58,237,0.4);
-  background:rgba(124,58,237,0.07);
-  transform:translateY(-2px);
-  box-shadow:0 6px 20px rgba(0,0,0,0.3);
-}
-.qa-btn.primary{border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.08);}
-.qa-btn.primary:hover{border-color:rgba(124,58,237,0.55);background:rgba(124,58,237,0.14);}
-.qa-icon{font-size:22px;line-height:1;}
-.qa-title{font-size:13px;font-weight:700;color:#fff;line-height:1.3;}
-.qa-desc{font-size:11px;color:var(--muted);line-height:1.4;}
-
-/* ── READINESS GAUGE ── */
-.gauge-center{
-  display:flex;flex-direction:column;align-items:center;
-  margin-bottom:18px;position:relative;
-}
-.gauge-svg{width:130px;height:130px;}
-.gauge-text{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  text-align:center;
-}
-.gauge-pct{
-  font-family:var(--fh);font-size:30px;font-weight:800;letter-spacing:-1px;
-  background:linear-gradient(90deg,#c084fc,#f472b6);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;line-height:1;
-}
-.gauge-sub{font-size:10px;color:var(--muted);margin-top:2px;}
-
-/* ── PROGRESS BARS ── */
-.pb-list{display:flex;flex-direction:column;gap:10px;}
-.pb-row{display:flex;flex-direction:column;gap:4px;}
-.pb-top{display:flex;justify-content:space-between;align-items:center;}
-.pb-label{font-size:12px;color:rgba(255,255,255,0.65);}
-.pb-val{font-size:12px;font-weight:700;color:#c084fc;}
-.pb-track{height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
-.pb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#7c3aed,#ec4899);
-  transition:width 1.3s cubic-bezier(.34,1.2,.64,1);}
-
-/* ── INTERVIEW LIST ── */
-.interview-list{display:flex;flex-direction:column;gap:8px;}
-.empty-state{
-  text-align:center;padding:32px 16px;
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-}
-.empty-icon{font-size:36px;}
-.empty-title{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5);}
-.empty-desc{font-size:12px;color:var(--muted);}
-.empty-btn{
-  background:linear-gradient(105deg,#7c3aed,#ec4899);
-  border:none;border-radius:10px;color:#fff;
-  font-size:13px;font-weight:700;padding:10px 20px;
-  cursor:pointer;font-family:var(--f);
-  margin-top:4px;transition:transform 0.15s;
-}
-.empty-btn:hover{transform:translateY(-1px);}
-
-.int-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 14px;border-radius:12px;
-  border:1px solid rgba(255,255,255,0.05);
-  background:rgba(255,255,255,0.02);
-  transition:all 0.2s;cursor:pointer;
-  min-width:0;
-}
-.int-item:hover{border-color:rgba(124,58,237,0.25);background:rgba(124,58,237,0.05);}
-.int-icon{
-  width:38px;height:38px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:16px;flex-shrink:0;
-}
-.int-info{flex:1;min-width:0;}
-.int-title{font-size:13px;font-weight:600;color:#fff;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.int-meta{font-size:11px;color:var(--muted);margin-top:2px;}
-.score-chip{
-  width:42px;height:42px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;flex-shrink:0;
-}
-.sc-green{background:rgba(34,197,94,0.12);border:2px solid rgba(34,197,94,0.3);color:#34d399;}
-.sc-yellow{background:rgba(245,158,11,0.12);border:2px solid rgba(245,158,11,0.3);color:#fbbf24;}
-.sc-red{background:rgba(239,68,68,0.12);border:2px solid rgba(239,68,68,0.3);color:#f87171;}
-
-/* ── GOALS LIST ── */
-.goal-list{display:flex;flex-direction:column;gap:8px;margin-top:18px;}
-.goal-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 12px;border-radius:10px;
-  background:rgba(255,255,255,0.02);
-  border:1px solid rgba(255,255,255,0.05);
-}
-.goal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.goal-info{flex:1;min-width:0;}
-.goal-title{font-size:12px;font-weight:600;color:#fff;}
-.goal-sub{font-size:10px;color:var(--muted);margin-top:1px;}
-.goal-badge{
-  font-size:9px;font-weight:700;letter-spacing:0.5px;
-  text-transform:uppercase;border-radius:6px;padding:3px 8px;
-  white-space:nowrap;flex-shrink:0;
-}
-
-/* ── MOBILE ── */
-.mobile-bar{display:none;}
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:49;backdrop-filter:blur(2px);}
-.overlay.show{display:block;}
-
-@media(max-width:1100px){
-  .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .three-col{grid-template-columns:1fr;}
-}
-@media(max-width:860px){
-  .two-col{grid-template-columns:1fr;}
-  .three-col{grid-template-columns:1fr;}
-}
-@media(max-width:720px){
-  .sidebar{transform:translateX(-100%);transition:transform 0.3s;}
-  .sidebar.open{transform:translateX(0);}
-  .main{margin-left:0;padding:16px;}
-  .mobile-bar{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:14px 16px;background:rgba(8,7,16,0.95);
+.logo{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:4px 8px 20px;
     border-bottom:1px solid var(--border);
-    position:sticky;top:0;z-index:40;backdrop-filter:blur(20px);
-    margin:-16px -16px 20px;
-  }
-  .menu-btn{
-    background:none;border:1px solid var(--border);
-    border-radius:8px;color:#fff;padding:7px 10px;cursor:pointer;font-size:16px;
-  }
-  .stats-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+    margin-bottom:18px;
 }
 
-/* ── TOAST ── */
+.logo-icon{
+    width:39px;
+    height:39px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#7c3aed,#ec4899);
+    box-shadow:0 0 25px rgba(139,92,246,.45);
+    font-size:20px;
+}
+
+.logo-title{
+    font-family:var(--head);
+    font-size:17px;
+    font-weight:800;
+}
+
+.logo-sub{
+    font-size:8px;
+    letter-spacing:2px;
+    color:#b794f4;
+    margin-top:2px;
+}
+
+.section-label{
+    color:#626b8b;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    padding:15px 12px 7px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.nav a{
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:11px 12px;
+    border-radius:11px;
+    color:#9299b6;
+    font-size:13px;
+    transition:.2s;
+}
+
+.nav a:hover{
+    color:white;
+    background:rgba(255,255,255,.05);
+    transform:translateX(2px);
+}
+
+.nav a.active{
+    color:#ddd0ff;
+    background:linear-gradient(90deg,rgba(124,58,237,.27),rgba(124,58,237,.06));
+    border:1px solid rgba(139,92,246,.25);
+}
+
+.nav-icon{
+    width:20px;
+    text-align:center;
+    font-size:16px;
+}
+
+.profile{
+    margin-top:auto;
+    border-top:1px solid var(--border);
+    padding-top:15px;
+}
+
+.profile-box{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:11px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:rgba(255,255,255,.025);
+}
+
+.avatar{
+    width:35px;
+    height:35px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#7c3aed,#ec4899);
+    font-weight:800;
+}
+
+.profile-name{
+    font-size:12px;
+    font-weight:700;
+}
+
+.profile-plan{
+    color:#727b99;
+    font-size:10px;
+    margin-top:2px;
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.main{
+    margin-left:245px;
+    padding:30px;
+    max-width:1600px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    margin-bottom:25px;
+}
+
+.welcome h1{
+    font-family:var(--head);
+    font-size:28px;
+    font-weight:800;
+}
+
+.gradient{
+    background:linear-gradient(90deg,#c084fc,#f472b6,#60a5fa);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.welcome p{
+    margin-top:6px;
+    color:var(--muted);
+    font-size:13px;
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.streak{
+    padding:10px 15px;
+    border-radius:12px;
+    border:1px solid rgba(251,191,36,.2);
+    background:rgba(251,191,36,.06);
+}
+
+.streak strong{
+    color:#fbbf24;
+}
+
+.primary-btn{
+    border:0;
+    color:white;
+    padding:12px 19px;
+    border-radius:12px;
+    font-weight:800;
+    background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899);
+    box-shadow:0 0 25px rgba(139,92,246,.35);
+    transition:.2s;
+}
+
+.primary-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 35px rgba(139,92,246,.5);
+}
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:18px;
+}
+
+.stat{
+    position:relative;
+    overflow:hidden;
+    padding:19px;
+    border:1px solid var(--border);
+    border-radius:17px;
+    background:var(--panel);
+}
+
+.stat:hover{
+    border-color:rgba(139,92,246,.3);
+    transform:translateY(-2px);
+}
+
+.stat-icon{
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.stat-number{
+    font-family:var(--head);
+    font-size:29px;
+    font-weight:800;
+}
+
+.stat-label{
+    color:#7e87a5;
+    font-size:11px;
+    margin-top:3px;
+}
+
+.stat-small{
+    color:#43e0a9;
+    font-size:10px;
+    margin-top:9px;
+}
+
+/* =====================================================
+   QUEST HERO
+===================================================== */
+
+.quest{
+    position:relative;
+    overflow:hidden;
+    min-height:310px;
+    border-radius:22px;
+    border:1px solid rgba(139,92,246,.28);
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(7,9,20,.92),
+            rgba(7,9,20,.55)
+        ),
+        url("background.png");
+
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+
+    margin-bottom:18px;
+}
+
+.quest-content{
+    position:relative;
+    z-index:3;
+    padding:32px;
+    width:60%;
+}
+
+.quest-label{
+    color:#b78cff;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+}
+
+.quest h2{
+    font-family:var(--head);
+    font-size:42px;
+    line-height:1.05;
+    margin:13px 0;
+}
+
+.quest p{
+    max-width:620px;
+    color:#9da5c0;
+    line-height:1.6;
+    font-size:13px;
+}
+
+.quest-buttons{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+}
+
+.secondary-btn{
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.04);
+    color:white;
+    border-radius:11px;
+    padding:11px 17px;
+    font-weight:700;
+}
+
+.secondary-btn:hover{
+    background:rgba(255,255,255,.08);
+}
+
+
+.hero {
+    background-image: url("anime-background.png");
+    background-size: cover;
+    background-position: center;
+}
+
+/* =====================================================
+   CHARACTER ROW
+===================================================== */
+
+.character-section{
+    margin-bottom:18px;
+}
+
+.section-heading{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:11px;
+}
+
+.section-heading h3{
+    font-family:var(--head);
+    font-size:16px;
+}
+
+.section-heading span{
+    color:#6f7897;
+    font-size:10px;
+}
+
+.characters{
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    gap:10px;
+}
+
+.character{
+    position:relative;
+    height:145px;
+    overflow:hidden;
+    border-radius:15px;
+    border:1px solid var(--border);
+    background:#101326;
+    transition:.25s;
+}
+
+.character:hover{
+    transform:translateY(-6px) scale(1.02);
+    border-color:rgba(168,85,247,.65);
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+}
+
+.character img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    transition:.3s;
+}
+
+.character:hover img{
+    transform:scale(1.08);
+}
+
+.character::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:55%;
+    background:linear-gradient(transparent,rgba(0,0,0,.88));
+}
+
+.character-info{
+    position:absolute;
+    left:9px;
+    right:9px;
+    bottom:9px;
+    z-index:2;
+}
+
+.character-name{
+    font-size:11px;
+    font-weight:800;
+}
+
+.character-role{
+    color:#aeb5cc;
+    font-size:8px;
+    margin-top:2px;
+}
+
+/* =====================================================
+   CONTENT GRID
+===================================================== */
+
+.content-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr;
+    gap:18px;
+}
+
+.card{
+    border:1px solid var(--border);
+    border-radius:18px;
+    background:var(--panel);
+    padding:21px;
+}
+
+.card-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:17px;
+}
+
+.card-title h3{
+    font-family:var(--head);
+    font-size:15px;
+}
+
+.card-badge{
+    color:#bda3ff;
+    font-size:9px;
+    font-weight:800;
+    padding:5px 9px;
+    border-radius:20px;
+    border:1px solid rgba(139,92,246,.25);
+    background:rgba(139,92,246,.1);
+}
+
+/* =====================================================
+   QUICK ACTIONS
+===================================================== */
+
+.quick-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:11px;
+}
+
+.quick{
+    text-align:left;
+    padding:16px;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:rgba(255,255,255,.025);
+    color:white;
+    transition:.2s;
+}
+
+.quick:hover{
+    transform:translateY(-3px);
+    border-color:rgba(139,92,246,.45);
+    background:rgba(139,92,246,.08);
+}
+
+.quick-icon{
+    font-size:20px;
+    margin-bottom:9px;
+}
+
+.quick-title{
+    font-size:12px;
+    font-weight:800;
+}
+
+.quick-desc{
+    color:#727b99;
+    font-size:10px;
+    margin-top:5px;
+    line-height:1.4;
+}
+
+/* =====================================================
+   READINESS
+===================================================== */
+
+.readiness{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.gauge{
+    width:135px;
+    height:135px;
+    flex-shrink:0;
+    position:relative;
+}
+
+.gauge svg{
+    width:100%;
+    height:100%;
+    transform:rotate(-90deg);
+}
+
+.gauge-bg{
+    fill:none;
+    stroke:rgba(255,255,255,.06);
+    stroke-width:10;
+}
+
+.gauge-fill{
+    fill:none;
+    stroke:url(#g);
+    stroke-width:10;
+    stroke-linecap:round;
+    stroke-dasharray:377;
+    stroke-dashoffset:377;
+    transition:1.4s ease;
+}
+
+.gauge-center{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+}
+
+.gauge-number{
+    font-family:var(--head);
+    font-size:27px;
+    font-weight:800;
+}
+
+.gauge-text{
+    color:#7f89a8;
+    font-size:9px;
+}
+
+.skills{
+    flex:1;
+}
+
+.skill{
+    margin-bottom:12px;
+}
+
+.skill-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:5px;
+    font-size:10px;
+}
+
+.skill-top span:last-child{
+    color:#c084fc;
+    font-weight:800;
+}
+
+.skill-track{
+    height:5px;
+    background:rgba(255,255,255,.06);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.skill-fill{
+    height:100%;
+    border-radius:10px;
+    background:linear-gradient(90deg,#7c3aed,#ec4899);
+}
+
+/* =====================================================
+   RECENT INTERVIEWS
+===================================================== */
+
+.interviews{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.interview{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:12px;
+    background:rgba(255,255,255,.02);
+}
+
+.interview-icon{
+    width:39px;
+    height:39px;
+    border-radius:11px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(139,92,246,.14);
+}
+
+.interview-info{
+    flex:1;
+}
+
+.interview-title{
+    font-size:11px;
+    font-weight:700;
+}
+
+.interview-meta{
+    color:#69728f;
+    font-size:9px;
+    margin-top:3px;
+}
+
+.score{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#34d399;
+    border:2px solid rgba(52,211,153,.3);
+    background:rgba(52,211,153,.08);
+    font-size:10px;
+    font-weight:800;
+}
+
+/* =====================================================
+   BADGES
+===================================================== */
+
+.badges{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.badge{
+    padding:13px 8px;
+    text-align:center;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:rgba(255,255,255,.02);
+}
+
+.badge-icon{
+    font-size:25px;
+    margin-bottom:6px;
+}
+
+.badge-name{
+    font-size:9px;
+    font-weight:800;
+}
+
+.badge-desc{
+    color:#6f7895;
+    font-size:8px;
+    margin-top:3px;
+}
+
+/* =====================================================
+   MENTOR PANEL
+===================================================== */
+
+.mentor{
+    position:relative;
+    min-height:260px;
+    overflow:hidden;
+    border-radius:18px;
+    border:1px solid rgba(139,92,246,.22);
+    background:
+        radial-gradient(circle at 80% 30%,rgba(168,85,247,.2),transparent 35%),
+        #0d1022;
+}
+
+.mentor-text{
+    position:absolute;
+    z-index:3;
+    left:20px;
+    top:20px;
+    width:52%;
+}
+
+.mentor-label{
+    color:#c084fc;
+    font-size:9px;
+    font-weight:800;
+    letter-spacing:2px;
+}
+
+.mentor h3{
+    font-family:var(--head);
+    font-size:25px;
+    margin:8px 0;
+}
+
+.mentor p{
+    color:#8790ad;
+    font-size:10px;
+    line-height:1.5;
+}
+
+.mentor img{
+    position:absolute;
+    right:-15px;
+    bottom:0;
+    width:58%;
+    height:100%;
+    object-fit:contain;
+    object-position:center bottom;
+    filter:drop-shadow(0 0 25px rgba(168,85,247,.4));
+}
+
+/* =====================================================
+   TOAST
+===================================================== */
+
 #toast{
-  position:fixed;top:24px;left:50%;
-  transform:translateX(-50%) translateY(-80px);
-  z-index:9999;padding:11px 24px;border-radius:12px;
-  font-size:14px;font-weight:600;font-family:var(--f);
-  transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.3s;
-  opacity:0;white-space:nowrap;backdrop-filter:blur(20px);
-  border:1px solid;pointer-events:none;
+    position:fixed;
+    top:22px;
+    left:50%;
+    transform:translate(-50%,-100px);
+    padding:12px 20px;
+    border-radius:12px;
+    background:rgba(15,18,40,.95);
+    border:1px solid rgba(139,92,246,.35);
+    box-shadow:0 15px 40px rgba(0,0,0,.4);
+    font-size:12px;
+    font-weight:700;
+    z-index:9999;
+    opacity:0;
+    transition:.35s;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+.mobile-button{
+    display:none;
+}
+
+@media(max-width:1200px){
+
+    .characters{
+        grid-template-columns:repeat(5,1fr);
+    }
+
+    .character{
+        height:155px;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:900px){
+
+    .sidebar{
+        transform:translateX(-100%);
+        transition:.3s;
+    }
+
+    .sidebar.open{
+        transform:translateX(0);
+    }
+
+    .main{
+        margin-left:0;
+        padding:20px;
+    }
+
+    .mobile-button{
+        display:flex;
+        width:40px;
+        height:40px;
+        align-items:center;
+        justify-content:center;
+        border:1px solid var(--border);
+        border-radius:10px;
+        background:rgba(255,255,255,.04);
+        color:white;
+    }
+
+    .topbar{
+        align-items:flex-start;
+    }
+
+    .quest-content{
+        width:100%;
+        position:relative;
+        z-index:4;
+        background:linear-gradient(90deg,rgba(7,9,20,.9),rgba(7,9,20,.45));
+    }
+
+    .hero-character{
+        opacity:.4;
+        width:60%;
+    }
+
+    .content-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:600px){
+
+    .main{
+        padding:15px;
+    }
+
+    .top-actions{
+        width:100%;
+        justify-content:space-between;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:9px;
+    }
+
+    .stat{
+        padding:14px;
+    }
+
+    .stat-number{
+        font-size:23px;
+    }
+
+    .quest{
+        min-height:380px;
+    }
+
+    .quest h2{
+        font-size:30px;
+    }
+
+    .quest-content{
+        padding:22px;
+    }
+
+    .characters{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .character{
+        height:180px;
+    }
+
+    .quick-grid{
+        grid-template-columns:1fr;
+    }
+
+    .readiness{
+        flex-direction:column;
+    }
+
+    .mentor{
+        min-height:300px;
+    }
 }
 </style>
 </head>
+
 <body>
-
-<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
-<div class="grain"></div>
-<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
-<div class="layout">
-
-  <!-- ═══ SIDEBAR ═══ -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <div class="gem">
-        <svg viewBox="0 0 22 22" fill="none">
-          <circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/>
-          <path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/>
-        </svg>
-      </div>
-      <div>
-        <div class="brand">InterviewAI</div>
-        <div class="brand-tag">Premium</div>
-      </div>
-    </div>
-
-    <div class="nav-label">Main</div>
-    <a class="nav-item active" onclick="navigate('dashboard')">
-      <span class="nav-icon">🏠</span> Dashboard
-    </a>
-    <a class="nav-item" onclick="navigate('setup')">
-      <span class="nav-icon">🎙️</span> Start Interview
-    </a>
-    <a class="nav-item" onclick="navigate('resume')">
-      <span class="nav-icon">📄</span> Resume Analysis
-    </a>
-    <a class="nav-item" onclick="navigate('progress')">
-      <span class="nav-icon">📊</span> My Progress
-    </a>
-
-    <div class="nav-label">Practice</div>
-    <a class="nav-item" onclick="navigate('setup')">
-      <span class="nav-icon">⚡</span> DSA Practice
-    </a>
-    <a class="nav-item" onclick="navigate('setup')">
-      <span class="nav-icon">🏗️</span> System Design
-    </a>
-    <a class="nav-item" onclick="navigate('setup')">
-      <span class="nav-icon">🧠</span> Behavioural
-    </a>
-
-    <div class="nav-label">Account</div>
-    <a class="nav-item" onclick="navigate('settings')">
-      <span class="nav-icon">⚙️</span> Settings
-    </a>
-
-    <div class="sidebar-footer">
-      <div class="user-pill">
-        <div class="uav" id="sav">U</div>
-        <div style="min-width:0;">
-          <div class="uname" id="sname">User</div>
-          <div class="urole" id="srole">Free Plan</div>
-        </div>
-        <button class="logout-btn" onclick="doLogout()" title="Sign out">🚪</button>
-      </div>
-    </div>
-  </aside>
-
-  <!-- ═══ MAIN ═══ -->
-  <main class="main" id="main-content">
-
-    <!-- Mobile top bar -->
-    <div class="mobile-bar">
-      <button class="menu-btn" onclick="openSidebar()">☰</button>
-      <div style="font-family:var(--fh);font-size:15px;font-weight:800;">InterviewAI</div>
-      <div style="width:36px;"></div>
-    </div>
-
-    <!-- ── TOP BAR ── -->
-    <div class="topbar">
-      <div>
-        <div class="topbar-title">
-          Welcome back, <span id="topbar-name"
-            style="background:linear-gradient(90deg,#c084fc,#f472b6);
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-            background-clip:text;">there</span> 👋
-        </div>
-        <div class="topbar-sub" id="topbar-sub">Ready to ace your next interview?</div>
-      </div>
-      <div class="topbar-right">
-        <div class="streak-pill">
-          <span class="streak-fire">🔥</span>
-          <div>
-            <div class="streak-num" id="streak-num">0</div>
-            <div class="streak-lbl">day streak</div>
-          </div>
-        </div>
-        <button class="start-btn" onclick="navigate('setup')">
-          <div class="btn-glint"></div>
-          🎙️ Start Interview
-        </button>
-      </div>
-    </div>
-
-    <!-- ── STAT CARDS ── -->
-    <div class="stats-grid">
-      <div class="stat-card sc1">
-        <div class="stat-icon">🎯</div>
-        <div class="stat-value" id="sc-total">0</div>
-        <div class="stat-label">Total Interviews</div>
-        <div class="stat-trend" id="sc-total-t">↑ Keep going!</div>
-      </div>
-      <div class="stat-card sc2">
-        <div class="stat-icon">📈</div>
-        <div class="stat-value" id="sc-avg">0%</div>
-        <div class="stat-label">Average Score</div>
-        <div class="stat-trend" id="sc-avg-t">↑ Improving!</div>
-      </div>
-      <div class="stat-card sc3">
-        <div class="stat-icon">🏆</div>
-        <div class="stat-value" id="sc-best">0%</div>
-        <div class="stat-label">Best Score</div>
-        <div class="stat-trend">↑ Personal best</div>
-      </div>
-      <div class="stat-card sc4">
-        <div class="stat-icon">⏱️</div>
-        <div class="stat-value" id="sc-hours">0h</div>
-        <div class="stat-label">Hours Practiced</div>
-        <div class="stat-trend">↑ Stay consistent!</div>
-      </div>
-    </div>
-
-    <!-- ── QUICK ACTIONS + GAUGE ── -->
-    <div class="two-col">
-
-      <!-- Quick Actions -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Quick Actions</div>
-          <div class="card-badge">Fast Track</div>
-        </div>
-        <div class="qa-grid">
-          <div class="qa-btn primary" onclick="navigate('setup')">
-            <div class="qa-icon">🎙️</div>
-            <div class="qa-title">Start Interview</div>
-            <div class="qa-desc">Begin a new AI mock session</div>
-          </div>
-          <div class="qa-btn" onclick="navigate('resume')">
-            <div class="qa-icon">📄</div>
-            <div class="qa-title">Resume Analysis</div>
-            <div class="qa-desc">Upload &amp; get AI feedback</div>
-          </div>
-          <div class="qa-btn" onclick="navigate('setup')">
-            <div class="qa-icon">⚡</div>
-            <div class="qa-title">Quick Practice</div>
-            <div class="qa-desc">5 random questions now</div>
-          </div>
-          <div class="qa-btn" onclick="navigate('setup')">
-            <div class="qa-icon">🏢</div>
-            <div class="qa-title">Company Prep</div>
-            <div class="qa-desc">Target a specific company</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Readiness Gauge -->
-      <div class="card" style="display:flex;flex-direction:column;">
-        <div class="card-header">
-          <div class="card-title">Readiness Score</div>
-          <div class="card-badge">Live</div>
-        </div>
-        <div class="gauge-center">
-          <svg class="gauge-svg" viewBox="0 0 130 130">
-            <circle cx="65" cy="65" r="52" fill="none"
-              stroke="rgba(255,255,255,0.06)" stroke-width="9"/>
-            <circle cx="65" cy="65" r="52" fill="none"
-              stroke="url(#gg)" stroke-width="9"
-              stroke-dasharray="327" id="gauge-arc"
-              stroke-dashoffset="327" stroke-linecap="round"
-              transform="rotate(-90 65 65)"/>
-            <defs>
-              <linearGradient id="gg" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#7c3aed"/>
-                <stop offset="100%" stop-color="#ec4899"/>
-              </linearGradient>
-            </defs>
-          </svg>
-          <div class="gauge-text">
-            <div class="gauge-pct" id="gauge-pct">0%</div>
-            <div class="gauge-sub">Interview Ready</div>
-          </div>
-        </div>
-        <div class="pb-list">
-          <div class="pb-row">
-            <div class="pb-top">
-              <span class="pb-label">Technical</span>
-              <span class="pb-val">78%</span>
-            </div>
-            <div class="pb-track"><div class="pb-fill" id="pb1" style="width:0%"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-top">
-              <span class="pb-label">Communication</span>
-              <span class="pb-val">82%</span>
-            </div>
-            <div class="pb-track"><div class="pb-fill" id="pb2" style="width:0%"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-top">
-              <span class="pb-label">Confidence</span>
-              <span class="pb-val">65%</span>
-            </div>
-            <div class="pb-track"><div class="pb-fill" id="pb3" style="width:0%"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── RECENT INTERVIEWS + SKILLS ── -->
-    <div class="three-col">
-
-      <!-- Recent Interviews -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Recent Interviews</div>
-          <div class="card-badge" id="int-badge">0 total</div>
-        </div>
-        <div id="interview-list">
-          <div class="empty-state">
-            <div class="empty-icon">🎙️</div>
-            <div class="empty-title">No interviews yet</div>
-            <div class="empty-desc">Start your first mock interview to see your results here</div>
-            <button class="empty-btn" onclick="navigate('setup')">
-              Start First Interview →
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Skills + Goals -->
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">Skill Progress</div>
-          <div class="card-badge">This Month</div>
-        </div>
-        <div class="pb-list">
-          <div class="pb-row">
-            <div class="pb-top"><span class="pb-label">DSA &amp; Coding</span><span class="pb-val">74%</span></div>
-            <div class="pb-track"><div class="pb-fill" style="width:74%"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-top"><span class="pb-label">System Design</span><span class="pb-val">61%</span></div>
-            <div class="pb-track"><div class="pb-fill" style="width:61%"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-top"><span class="pb-label">Behavioural</span><span class="pb-val">88%</span></div>
-            <div class="pb-track"><div class="pb-fill" style="width:88%"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-top"><span class="pb-label">Communication</span><span class="pb-val">79%</span></div>
-            <div class="pb-track"><div class="pb-fill" style="width:79%"></div></div>
-          </div>
-          <div class="pb-row">
-            <div class="pb-top"><span class="pb-label">Problem Solving</span><span class="pb-val">68%</span></div>
-            <div class="pb-track"><div class="pb-fill" style="width:68%"></div></div>
-          </div>
-        </div>
-
-        <div style="margin-top:20px;">
-          <div class="card-header" style="margin-bottom:12px;">
-            <div class="card-title" style="font-size:14px;">Goals</div>
-          </div>
-          <div class="goal-list">
-            <div class="goal-item">
-              <div class="goal-dot" style="background:#a855f7;box-shadow:0 0 7px #a855f7;"></div>
-              <div class="goal-info">
-                <div class="goal-title">Complete 10 DSA sessions</div>
-                <div class="goal-sub">7 of 10 done</div>
-              </div>
-              <div class="goal-badge"
-                style="background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.28);color:#c084fc;">
-                70%
-              </div>
-            </div>
-            <div class="goal-item">
-              <div class="goal-dot" style="background:#ec4899;box-shadow:0 0 7px #ec4899;"></div>
-              <div class="goal-info">
-                <div class="goal-title">Google interview ready</div>
-                <div class="goal-sub">Keep practicing daily</div>
-              </div>
-              <div class="goal-badge"
-                style="background:rgba(236,72,153,0.12);border:1px solid rgba(236,72,153,0.28);color:#f9a8d4;">
-                Active
-              </div>
-            </div>
-            <div class="goal-item">
-              <div class="goal-dot" style="background:#10b981;box-shadow:0 0 7px #10b981;"></div>
-              <div class="goal-info">
-                <div class="goal-title">7-day streak goal</div>
-                <div class="goal-sub" id="streak-goal-sub">0 of 7 days done</div>
-              </div>
-              <div class="goal-badge"
-                style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.28);color:#6ee7b7;"
-                id="streak-goal-badge">
-                Active
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-</div>
 
 <div id="toast"></div>
 
+<div class="layout">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">✦</div>
+        <div>
+            <div class="logo-title">InterviewAI</div>
+            <div class="logo-sub">CAREER QUEST</div>
+        </div>
+    </div>
+
+    <div class="section-label">Main</div>
+
+    <nav class="nav">
+
+        <a href="dashboard.html" class="active">
+            <span class="nav-icon">🏠</span>
+            Dashboard
+        </a>
+
+        <a href="Quest.html">
+            <span class="nav-icon">🗺️</span>
+            Career Quest
+        </a>
+
+        <a href="interview.html">
+            <span class="nav-icon">🎙️</span>
+            Start Interview
+        </a>
+
+        <a href="resume.html">
+            <span class="nav-icon">📄</span>
+            Resume Analysis
+        </a>
+
+        <a href="result.html">
+            <span class="nav-icon">🏆</span>
+            My Results
+        </a>
+
+        <a href="badges.html">
+            <span class="nav-icon">🏅</span>
+            Badges
+        </a>
+
+    </nav>
+
+    <div class="section-label">Practice</div>
+
+    <nav class="nav">
+
+        <a href="interview.html?track=dsa">
+            <span class="nav-icon">⚡</span>
+            DSA Practice
+        </a>
+
+        <a href="interview.html?track=system-design">
+            <span class="nav-icon">🏗️</span>
+            System Design
+        </a>
+
+        <a href="interview.html?track=behavioural">
+            <span class="nav-icon">🧠</span>
+            Behavioural
+        </a>
+
+        <a href="Game%20ui.html">
+            <span class="nav-icon">🎮</span>
+            Training Arena
+        </a>
+
+    </nav>
+
+    <div class="section-label">Account</div>
+
+    <nav class="nav">
+
+        <a href="#" onclick="comingSoon(event,'Settings')">
+            <span class="nav-icon">⚙️</span>
+            Settings
+        </a>
+
+    </nav>
+
+    <div class="profile">
+
+        <div class="profile-box">
+
+            <div class="avatar" id="avatar">Y</div>
+
+            <div>
+                <div class="profile-name" id="profileName">
+                    Y Manu
+                </div>
+
+                <div class="profile-plan">
+                    Level <span id="level">7</span> · <span id="xp">720</span> XP
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+
+            <button
+                class="mobile-button"
+                onclick="toggleSidebar()">
+                ☰
+            </button>
+
+            <div class="welcome">
+
+                <h1>
+                    Welcome back,
+                    <span class="gradient" id="userName">
+                        Y Manu
+                    </span>
+                    👋
+                </h1>
+
+                <p>
+                    Continue your journey to become
+                    <strong style="color:#c084fc">
+                        Interview Ready
+                    </strong>.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="top-actions">
+
+            <div class="streak">
+                🔥 <strong id="streak">7</strong>
+                <span style="color:#737c9a;font-size:10px">
+                    Day Streak
+                </span>
+            </div>
+
+            <button
+                class="primary-btn"
+                onclick="go('interview.html')">
+                🎙️ Start Interview
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         STATS
+    ================================================= -->
+
+    <section class="stats">
+
+        <div class="stat">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-number" id="totalInterviews">0</div>
+            <div class="stat-label">Total Interviews</div>
+            <div class="stat-small">↑ Keep training</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">📈</div>
+            <div class="stat-number" id="averageScore">0%</div>
+            <div class="stat-label">Average Score</div>
+            <div class="stat-small">↑ Your performance</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">🏆</div>
+            <div class="stat-number" id="bestScore">0%</div>
+            <div class="stat-label">Best Score</div>
+            <div class="stat-small">Personal best</div>
+        </div>
+
+        <div class="stat">
+            <div class="stat-icon">⚔️</div>
+            <div class="stat-number" id="hours">0h</div>
+            <div class="stat-label">Training Time</div>
+            <div class="stat-small">↑ Build your skill</div>
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         QUEST HERO
+    ================================================= -->
+
+    <section class="quest">
+
+        <div class="quest-content">
+
+            <div class="quest-label">
+                ⚔ Career Quest · Training Arena
+            </div>
+
+            <h2>
+                Train.
+                <span class="gradient">Level Up.</span>
+                Become Interview Ready.
+            </h2>
+
+            <p>
+                Turn interview preparation into an adventure.
+                Complete challenges, earn XP, unlock badges,
+                defeat difficult interview stages and build
+                your professional skill tree.
+            </p>
+
+            <div class="quest-buttons">
+
+                <button
+                    class="primary-btn"
+                    onclick="go('interview.html')">
+                    🎙️ Enter Interview Quest
+                </button>
+
+                <button
+                    class="secondary-btn"
+                    onclick="go('Quest.html')">
+                    🗺️ View Quest Map
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- =================================================
+         CHARACTER SQUAD
+    ================================================= -->
+
+    <section class="character-section">
+
+        <div class="section-heading">
+
+            <h3>
+                ⚡ Your Anime Training Squad
+            </h3>
+
+            <span>
+                Every character represents a skill
+            </span>
+
+        </div>
+
+        <div class="characters">
+
+            <!-- 1 -->
+            <div class="character">
+                <img src="tanjiro.png" alt="Tanjiro"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Tanjiro</div>
+                    <div class="character-role">Focus</div>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="character">
+                <img src="giyu.png" alt="Giyu"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Giyu</div>
+                    <div class="character-role">Precision</div>
+                </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="character">
+                <img src="kakashi.png" alt="Kakashi"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Kakashi</div>
+                    <div class="character-role">Mentor</div>
+                </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="character">
+                <img src="naruto.png" alt="Naruto"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Naruto</div>
+                    <div class="character-role">Consistency</div>
+                </div>
+            </div>
+
+            <!-- 5 -->
+            <div class="character">
+                <img src="zenitsu.png" alt="Zenitsu"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Zenitsu</div>
+                    <div class="character-role">Speed</div>
+                </div>
+            </div>
+
+            <!-- 6 -->
+            <div class="character">
+                <img src="inosuke.png" alt="Inosuke"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Inosuke</div>
+                    <div class="character-role">Problem Solving</div>
+                </div>
+            </div>
+
+            <!-- 7 -->
+            <div class="character">
+                <img src="sasuke.png" alt="Sasuke"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Sasuke</div>
+                    <div class="character-role">Advanced Tech</div>
+                </div>
+            </div>
+
+            <!-- 8 -->
+            <div class="character">
+                <img src="levi.png" alt="Levi"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Levi</div>
+                    <div class="character-role">Discipline</div>
+                </div>
+            </div>
+
+            <!-- 9 -->
+            <div class="character">
+                <img src="gojo.png" alt="Gojo"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Gojo</div>
+                    <div class="character-role">Elite Mentor</div>
+                </div>
+            </div>
+
+            <!-- 10 -->
+            <div class="character">
+                <img src="itachi.png" alt="Itachi"
+                     onerror="this.style.display='none'">
+                <div class="character-info">
+                    <div class="character-name">Itachi</div>
+                    <div class="character-role">Strategy</div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         CONTENT
+    ================================================= -->
+
+    <section class="content-grid">
+
+
+        <!-- LEFT -->
+        <div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h3>
+                        ⚡ Quick Actions
+                    </h3>
+
+                    <span class="card-badge">
+                        FAST TRACK
+                    </span>
+
+                </div>
+
+                <div class="quick-grid">
+
+                    <button
+                        class="quick"
+                        onclick="go('interview.html')">
+
+                        <div class="quick-icon">
+                            🎙️
+                        </div>
+
+                        <div class="quick-title">
+                            Start Interview
+                        </div>
+
+                        <div class="quick-desc">
+                            Begin a new AI mock interview session.
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="quick"
+                        onclick="go('resume.html')">
+
+                        <div class="quick-icon">
+                            📄
+                        </div>
+
+                        <div class="quick-title">
+                            Resume Analysis
+                        </div>
+
+                        <div class="quick-desc">
+                            Upload your resume and improve it.
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="quick"
+                        onclick="go('interview.html?mode=quick')">
+
+                        <div class="quick-icon">
+                            ⚡
+                        </div>
+
+                        <div class="quick-title">
+                            Quick Practice
+                        </div>
+
+                        <div class="quick-desc">
+                            Five random questions to gain XP.
+                        </div>
+
+                    </button>
+
+
+                    <button
+                        class="quick"
+                        onclick="go('Quest.html')">
+
+                        <div class="quick-icon">
+                            🗺️
+                        </div>
+
+                        <div class="quick-title">
+                            Career Quest
+                        </div>
+
+                        <div class="quick-desc">
+                            Continue your anime career journey.
+                        </div>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT INTERVIEWS -->
+
+            <div class="card" style="margin-top:18px;">
+
+                <div class="card-title">
+
+                    <h3>
+                        🏆 Recent Interviews
+                    </h3>
+
+                    <span
+                        class="card-badge"
+                        id="interviewCount">
+                        0 TOTAL
+                    </span>
+
+                </div>
+
+                <div
+                    class="interviews"
+                    id="interviewList">
+
+                    <div style="
+                        text-align:center;
+                        padding:28px;
+                        color:#69728f;
+                        font-size:11px;
+                    ">
+
+                        🎙️ No interviews yet.<br><br>
+
+                        Start your first interview to
+                        begin your journey.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- RIGHT -->
+        <div>
+
+
+            <!-- READINESS -->
+
+            <div class="card">
+
+                <div class="card-title">
+
+                    <h3>
+                        🧠 AI Readiness
+                    </h3>
+
+                    <span class="card-badge">
+                        LIVE
+                    </span>
+
+                </div>
+
+
+                <div class="readiness">
+
+                    <div class="gauge">
+
+                        <svg viewBox="0 0 140 140">
+
+                            <defs>
+
+                                <linearGradient
+                                    id="g"
+                                    x1="0%"
+                                    y1="0%"
+                                    x2="100%"
+                                    y2="100%">
+
+                                    <stop
+                                        offset="0%"
+                                        stop-color="#7c3aed"/>
+
+                                    <stop
+                                        offset="100%"
+                                        stop-color="#ec4899"/>
+
+                                </linearGradient>
+
+                            </defs>
+
+                            <circle
+                                class="gauge-bg"
+                                cx="70"
+                                cy="70"
+                                r="60"/>
+
+                            <circle
+                                class="gauge-fill"
+                                id="gauge"
+                                cx="70"
+                                cy="70"
+                                r="60"/>
+
+                        </svg>
+
+                        <div class="gauge-center">
+
+                            <div
+                                class="gauge-number"
+                                id="readiness">
+                                0%
+                            </div>
+
+                            <div class="gauge-text">
+                                READY
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="skills">
+
+                        <div class="skill">
+
+                            <div class="skill-top">
+                                <span>Technical</span>
+                                <span id="technicalText">0%</span>
+                            </div>
+
+                            <div class="skill-track">
+                                <div
+                                    class="skill-fill"
+                                    id="technicalBar"
+                                    style="width:0%">
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="skill">
+
+                            <div class="skill-top">
+                                <span>Communication</span>
+                                <span id="communicationText">0%</span>
+                            </div>
+
+                            <div class="skill-track">
+                                <div
+                                    class="skill-fill"
+                                    id="communicationBar"
+                                    style="width:0%">
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="skill">
+
+                            <div class="skill-top">
+                                <span>Confidence</span>
+                                <span id="confidenceText">0%</span>
+                            </div>
+
+                            <div class="skill-track">
+                                <div
+                                    class="skill-fill"
+                                    id="confidenceBar"
+                                    style="width:0%">
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="skill">
+
+                            <div class="skill-top">
+                                <span>Problem Solving</span>
+                                <span id="problemText">0%</span>
+                            </div>
+
+                            <div class="skill-track">
+                                <div
+                                    class="skill-fill"
+                                    id="problemBar"
+                                    style="width:0%">
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- BADGES -->
+
+            <div class="card" style="margin-top:18px;">
+
+                <div class="card-title">
+
+                    <h3>
+                        🏅 Achievement Badges
+                    </h3>
+
+                    <span
+                        class="card-badge">
+                        XP
+                    </span>
+
+                </div>
+
+
+                <div class="badges">
+
+                    <div class="badge">
+                        <div class="badge-icon">🌱</div>
+                        <div class="badge-name">First Step</div>
+                        <div class="badge-desc">First interview</div>
+                    </div>
+
+                    <div class="badge">
+                        <div class="badge-icon">🔥</div>
+                        <div class="badge-name">Consistent</div>
+                        <div class="badge-desc">7 day streak</div>
+                    </div>
+
+                    <div class="badge">
+                        <div class="badge-icon">⚡</div>
+                        <div class="badge-name">Quick Learner</div>
+                        <div class="badge-desc">Fast progress</div>
+                    </div>
+
+                    <div class="badge">
+                        <div class="badge-icon">🧠</div>
+                        <div class="badge-name">DSA Master</div>
+                        <div class="badge-desc">DSA champion</div>
+                    </div>
+
+                    <div class="badge">
+                        <div class="badge-icon">⚔️</div>
+                        <div class="badge-name">Tech Warrior</div>
+                        <div class="badge-desc">Technical expert</div>
+                    </div>
+
+                    <div class="badge">
+                        <div class="badge-icon">👑</div>
+                        <div class="badge-name">Elite</div>
+                        <div class="badge-desc">90%+ score</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LARGE GOJO MENTOR -->
+
+            <div
+                class="mentor"
+                style="margin-top:18px;">
+
+                <div class="mentor-text">
+
+                    <div class="mentor-label">
+                        ELITE MENTOR
+                    </div>
+
+                    <h3>
+                        Train Beyond<br>
+                        Your Limits.
+                    </h3>
+
+                    <p>
+                        Complete difficult challenges,
+                        improve your score and unlock
+                        your next character.
+                    </p>
+
+                    <button
+                        class="secondary-btn"
+                        style="margin-top:15px;"
+                        onclick="go('Quest.html')">
+                        Continue Quest →
+                    </button>
+
+                </div>
+
+                <img
+                    src="gojo.png"
+                    alt="Gojo mentor"
+                    onerror="this.style.display='none'">
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+</div>
+
+
 <script>
-/* ══════════════════════════════════════
-   AUTH GUARD
-══════════════════════════════════════ */
-if(localStorage.getItem('ai_logged_in') !== 'true'){
-  window.location.replace('ai_interviewer_login.html');
+
+/* =====================================================
+   USER DATA
+===================================================== */
+
+const userName =
+    localStorage.getItem("ai_user_name") ||
+    "Y Manu";
+
+const displayName =
+    userName.includes("@")
+        ? userName.split("@")[0]
+        : userName;
+
+document.getElementById("userName").textContent =
+    displayName;
+
+document.getElementById("profileName").textContent =
+    displayName;
+
+document.getElementById("avatar").textContent =
+    displayName.charAt(0).toUpperCase();
+
+
+/* =====================================================
+   LOCAL STORAGE INTERVIEW DATA
+===================================================== */
+
+let interviews = [];
+
+try{
+
+    interviews =
+        JSON.parse(
+            localStorage.getItem("ai_interviews") || "[]"
+        );
+
+    if(!Array.isArray(interviews)){
+        interviews = [];
+    }
+
+}catch(error){
+
+    interviews = [];
+
 }
 
-/* ══════════════════════════════════════
-   NAVIGATION — no page reloads, no GET errors
-   All pages opened via JS redirect to their
-   actual HTML files. Falls back gracefully.
-══════════════════════════════════════ */
-function navigate(page){
-  closeSidebar();
-  const map = {
-    dashboard : 'dashboard.html',
-    setup     : 'interview.html',
-    session   : 'session.html',
-    results   : 'results.html',
-    resume    : 'resume.html',
-    home      : 'home.html',
-    login     : 'login.html',
-    progress  : null,   // coming soon
-    settings  : null,   // coming soon
-  };
-  const target = map[page];
-  if(!target){
-    showToast('🚧 '+page.charAt(0).toUpperCase()+page.slice(1)+' page coming soon!','info');
-    return;
-  }
-  window.location.href = target;
+
+const total =
+    interviews.length;
+
+
+const scores =
+    interviews
+    .map(i => Number(i.score) || 0);
+
+
+const average =
+    scores.length
+        ? Math.round(
+            scores.reduce(
+                (a,b) => a+b,
+                0
+            ) / scores.length
+          )
+        : 0;
+
+
+const best =
+    scores.length
+        ? Math.max(...scores)
+        : 0;
+
+
+const totalMinutes =
+    interviews.reduce(
+        (sum,item) =>
+            sum + (Number(item.duration) || 15),
+        0
+    );
+
+
+const hours =
+    Math.round(totalMinutes / 60);
+
+
+/* =====================================================
+   STREAK / XP
+===================================================== */
+
+const streak =
+    Number(
+        localStorage.getItem("ai_streak") || 7
+    );
+
+const xp =
+    Number(
+        localStorage.getItem("ai_xp") || 720
+    );
+
+const level =
+    Number(
+        localStorage.getItem("ai_level") || 7
+    );
+
+
+document.getElementById("streak").textContent =
+    streak;
+
+document.getElementById("xp").textContent =
+    xp;
+
+document.getElementById("level").textContent =
+    level;
+
+
+/* =====================================================
+   ANIMATED NUMBER
+===================================================== */
+
+function animateNumber(
+    element,
+    target,
+    suffix=""
+){
+
+    let current = 0;
+
+    const steps = 25;
+
+    const increment =
+        target / steps;
+
+    let count = 0;
+
+    const timer =
+        setInterval(() => {
+
+            count++;
+
+            current += increment;
+
+            if(count >= steps){
+
+                current = target;
+
+                clearInterval(timer);
+            }
+
+            element.textContent =
+                Math.round(current) + suffix;
+
+        },30);
+
 }
 
-/* ══════════════════════════════════════
-   LOAD USER DATA
-══════════════════════════════════════ */
-const rawName      = localStorage.getItem('ai_user_name') || localStorage.getItem('ai_user_email') || 'there';
-const displayName  = rawName.split('@')[0];
-const initial      = displayName.charAt(0).toUpperCase();
-const targetCo     = localStorage.getItem('ai_user_company') || 'your target company';
-const targetRole   = localStorage.getItem('ai_user_role')    || 'your target role';
-const exp          = localStorage.getItem('ai_user_exp')     || 'Free Plan';
 
-document.getElementById('topbar-name').textContent  = displayName;
-document.getElementById('topbar-sub').textContent   = `Targeting ${targetRole} at ${targetCo}`;
-document.getElementById('sav').textContent          = initial;
-document.getElementById('sname').textContent        = displayName;
-document.getElementById('srole').textContent        = exp;
-
-/* ══════════════════════════════════════
+/* =====================================================
    STATS
-══════════════════════════════════════ */
-const interviews  = JSON.parse(localStorage.getItem('ai_interviews') || '[]');
-const totalInt    = interviews.length;
-const scores      = interviews.map(i => i.score || 0);
-const avgScore    = scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length) : 0;
-const bestScore   = scores.length ? Math.max(...scores) : 0;
-const totalMins   = interviews.reduce((a,i) => a+(i.duration||15), 0);
-const streak      = parseInt(localStorage.getItem('ai_streak') || '0');
+===================================================== */
 
-/* Animated counter */
-function animCount(el, target, suffix='', dur=1100){
-  let start=null;
-  function step(ts){
-    if(!start) start=ts;
-    const p = Math.min((ts-start)/dur, 1);
-    const ease = 1 - Math.pow(1-p, 3);
-    el.textContent = Math.round(ease*target) + suffix;
-    if(p<1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
+animateNumber(
+    document.getElementById("totalInterviews"),
+    total
+);
+
+animateNumber(
+    document.getElementById("averageScore"),
+    average,
+    "%"
+);
+
+animateNumber(
+    document.getElementById("bestScore"),
+    best,
+    "%"
+);
+
+animateNumber(
+    document.getElementById("hours"),
+    hours,
+    "h"
+);
+
+
+/* =====================================================
+   READINESS
+===================================================== */
+
+let technical =
+    average || 0;
+
+let communication =
+    total
+        ? Math.min(100,average + 5)
+        : 0;
+
+let confidence =
+    total
+        ? Math.max(0,average - 5)
+        : 0;
+
+let problem =
+    total
+        ? Math.min(100,average + 2)
+        : 0;
+
+let readiness =
+    total
+        ? Math.round(
+            (
+                technical +
+                communication +
+                confidence +
+                problem
+            ) / 4
+          )
+        : 0;
+
+
+/* bars */
+
+function setBar(
+    bar,
+    text,
+    value
+){
+
+    document.getElementById(bar).style.width =
+        value + "%";
+
+    document.getElementById(text).textContent =
+        value + "%";
 }
 
-setTimeout(()=>{
-  animCount(document.getElementById('sc-total'), totalInt);
-  animCount(document.getElementById('sc-avg'),   avgScore,  '%');
-  animCount(document.getElementById('sc-best'),  bestScore, '%');
-  animCount(document.getElementById('sc-hours'), Math.round(totalMins/60), 'h');
-  animCount(document.getElementById('streak-num'), streak);
 
-  /* Gauge */
-  const pct = avgScore || 75;
-  const circ = 327;
-  const offset = circ - (circ * pct / 100);
-  const arc = document.getElementById('gauge-arc');
-  arc.style.transition = 'stroke-dashoffset 1.4s cubic-bezier(.34,1.2,.64,1)';
-  arc.setAttribute('stroke-dashoffset', offset);
-  animCount(document.getElementById('gauge-pct'), pct, '%', 1400);
+setBar(
+    "technicalBar",
+    "technicalText",
+    technical
+);
 
-  /* Skill bars */
-  document.getElementById('pb1').style.width = '78%';
-  document.getElementById('pb2').style.width = '82%';
-  document.getElementById('pb3').style.width = '65%';
+setBar(
+    "communicationBar",
+    "communicationText",
+    communication
+);
 
-  /* Streak goal */
-  document.getElementById('streak-goal-sub').textContent   = `${streak} of 7 days done`;
-  document.getElementById('streak-goal-badge').textContent = `${streak}/7`;
+setBar(
+    "confidenceBar",
+    "confidenceText",
+    confidence
+);
 
-  /* Trend text */
-  document.getElementById('sc-total-t').textContent =
-    totalInt > 0 ? `↑ ${totalInt} session${totalInt>1?'s':''} logged` : '↑ Start your first!';
-  document.getElementById('sc-avg-t').textContent =
-    avgScore > 0 ? `↑ Across ${totalInt} sessions` : '↑ Complete an interview';
-}, 200);
+setBar(
+    "problemBar",
+    "problemText",
+    problem
+);
 
-/* ══════════════════════════════════════
-   INTERVIEW LIST
-══════════════════════════════════════ */
-const listEl = document.getElementById('interview-list');
-if(interviews.length > 0){
-  document.getElementById('int-badge').textContent = totalInt + ' total';
-  listEl.innerHTML = '';
-  const iconMap  = {Technical:'⚡',HR:'🤝',Mixed:'🎯',DSA:'💻','System Design':'🏗️'};
-  const bgMap    = {Technical:'rgba(124,58,237,0.18)',HR:'rgba(16,185,129,0.18)',Mixed:'rgba(245,158,11,0.18)'};
-  interviews.slice(-6).reverse().forEach(iv => {
-    const sc  = iv.score || 0;
-    const cls = sc >= 80 ? 'sc-green' : sc >= 55 ? 'sc-yellow' : 'sc-red';
-    const el  = document.createElement('div');
-    el.className = 'int-item';
-    el.innerHTML = `
-      <div class="int-icon" style="background:${bgMap[iv.type]||'rgba(124,58,237,0.18)'}">
-        ${iconMap[iv.type]||'🎙️'}
-      </div>
-      <div class="int-info">
-        <div class="int-title">${iv.role||'Software Engineer'} — ${iv.type||'Technical'}</div>
-        <div class="int-meta">${iv.company||'General'} · ${iv.date||'Today'} · ${iv.duration||15} min</div>
-      </div>
-      <div class="score-chip ${cls}">${sc}%</div>`;
-    el.onclick = () => navigate('results');
-    listEl.appendChild(el);
-  });
+
+/* gauge */
+
+setTimeout(() => {
+
+    const circumference =
+        2 * Math.PI * 60;
+
+    const offset =
+        circumference -
+        (circumference * readiness / 100);
+
+    const gauge =
+        document.getElementById("gauge");
+
+    gauge.style.strokeDasharray =
+        circumference;
+
+    gauge.style.strokeDashoffset =
+        offset;
+
+    animateNumber(
+        document.getElementById("readiness"),
+        readiness,
+        "%"
+    );
+
+},300);
+
+
+/* =====================================================
+   RECENT INTERVIEWS
+===================================================== */
+
+const interviewList =
+    document.getElementById(
+        "interviewList"
+    );
+
+document.getElementById(
+    "interviewCount"
+).textContent =
+    total + " TOTAL";
+
+
+if(total > 0){
+
+    interviewList.innerHTML = "";
+
+    interviews
+        .slice()
+        .reverse()
+        .slice(0,5)
+        .forEach(item => {
+
+            const score =
+                Number(item.score) || 0;
+
+            const row =
+                document.createElement("div");
+
+            row.className =
+                "interview";
+
+            const role =
+                item.role ||
+                "Software Engineer";
+
+            const type =
+                item.type ||
+                "Technical";
+
+            const company =
+                item.company ||
+                "General";
+
+            const date =
+                item.date ||
+                "Recent";
+
+            row.innerHTML = `
+
+                <div class="interview-icon">
+                    🎙️
+                </div>
+
+                <div class="interview-info">
+
+                    <div class="interview-title">
+                        ${escapeHTML(role)}
+                        — ${escapeHTML(type)}
+                    </div>
+
+                    <div class="interview-meta">
+                        ${escapeHTML(company)}
+                        ·
+                        ${escapeHTML(date)}
+                        ·
+                        ${item.duration || 15} min
+                    </div>
+
+                </div>
+
+                <div class="score">
+                    ${score}%
+                </div>
+            `;
+
+            interviewList.appendChild(row);
+
+        });
+
 }
 
-/* ══════════════════════════════════════
-   SIDEBAR (MOBILE)
-══════════════════════════════════════ */
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('overlay').classList.add('show');
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
+
+/* =====================================================
+   HTML ESCAPE
+===================================================== */
+
+function escapeHTML(value){
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        String(value);
+
+    return div.innerHTML;
 }
 
-/* ══════════════════════════════════════
-   LOGOUT
-══════════════════════════════════════ */
-function doLogout(){
-  localStorage.removeItem('ai_logged_in');
-  localStorage.removeItem('ai_user_name');
-  localStorage.removeItem('ai_user_email');
-  window.location.href = 'ai_interviewer_login.html';
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function go(page){
+
+    window.location.href =
+        page;
+
 }
 
-/* ══════════════════════════════════════
+
+function comingSoon(
+    event,
+    name
+){
+
+    event.preventDefault();
+
+    showToast(
+        name +
+        " page can be connected next.",
+        "info"
+    );
+
+}
+
+
+/* =====================================================
+   SIDEBAR MOBILE
+===================================================== */
+
+function toggleSidebar(){
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =====================================================
    TOAST
-══════════════════════════════════════ */
-function showToast(msg, type){
-  const t = document.getElementById('toast');
-  const styles = {
-    success : {bg:'rgba(34,197,94,0.15)',  bc:'rgba(34,197,94,0.35)',  c:'#86efac'},
-    info    : {bg:'rgba(124,58,237,0.18)', bc:'rgba(124,58,237,0.4)',  c:'#c4b5fd'},
-    error   : {bg:'rgba(220,38,38,0.18)',  bc:'rgba(220,38,38,0.4)',   c:'#fca5a5'},
-  };
-  const s = styles[type] || styles.info;
-  t.style.background  = s.bg;
-  t.style.borderColor = s.bc;
-  t.style.color       = s.c;
-  t.textContent = msg;
-  t.style.opacity   = '1';
-  t.style.transform = 'translateX(-50%) translateY(0)';
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=>{
-    t.style.opacity   = '0';
-    t.style.transform = 'translateX(-50%) translateY(-80px)';
-  }, 3000);
+===================================================== */
+
+function showToast(
+    message,
+    type="info"
+){
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent =
+        message;
+
+    toast.style.opacity =
+        "1";
+
+    toast.style.transform =
+        "translate(-50%,0)";
+
+    setTimeout(() => {
+
+        toast.style.opacity =
+            "0";
+
+        toast.style.transform =
+            "translate(-50%,-100px)";
+
+    },2500);
+
 }
 
-/* Welcome toast */
-showToast('Welcome back, ' + displayName + '! 👋', 'info');
+
+/* =====================================================
+   AUTH
+===================================================== */
+
+/*
+   IMPORTANT:
+   Do not force redirect here.
+   This prevents the dashboard from breaking
+   when you are testing locally or on Vercel.
+*/
+
+if(
+    localStorage.getItem("ai_logged_in") === "true"
+){
+
+    console.log(
+        "InterviewAI user session active."
+    );
+
+}
+
+
+/* =====================================================
+   CHARACTER IMAGE FALLBACK
+===================================================== */
+
+document
+    .querySelectorAll(".character img, .hero-character img, .mentor img")
+    .forEach(img => {
+
+        img.addEventListener(
+            "error",
+            function(){
+
+                this.style.display =
+                    "none";
+
+            }
+        );
+
+    });
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+setTimeout(() => {
+
+    showToast(
+        "Welcome back, " +
+        displayName +
+        "! ⚔️",
+        "info"
+    );
+
+},500);
+
 </script>
+
 </body>
 </html>
