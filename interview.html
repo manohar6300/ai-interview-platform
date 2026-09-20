@@ -1,260 +1,3579 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>InterviewAI — Setup Interview</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%237c3aed'/><circle cx='50' cy='50' r='18' fill='white'/></svg>"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>InterviewAI — Interview Arena</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800;900&display=swap"
+  rel="stylesheet"
+>
+
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--bg:#060608;--purple:#7c3aed;--pink:#ec4899;--border:rgba(255,255,255,0.08);--muted:rgba(255,255,255,0.4);--font-head:'Syne',sans-serif;--font:'Inter',sans-serif;}
-body{font-family:var(--font);background:var(--bg);color:#fff;min-height:100vh;}
-.aurora{position:fixed;inset:0;pointer-events:none;z-index:0;}
-.ab{position:absolute;border-radius:50%;}
-.ab1{width:700px;height:700px;top:-200px;left:-150px;background:radial-gradient(circle,rgba(124,58,237,0.18) 0%,transparent 65%);animation:ab1 18s ease-in-out infinite alternate;}
-.ab2{width:600px;height:600px;bottom:-200px;right:-100px;background:radial-gradient(circle,rgba(236,72,153,0.12) 0%,transparent 65%);animation:ab2 22s ease-in-out infinite alternate;}
-@keyframes ab1{from{transform:translate(0,0);}to{transform:translate(60px,40px) scale(1.1);}}
-@keyframes ab2{from{transform:translate(0,0);}to{transform:translate(-50px,-30px) scale(1.1);}}
-.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.35;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:160px;}
-/* NAVBAR */
-nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:center;padding:0 32px;background:rgba(6,6,8,0.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
-.nav-inner{max-width:1100px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
-.logo-gem{width:34px;height:34px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#db2777);display:flex;align-items:center;justify-content:center;box-shadow:0 0 16px rgba(124,58,237,0.45);}
-.logo-gem svg{width:18px;height:18px;}
-.logo-name{font-family:var(--font-head);font-size:16px;font-weight:800;color:#fff;}
-.back-btn{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:9px;padding:7px 16px;cursor:pointer;font-family:var(--font);transition:all 0.2s;}
-.back-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
-/* PAGE */
-.page{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:48px 32px 80px;}
-.page-head{text-align:center;margin-bottom:48px;}
-.page-pill{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:#a78bfa;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.28);border-radius:100px;padding:5px 14px;margin-bottom:18px;}
-.pill-dot{width:6px;height:6px;border-radius:50%;background:#a78bfa;box-shadow:0 0 8px #a78bfa;animation:pd 2s ease-in-out infinite;}
-@keyframes pd{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.page-title{font-family:var(--font-head);font-size:38px;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px;}
-.grad-text{background:linear-gradient(120deg,#ede9fe,#c084fc 42%,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.page-sub{font-size:15px;color:var(--muted);line-height:1.65;}
-/* STEP PROGRESS */
-.step-bar{display:flex;align-items:center;gap:0;margin-bottom:40px;max-width:400px;margin-left:auto;margin-right:auto;}
-.step-item{display:flex;flex-direction:column;align-items:center;gap:6px;}
-.step-circle{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);transition:all 0.3s;}
-.step-item.active .step-circle{background:linear-gradient(135deg,#7c3aed,#ec4899);border-color:transparent;color:#fff;box-shadow:0 0 16px rgba(124,58,237,0.5);}
-.step-item.done .step-circle{background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.4);color:#34d399;}
-.step-label{font-size:10px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:var(--muted);}
-.step-item.active .step-label{color:#a78bfa;}
-.step-line{flex:1;height:1px;background:rgba(255,255,255,0.08);margin:0 8px;margin-bottom:20px;}
-/* FORM CARD */
-.form-card{border-radius:20px;border:1px solid var(--border);background:rgba(255,255,255,0.025);padding:36px;margin-bottom:20px;}
-.form-section-title{font-family:var(--font-head);font-size:17px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
-.form-section-icon{width:36px;height:36px;border-radius:9px;background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.25);display:flex;align-items:center;justify-content:center;font-size:16px;}
-/* OPTION GRID */
-.option-grid{display:grid;gap:10px;}
-.opt-2{grid-template-columns:1fr 1fr;}
-.opt-3{grid-template-columns:1fr 1fr 1fr;}
-.opt-4{grid-template-columns:1fr 1fr 1fr 1fr;}
-.opt-card{border-radius:14px;border:2px solid rgba(255,255,255,0.07);background:rgba(255,255,255,0.02);padding:16px 14px;cursor:pointer;transition:all 0.22s;text-align:center;user-select:none;}
-.opt-card:hover{border-color:rgba(124,58,237,0.35);background:rgba(124,58,237,0.06);transform:translateY(-2px);}
-.opt-card.selected{border-color:rgba(124,58,237,0.6);background:rgba(124,58,237,0.12);box-shadow:0 0 20px rgba(124,58,237,0.15);}
-.opt-card.selected .opt-icon{transform:scale(1.15);}
-.opt-icon{font-size:24px;margin-bottom:8px;transition:transform 0.2s;}
-.opt-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;}
-.opt-desc{font-size:10px;color:var(--muted);line-height:1.4;}
-/* Company search in setup */
-.company-input-wrap{position:relative;}
-.company-input{width:100%;padding:13px 18px 13px 44px;font-size:14px;font-family:var(--font);color:#fff;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:12px;outline:none;transition:all 0.25s;}
-.company-input:focus{background:rgba(124,58,237,0.07);border-color:rgba(124,58,237,0.52);box-shadow:0 0 0 3px rgba(124,58,237,0.13);}
-.company-input::placeholder{color:rgba(255,255,255,0.2);}
-.ci-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none;}
-.company-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
-.ctag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:7px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.2s;}
-.ctag:hover,.ctag.selected{border-color:rgba(124,58,237,0.45);background:rgba(124,58,237,0.1);color:#c084fc;}
-/* QUESTION COUNT */
-.count-row{display:flex;align-items:center;gap:16px;}
-.count-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);font-size:20px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-family:var(--font);}
-.count-btn:hover{border-color:rgba(124,58,237,0.4);background:rgba(124,58,237,0.08);}
-.count-val{font-family:var(--font-head);font-size:28px;font-weight:800;background:linear-gradient(90deg,#c084fc,#f472b6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;min-width:40px;text-align:center;}
-/* START BUTTON */
-.start-btn{width:100%;padding:18px;border:none;border-radius:14px;background:linear-gradient(105deg,#7c3aed,#a855f7 50%,#ec4899);color:#fff;font-size:16px;font-weight:800;font-family:var(--font);cursor:pointer;position:relative;overflow:hidden;box-shadow:0 4px 32px rgba(124,58,237,0.5),0 2px 12px rgba(236,72,153,0.3);transition:transform 0.15s,box-shadow 0.2s;}
-.start-btn:hover{transform:translateY(-2px);box-shadow:0 8px 44px rgba(124,58,237,0.65);}
-.start-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
-.btn-glint{position:absolute;top:0;left:-130%;width:65%;height:100%;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.25) 50%,transparent 70%);animation:glint 3s ease-in-out infinite;}
-@keyframes glint{0%{left:-130%;}45%{left:130%;}100%{left:130%;}}
-.summary-card{border-radius:14px;border:1px solid rgba(124,58,237,0.2);background:rgba(124,58,237,0.05);padding:20px 24px;margin-bottom:20px;}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.summary-item{display:flex;flex-direction:column;gap:3px;}
-.summary-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);}
-.summary-value{font-size:14px;font-weight:700;color:#fff;}
-@media(max-width:600px){.opt-3{grid-template-columns:1fr 1fr;}.opt-4{grid-template-columns:1fr 1fr;}.opt-2{grid-template-columns:1fr;}}
-#toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);z-index:9999;padding:12px 26px;border-radius:12px;font-size:14px;font-weight:600;font-family:var(--font);transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.3s;opacity:0;white-space:nowrap;backdrop-filter:blur(20px);border:1px solid;pointer-events:none;}
+
+:root{
+  --white:#fff;
+  --muted:#c9d2ef;
+  --purple:#9b5cff;
+  --pink:#ff43d1;
+  --blue:#58c7ff;
+  --cyan:#6df7ff;
+  --gold:#ffc85c;
+  --green:#72f0b2;
+  --glass:rgba(10,16,43,.48);
+  --glass2:rgba(20,28,67,.58);
+  --line:rgba(190,210,255,.24);
+}
+
+*{
+  box-sizing:border-box
+}
+
+html,
+body{
+  margin:0;
+  min-height:100%;
+  font-family:Inter,Arial,sans-serif;
+  color:var(--white);
+  background:#050716;
+}
+
+body{
+  overflow-x:hidden;
+
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(2,5,20,.18),
+      rgba(3,5,18,.68)
+    ),
+    url('interview-arena-bg.png');
+
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(7,9,28,.02) 0%,
+      rgba(7,9,28,.08) 38%,
+      rgba(3,5,18,.58) 100%
+    ),
+    radial-gradient(
+      circle at 50% 5%,
+      rgba(255,255,255,.16),
+      transparent 26%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(70,35,160,.16),
+      transparent 35%,
+      rgba(22,140,255,.08) 70%,
+      rgba(255,60,190,.1)
+    );
+
+  z-index:-1;
+}
+
+button,
+textarea{
+  font:inherit;
+}
+
+.page{
+  min-height:100vh;
+  position:relative;
+  padding:18px 28px 34px;
+}
+
+.page:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0 38%,
+      rgba(255,255,255,.025) 40%,
+      transparent 42% 100%
+    );
+
+  mix-blend-mode:screen;
+}
+
+.glass{
+  background:
+    linear-gradient(
+      135deg,
+      rgba(22,31,73,.62),
+      rgba(10,16,43,.38)
+    );
+
+  border:1px solid rgba(211,225,255,.25);
+
+  box-shadow:
+    0 25px 80px rgba(0,0,0,.38),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -1px 0 rgba(0,0,0,.2);
+
+  backdrop-filter:blur(18px) saturate(135%);
+  -webkit-backdrop-filter:blur(18px) saturate(135%);
+}
+
+/* TOP BAR */
+
+.topbar{
+  max-width:1480px;
+  margin:0 auto;
+
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:18px;
+  align-items:center;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.brand-mark{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+
+  display:grid;
+  place-items:center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #48bfff,
+      #9b5cff
+    );
+
+  box-shadow:
+    0 0 28px rgba(83,180,255,.35);
+
+  font-size:22px;
+}
+
+.brand-name{
+  font:800 23px Syne,Inter;
+}
+
+.brand-name span{
+  color:#d53fff;
+}
+
+.brand-sub{
+  display:block;
+  font-size:8px;
+  letter-spacing:2.2px;
+  color:#dbe4ff;
+  margin-top:-2px;
+}
+
+.nav{
+  display:flex;
+  gap:7px;
+  padding:6px;
+  border-radius:18px;
+}
+
+.nav a{
+  color:#dfe8ff;
+  text-decoration:none;
+
+  font-size:12px;
+  font-weight:800;
+
+  padding:11px 16px;
+  border-radius:12px;
+
+  white-space:nowrap;
+
+  border:1px solid transparent;
+}
+
+.nav a:hover,
+.nav a.active{
+  background:rgba(147,118,255,.28);
+  border-color:rgba(211,225,255,.22);
+
+  box-shadow:
+    0 0 24px rgba(155,92,255,.22);
+}
+
+.profile{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  padding:7px 12px 7px 8px;
+
+  border-radius:17px;
+
+  min-width:185px;
+}
+
+.avatar{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+
+  display:grid;
+  place-items:center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ff855f,
+      #e9468f
+    );
+
+  font-weight:900;
+
+  box-shadow:
+    0 0 20px rgba(255,88,143,.28);
+}
+
+.profile b{
+  font-size:12px;
+}
+
+.profile small{
+  display:block;
+  color:#bdc9e9;
+  font-size:10px;
+  margin-top:2px;
+}
+
+.xpbar{
+  width:70px;
+  height:6px;
+
+  border-radius:99px;
+
+  background:rgba(255,255,255,.13);
+
+  overflow:hidden;
+
+  margin-top:5px;
+}
+
+.xpbar i{
+  display:block;
+  height:100%;
+  width:58%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #b44cff,
+      #e849ff
+    );
+
+  border-radius:99px;
+}
+
+.menu{
+  font-size:22px;
+  color:#fff;
+  margin-left:5px;
+}
+
+/* HERO */
+
+.hero{
+  max-width:1480px;
+  margin:26px auto 0;
+  text-align:center;
+}
+
+.hero .eyebrow{
+  font-size:10px;
+  letter-spacing:5px;
+  color:#e7ddff;
+  font-weight:800;
+
+  text-shadow:
+    0 0 20px rgba(175,113,255,.8);
+}
+
+.hero h1{
+  font:
+    900 clamp(36px,5vw,66px)/.95
+    Syne,Inter;
+
+  margin:8px 0 8px;
+
+  letter-spacing:-2px;
+  text-transform:uppercase;
+
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      #d7b7ff,
+      #fff,
+      #8deeff
+    );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+
+  color:transparent;
+
+  text-shadow:
+    0 0 30px rgba(181,93,255,.28);
+}
+
+.hero .sub{
+  font-size:12px;
+  letter-spacing:6px;
+  color:#f0eaff;
+  font-weight:700;
+}
+
+/* STEPS */
+
+.steps{
+  max-width:720px;
+  margin:17px auto 19px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  gap:8px;
+}
+
+.step{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  color:#b8c3e4;
+
+  font-size:10px;
+  font-weight:800;
+}
+
+.step .dot{
+  width:31px;
+  height:31px;
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  border:
+    1px solid rgba(210,225,255,.22);
+
+  background:
+    rgba(10,16,43,.48);
+
+  box-shadow:
+    inset 0 0 15px rgba(120,100,255,.12);
+}
+
+.step.active{
+  color:#fff;
+}
+
+.step.active .dot{
+  border-color:#bd74ff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8f43ff,
+      #e83cff
+    );
+
+  box-shadow:
+    0 0 24px rgba(177,75,255,.65);
+}
+
+.connector{
+  height:1px;
+  width:58px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(164,102,255,.6),
+      rgba(97,204,255,.3)
+    );
+}
+
+/* SETUP */
+
+.content{
+  max-width:1180px;
+  margin:0 auto;
+
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1fr)
+    280px;
+
+  gap:22px;
+
+  align-items:start;
+}
+
+.setup-card{
+  padding:25px 28px 27px;
+  border-radius:24px;
+}
+
+.setup-card:before{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  pointer-events:none;
+
+  border-radius:24px;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255,255,255,.08),
+      transparent 30%,
+      transparent 70%,
+      rgba(150,100,255,.08)
+    );
+}
+
+.card-title{
+  position:relative;
+
+  font:
+    900 25px Syne;
+
+  margin:0;
+}
+
+.card-title span{
+  color:#cf49ff;
+}
+
+.card-sub{
+  position:relative;
+
+  color:#b8c6e8;
+  font-size:12px;
+
+  margin:5px 0 19px;
+}
+
+.section{
+  position:relative;
+  margin-top:18px;
+}
+
+.label{
+  font-size:12px;
+  font-weight:900;
+
+  margin-bottom:9px;
+
+  color:#edf2ff;
+}
+
+.choices{
+  display:grid;
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:10px;
+}
+
+.choice{
+  min-height:74px;
+
+  cursor:pointer;
+
+  color:#dce5ff;
+
+  border:
+    1px solid rgba(204,220,255,.18);
+
+  border-radius:12px;
+
+  background:
+    rgba(8,14,39,.34);
+
+  padding:12px 10px;
+
+  transition:.2s;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.choice b{
+  display:block;
+  font-size:13px;
+  margin-bottom:6px;
+}
+
+.choice small{
+  font-size:10px;
+  line-height:1.35;
+  color:#b7c4e8;
+}
+
+.choice:hover{
+  transform:translateY(-2px);
+
+  border-color:
+    rgba(177,109,255,.7);
+
+  background:
+    rgba(83,53,151,.25);
+
+  box-shadow:
+    0 0 25px rgba(145,74,255,.16);
+}
+
+.choice.selected{
+  border-color:#c54cff;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(151,69,255,.34),
+      rgba(222,44,220,.12)
+    );
+
+  box-shadow:
+    0 0 24px rgba(176,69,255,.26),
+    inset 0 0 25px rgba(129,68,255,.08);
+}
+
+.role-grid{
+  grid-template-columns:
+    repeat(4,1fr);
+}
+
+.role-grid .choice{
+  min-height:auto;
+}
+
+.small-grid{
+  grid-template-columns:
+    repeat(3,1fr);
+}
+
+.small-grid .choice{
+  min-height:auto;
+}
+
+.start{
+  position:relative;
+
+  margin:23px auto 0;
+
+  display:block;
+
+  min-width:360px;
+
+  border:0;
+  border-radius:14px;
+
+  padding:15px 26px;
+
+  color:#fff;
+
+  font-weight:900;
+  font-size:16px;
+
+  letter-spacing:.3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #9b38ff,
+      #e53ee8
+    );
+
+  box-shadow:
+    0 0 28px rgba(198,53,255,.45),
+    inset 0 1px rgba(255,255,255,.3);
+
+  cursor:pointer;
+
+  clip-path:
+    polygon(
+      5% 0,
+      95% 0,
+      100% 50%,
+      95% 100%,
+      5% 100%,
+      0 50%
+    );
+}
+
+.start:hover{
+  filter:brightness(1.12);
+  transform:translateY(-2px);
+}
+
+/* MENTOR */
+
+.mentor-panel{
+  padding:15px;
+
+  border-radius:22px;
+
+  overflow:hidden;
+
+  position:relative;
+}
+
+.mentor-panel:before{
+  content:"";
+
+  position:absolute;
+  inset:0;
+
+  background:
+    radial-gradient(
+      circle at 50% 15%,
+      rgba(153,77,255,.3),
+      transparent 45%
+    );
+
+  pointer-events:none;
+}
+
+.mentor-img{
+  position:relative;
+
+  width:100%;
+  height:185px;
+
+  object-fit:cover;
+  object-position:55% 25%;
+
+  border-radius:15px;
+
+  border:
+    1px solid rgba(209,221,255,.22);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.3);
+}
+
+.mentor-kicker{
+  position:relative;
+
+  margin-top:12px;
+
+  color:#e7d7ff;
+
+  font-size:10px;
+
+  letter-spacing:2px;
+
+  font-weight:900;
+}
+
+.mentor-name{
+  position:relative;
+
+  font:
+    900 21px Syne;
+
+  margin-top:2px;
+}
+
+.mentor-desc{
+  position:relative;
+
+  color:#b9c7e8;
+
+  font-size:11px;
+  line-height:1.5;
+
+  margin:6px 0 12px;
+}
+
+.mentor-list{
+  position:relative;
+
+  display:grid;
+
+  gap:7px;
+}
+
+.mentor-list div{
+  display:flex;
+
+  gap:9px;
+
+  align-items:center;
+
+  padding:7px 9px;
+
+  border-radius:9px;
+
+  background:
+    rgba(8,14,38,.35);
+
+  border:
+    1px solid rgba(210,220,255,.1);
+
+  font-size:10px;
+
+  color:#d9e3ff;
+}
+
+.mentor-list i{
+  font-style:normal;
+  color:#c95cff;
+}
+
+.quote{
+  position:relative;
+
+  margin-top:12px;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  background:
+    rgba(15,20,54,.42);
+
+  color:#dfe7ff;
+
+  font-size:10px;
+
+  line-height:1.45;
+
+  border-left:
+    2px solid #b34cff;
+}
+
+/* STATS */
+
+.stats{
+  max-width:980px;
+
+  margin:17px auto 0;
+
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  border-radius:18px;
+
+  overflow:hidden;
+}
+
+.stat{
+  padding:11px 15px;
+
+  text-align:center;
+
+  border-right:
+    1px solid rgba(220,230,255,.1);
+}
+
+.stat:last-child{
+  border-right:0;
+}
+
+.stat b{
+  font-size:17px;
+}
+
+.stat span{
+  display:block;
+
+  color:#b7c4e5;
+
+  font-size:9px;
+
+  margin-top:2px;
+}
+
+/* SESSION */
+
+.session{
+  max-width:1180px;
+  margin:0 auto;
+}
+
+.session-head{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  gap:15px;
+
+  margin-bottom:12px;
+}
+
+.session-title{
+  font:
+    900 27px Syne;
+}
+
+.meta{
+  font-size:11px;
+  color:#b7c5e8;
+}
+
+.timer{
+  min-width:110px;
+
+  text-align:center;
+
+  padding:11px 16px;
+
+  border-radius:14px;
+
+  background:
+    rgba(20,22,60,.55);
+
+  border:
+    1px solid rgba(255,201,92,.35);
+
+  color:var(--gold);
+
+  font-weight:900;
+
+  box-shadow:
+    0 0 20px rgba(255,195,76,.08);
+}
+
+.progress-wrap{
+  height:7px;
+
+  background:
+    rgba(5,9,27,.55);
+
+  border-radius:99px;
+
+  overflow:hidden;
+
+  margin-bottom:16px;
+
+  border:
+    1px solid rgba(220,230,255,.08);
+}
+
+.progress{
+  height:100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #9b44ff,
+      #ef42e7,
+      #65ddff
+    );
+
+  box-shadow:
+    0 0 18px rgba(196,71,255,.55);
+
+  transition:width .3s;
+}
+
+.question-card{
+  padding:25px;
+  border-radius:22px;
+}
+
+.q-top{
+  display:flex;
+
+  justify-content:space-between;
+
+  color:#c0cce9;
+
+  font-size:10px;
+
+  font-weight:800;
+
+  text-transform:uppercase;
+
+  letter-spacing:1px;
+}
+
+.tag{
+  padding:6px 9px;
+
+  border-radius:8px;
+
+  background:
+    rgba(90,235,182,.1);
+
+  color:#7bf2bb;
+
+  border:
+    1px solid rgba(90,235,182,.18);
+}
+
+.question{
+  font:
+    800 24px/1.35 Syne;
+
+  margin:20px 0;
+
+  color:#fff;
+}
+
+.answer{
+  width:100%;
+
+  min-height:220px;
+
+  resize:vertical;
+
+  padding:16px;
+
+  border-radius:14px;
+
+  border:
+    1px solid rgba(190,210,255,.2);
+
+  outline:0;
+
+  background:
+    rgba(3,8,28,.45);
+
+  color:#edf2ff;
+
+  line-height:1.65;
+
+  backdrop-filter:blur(12px);
+}
+
+.answer:focus{
+  border-color:#b75aff;
+
+  box-shadow:
+    0 0 0 3px rgba(166,75,255,.1),
+    0 0 25px rgba(166,75,255,.12);
+}
+
+.session-actions{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  margin-top:15px;
+}
+
+.save-note{
+  color:#aebbe0;
+  font-size:10px;
+}
+
+.btn{
+  border:
+    1px solid rgba(205,220,255,.2);
+
+  background:
+    rgba(15,22,51,.52);
+
+  color:#e9efff;
+
+  border-radius:11px;
+
+  padding:11px 16px;
+
+  cursor:pointer;
+
+  font-size:11px;
+
+  font-weight:800;
+}
+
+.btn.primary{
+  border:0;
+
+  background:
+    linear-gradient(
+      135deg,
+      #9741ff,
+      #e33fe8
+    );
+
+  box-shadow:
+    0 8px 24px rgba(180,59,255,.25);
+}
+
+.finish{
+  border-color:
+    rgba(114,240,178,.28);
+
+  color:#7df2ba;
+}
+
+/* RESULT */
+
+.result-card{
+  padding:36px;
+
+  text-align:center;
+
+  border-radius:24px;
+}
+
+.score{
+  font:
+    900 72px Syne;
+
+  background:
+    linear-gradient(
+      90deg,
+      #fff,
+      #74eaff,
+      #b25cff
+    );
+
+  -webkit-background-clip:text;
+  background-clip:text;
+
+  color:transparent;
+}
+
+.result-grid{
+  display:grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap:10px;
+
+  margin:22px 0;
+}
+
+.metric{
+  padding:15px;
+
+  border-radius:13px;
+
+  background:
+    rgba(8,14,38,.38);
+
+  border:
+    1px solid rgba(220,230,255,.1);
+}
+
+.metric b{
+  display:block;
+  font-size:21px;
+}
+
+.metric span{
+  font-size:9px;
+
+  color:#b5c1e0;
+
+  text-transform:uppercase;
+
+  letter-spacing:1px;
+}
+
+.result-actions{
+  display:flex;
+
+  justify-content:center;
+
+  gap:10px;
+
+  margin-top:22px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+
+  right:22px;
+  bottom:22px;
+
+  background:
+    rgba(14,19,48,.78);
+
+  border:
+    1px solid rgba(191,103,255,.4);
+
+  padding:12px 15px;
+
+  border-radius:12px;
+
+  color:#eef3ff;
+
+  font-size:11px;
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.45);
+
+  backdrop-filter:blur(15px);
+
+  z-index:20;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+
+  .topbar{
+    grid-template-columns:1fr auto;
+  }
+
+  .nav{
+    order:3;
+    grid-column:1/-1;
+    justify-content:center;
+  }
+
+  .content{
+    grid-template-columns:1fr;
+  }
+
+  .mentor-panel{
+    display:grid;
+    grid-template-columns:180px 1fr;
+    gap:15px;
+  }
+
+  .mentor-img{
+    height:180px;
+    grid-row:1/4;
+  }
+
+  .mentor-kicker{
+    margin-top:0;
+  }
+
+  .stats{
+    max-width:100%;
+  }
+
+}
+
+@media(max-width:700px){
+
+  .page{
+    padding:12px 12px 25px;
+  }
+
+  .brand-name{
+    font-size:18px;
+  }
+
+  .brand-sub{
+    display:none;
+  }
+
+  .topbar{
+    grid-template-columns:1fr auto;
+  }
+
+  .nav{
+    overflow:auto;
+    justify-content:flex-start;
+  }
+
+  .nav a{
+    padding:9px 11px;
+  }
+
+  .profile{
+    min-width:auto;
+  }
+
+  .profile small,
+  .xpbar{
+    display:none;
+  }
+
+  .hero{
+    margin-top:18px;
+  }
+
+  .hero h1{
+    font-size:38px;
+  }
+
+  .hero .sub{
+    font-size:9px;
+    letter-spacing:3px;
+  }
+
+  .steps{
+    gap:4px;
+  }
+
+  .step span:not(.dot){
+    display:none;
+  }
+
+  .connector{
+    width:28px;
+  }
+
+  .setup-card{
+    padding:20px 16px;
+  }
+
+  .choices,
+  .role-grid,
+  .small-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .start{
+    min-width:100%;
+    font-size:14px;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stat:nth-child(2){
+    border-right:0;
+  }
+
+  .mentor-panel{
+    display:block;
+  }
+
+  .mentor-img{
+    height:220px;
+  }
+
+  .session-actions{
+    flex-direction:column;
+    align-items:stretch;
+    gap:10px;
+  }
+
+  .session-actions>div:last-child{
+    display:grid!important;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .result-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .question{
+    font-size:20px;
+  }
+
+}
+
+@media(max-width:430px){
+
+  .topbar{
+    grid-template-columns:1fr;
+  }
+
+  .profile{
+    justify-self:start;
+  }
+
+  .nav{
+    grid-column:auto;
+  }
+
+  .choices,
+  .role-grid,
+  .small-grid{
+    grid-template-columns:1fr;
+  }
+
+  .hero h1{
+    font-size:32px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .score{
+    font-size:58px;
+  }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+  *{
+    scroll-behavior:auto!important;
+    transition:none!important;
+  }
+
+}
+
 </style>
 </head>
+
 <body>
-<div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
-<div class="grain"></div>
-<nav><div class="nav-inner">
-  <a class="nav-logo" href=	'ai_dashboard.html'">
-    <div class="logo-gem"><svg viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="4.5" fill="white" opacity="0.95"/><path d="M2 11 Q6.5 5 11 11 Q15.5 17 20 11" stroke="white" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.75"/></svg></div>
-    <div class="logo-name">InterviewAI</div>
-  </a>
-  <button class="back-btn" onclick="window.location.href='ai_dashboard.html'">← Back to Dashboard</button>
-</div></nav>
 
 <div class="page">
-  <div class="page-head">
-    <div class="page-pill"><span class="pill-dot"></span>Interview Setup</div>
-    <h1 class="page-title">Set Up Your <span class="grad-text">Mock Interview</span></h1>
-    <p class="page-sub">Customise your session — role, experience, type, and target company. The AI will tailor every question just for you.</p>
-  </div>
 
-  <!-- ROLE -->
-  <div class="form-card">
-    <div class="form-section-title"><div class="form-section-icon">👨‍💻</div>What role are you interviewing for?</div>
-    <div class="option-grid opt-3" id="role-grid">
-      <div class="opt-card" onclick="select('role',this,'Frontend Developer')"><div class="opt-icon">🖥️</div><div class="opt-title">Frontend Dev</div><div class="opt-desc">React, HTML, CSS, JS</div></div>
-      <div class="opt-card" onclick="select('role',this,'Backend Developer')"><div class="opt-icon">⚙️</div><div class="opt-title">Backend Dev</div><div class="opt-desc">Node, Java, Python, APIs</div></div>
-      <div class="opt-card" onclick="select('role',this,'Full Stack Developer')"><div class="opt-icon">🔮</div><div class="opt-title">Full Stack</div><div class="opt-desc">End-to-end development</div></div>
-      <div class="opt-card" onclick="select('role',this,'Data Analyst')"><div class="opt-icon">📊</div><div class="opt-title">Data Analyst</div><div class="opt-desc">SQL, Python, Tableau</div></div>
-      <div class="opt-card" onclick="select('role',this,'Java Developer')"><div class="opt-icon">☕</div><div class="opt-title">Java Developer</div><div class="opt-desc">Spring, Microservices</div></div>
-      <div class="opt-card" onclick="select('role',this,'Product Manager')"><div class="opt-icon">📋</div><div class="opt-title">Product Manager</div><div class="opt-desc">Strategy, roadmap, metrics</div></div>
-    </div>
-  </div>
+  <!-- =========================
+       TOP BAR
+  ========================== -->
 
-  <!-- EXPERIENCE -->
-  <div class="form-card">
-    <div class="form-section-title"><div class="form-section-icon">⭐</div>What's your experience level?</div>
-    <div class="option-grid opt-4" id="exp-grid">
-      <div class="opt-card" onclick="select('exp',this,'Fresher')"><div class="opt-icon">🌱</div><div class="opt-title">Fresher</div><div class="opt-desc">0 years</div></div>
-      <div class="opt-card" onclick="select('exp',this,'1-2 Years')"><div class="opt-icon">🚀</div><div class="opt-title">1–2 Years</div><div class="opt-desc">Junior level</div></div>
-      <div class="opt-card" onclick="select('exp',this,'3-5 Years')"><div class="opt-icon">💪</div><div class="opt-title">3–5 Years</div><div class="opt-desc">Mid level</div></div>
-      <div class="opt-card" onclick="select('exp',this,'5+ Years')"><div class="opt-icon">🏆</div><div class="opt-title">5+ Years</div><div class="opt-desc">Senior level</div></div>
-    </div>
-  </div>
+  <header class="topbar">
 
-  <!-- INTERVIEW TYPE -->
-  <div class="form-card">
-    <div class="form-section-title"><div class="form-section-icon">🎯</div>What type of interview?</div>
-    <div class="option-grid opt-3" id="type-grid">
-      <div class="opt-card" onclick="select('type',this,'Technical')"><div class="opt-icon">⚡</div><div class="opt-title">Technical</div><div class="opt-desc">DSA, Coding, System Design</div></div>
-      <div class="opt-card" onclick="select('type',this,'HR')"><div class="opt-icon">🤝</div><div class="opt-title">HR Round</div><div class="opt-desc">Behavioural, Culture fit</div></div>
-      <div class="opt-card" onclick="select('type',this,'Mixed')"><div class="opt-icon">🎯</div><div class="opt-title">Mixed</div><div class="opt-desc">Technical + Behavioural</div></div>
-    </div>
-  </div>
+    <div class="brand">
 
-  <!-- COMPANY -->
-  <div class="form-card">
-    <div class="form-section-title"><div class="form-section-icon">🏢</div>Target company (optional)</div>
-    <div class="company-input-wrap">
-      <span class="ci-icon">🔍</span>
-      <input class="company-input" id="company-input" type="text" placeholder="Type any company name..."/>
-    </div>
-    <div class="company-tags">
-      <div class="ctag" onclick="setCompany(this,'Google')">🔵 Google</div>
-      <div class="ctag" onclick="setCompany(this,'Amazon')">🟠 Amazon</div>
-      <div class="ctag" onclick="setCompany(this,'Microsoft')">🟦 Microsoft</div>
-      <div class="ctag" onclick="setCompany(this,'Meta')">🔷 Meta</div>
-      <div class="ctag" onclick="setCompany(this,'TCS')">🟣 TCS</div>
-      <div class="ctag" onclick="setCompany(this,'Infosys')">🔶 Infosys</div>
-      <div class="ctag" onclick="setCompany(this,'Swiggy')">🟠 Swiggy</div>
-      <div class="ctag" onclick="setCompany(this,'Razorpay')">💳 Razorpay</div>
-      <div class="ctag" onclick="setCompany(this,'Zepto')">⚡ Zepto</div>
-    </div>
-  </div>
-
-  <!-- QUESTION COUNT -->
-  <div class="form-card">
-    <div class="form-section-title"><div class="form-section-icon">🔢</div>How many questions?</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
-      <div class="count-row">
-        <button class="count-btn" onclick="changeCount(-1)">−</button>
-        <div class="count-val" id="count-val">10</div>
-        <button class="count-btn" onclick="changeCount(1)">+</button>
-        <span style="font-size:13px;color:var(--muted);margin-left:8px;">questions</span>
+      <div class="brand-mark">
+        ⚔
       </div>
-      <div style="font-size:12px;color:var(--muted);line-height:1.6;">Estimated time: <strong style="color:#c084fc" id="est-time">20 min</strong><br>Recommended: 10 questions</div>
+
+      <div>
+
+        <div class="brand-name">
+          Interview<span>AI</span>
+        </div>
+
+        <span class="brand-sub">
+          PRACTICE • EVOLVE • CONQUER
+        </span>
+
+      </div>
+
     </div>
+
+
+    <nav class="nav glass">
+
+      <a href="dashboard.html">
+        ⌂ Dashboard
+      </a>
+
+      <a class="active" href="interview.html">
+        ✦ Interview
+      </a>
+
+      <a href="result.html">
+        ◈ Results
+      </a>
+
+      <a href="Quest.html">
+        ◉ Quest
+      </a>
+
+    </nav>
+
+
+    <div class="profile glass">
+
+      <div class="avatar" id="avatar">
+        M
+      </div>
+
+      <div>
+
+        <b id="profileName">
+          Y Manu
+        </b>
+
+        <small id="profileLevel">
+          Level 7 · 720 XP
+        </small>
+
+        <div class="xpbar">
+          <i></i>
+        </div>
+
+      </div>
+
+      <div class="menu">
+        ☰
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =========================
+       HERO
+  ========================== -->
+
+  <div id="arenaHeader">
+
+    <section class="hero">
+
+      <div class="eyebrow">
+        限界は、ただの幻想だ
+      </div>
+
+      <h1 id="pageTitle">
+        INTERVIEW ARENA
+      </h1>
+
+      <div class="sub">
+        PRACTICE • EVOLVE • CONQUER
+      </div>
+
+    </section>
+
+
+    <div class="steps">
+
+      <div class="step active">
+        <span class="dot">✦</span>
+        <span>Setup</span>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="step">
+        <span class="dot">?</span>
+        <span>Questions</span>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="step">
+        <span class="dot">⚔</span>
+        <span>Battle</span>
+      </div>
+
+      <div class="connector"></div>
+
+      <div class="step">
+        <span class="dot">♛</span>
+        <span>Results</span>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- SUMMARY + START -->
-  <div class="summary-card" id="summary-card" style="display:none;">
-    <div style="font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;">Session Summary</div>
-    <div class="summary-grid">
-      <div class="summary-item"><div class="summary-label">Role</div><div class="summary-value" id="sum-role">—</div></div>
-      <div class="summary-item"><div class="summary-label">Experience</div><div class="summary-value" id="sum-exp">—</div></div>
-      <div class="summary-item"><div class="summary-label">Type</div><div class="summary-value" id="sum-type">—</div></div>
-      <div class="summary-item"><div class="summary-label">Company</div><div class="summary-value" id="sum-company">General</div></div>
+
+  <main>
+
+    <!-- =========================
+         SETUP
+    ========================== -->
+
+    <section id="setupView" class="content">
+
+      <div class="glass setup-card">
+
+        <h2 class="card-title">
+          INTERVIEW <span>SETUP</span>
+        </h2>
+
+        <p class="card-sub">
+          Choose your battle. Every interview makes you stronger.
+        </p>
+
+
+        <!-- TYPE -->
+
+        <div class="section">
+
+          <div class="label">
+            1. Select Interview Type
+          </div>
+
+          <div class="choices" id="typeChoices">
+
+            <button
+              class="choice selected"
+              data-value="technical"
+            >
+              <b>〈/〉 Technical</b>
+              <small>
+                Programming & Technical Concepts
+              </small>
+            </button>
+
+
+            <button
+              class="choice"
+              data-value="dsa"
+            >
+              <b>⌘ DSA</b>
+              <small>
+                Data Structures & Algorithms
+              </small>
+            </button>
+
+
+            <button
+              class="choice"
+              data-value="system-design"
+            >
+              <b>◉ System Design</b>
+              <small>
+                Architecture & Scalability
+              </small>
+            </button>
+
+
+            <button
+              class="choice"
+              data-value="behavioural"
+            >
+              <b>♟ Behavioral</b>
+              <small>
+                HR & Career Questions
+              </small>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- ROLE -->
+
+        <div class="section">
+
+          <div class="label">
+            2. Select Job Role
+          </div>
+
+          <div
+            class="choices role-grid"
+            id="roleChoices"
+          >
+
+            <button
+              class="choice selected"
+              data-value="Software Engineer"
+            >
+              <b>▣ Software Engineer</b>
+            </button>
+
+            <button
+              class="choice"
+              data-value="Frontend Developer"
+            >
+              <b>▣ Frontend Developer</b>
+            </button>
+
+            <button
+              class="choice"
+              data-value="Backend Developer"
+            >
+              <b>▤ Backend Developer</b>
+            </button>
+
+            <button
+              class="choice"
+              data-value="Full Stack Developer"
+            >
+              <b>▰ Full Stack Developer</b>
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- DIFFICULTY + QUESTIONS -->
+
+        <div
+          class="section"
+          style="
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:22px
+          "
+        >
+
+          <div>
+
+            <div class="label">
+              3. Select Difficulty
+            </div>
+
+            <div
+              class="choices small-grid"
+              id="difficultyChoices"
+            >
+
+              <button
+                class="choice"
+                data-value="Easy"
+              >
+                <b>◈ Easy</b>
+              </button>
+
+              <button
+                class="choice selected"
+                data-value="Medium"
+              >
+                <b>◉ Medium</b>
+              </button>
+
+              <button
+                class="choice"
+                data-value="Hard"
+              >
+                <b>◆ Hard</b>
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div>
+
+            <div class="label">
+              4. Number of Questions
+            </div>
+
+            <div
+              class="choices small-grid"
+              id="countChoices"
+            >
+
+              <button
+                class="choice"
+                data-value="5"
+              >
+                <b>5</b>
+              </button>
+
+              <button
+                class="choice selected"
+                data-value="10"
+              >
+                <b>10</b>
+              </button>
+
+              <button
+                class="choice"
+                data-value="15"
+              >
+                <b>15</b>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <button
+          class="start"
+          id="startBtn"
+        >
+          START INTERVIEW &nbsp; →
+        </button>
+
+      </div>
+
+
+      <!-- =========================
+           GOJO MENTOR
+      ========================== -->
+
+      <aside class="glass mentor-panel">
+
+        <img
+          class="mentor-img"
+          src="gojo-mentor.png"
+          alt="Elite mentor anime portrait"
+        >
+
+        <div class="mentor-kicker">
+          ELITE MENTOR
+        </div>
+
+        <div class="mentor-name">
+          SATORU GOJO
+        </div>
+
+        <div class="mentor-desc">
+          The strongest mentor. Stay calm, think clearly,
+          and show your reasoning.
+        </div>
+
+        <div class="mentor-list">
+
+          <div>
+            <i>♛</i>
+            STRATEGY
+          </div>
+
+          <div>
+            <i>◈</i>
+            DISCIPLINE
+          </div>
+
+          <div>
+            <i>✦</i>
+            CONSISTENCY
+          </div>
+
+          <div>
+            <i>◆</i>
+            GROWTH
+          </div>
+
+        </div>
+
+        <div class="quote">
+          “Let’s see what you’ve got. I’ll be watching.”
+        </div>
+
+      </aside>
+
+    </section>
+
+
+    <!-- =========================
+         INTERVIEW SESSION
+    ========================== -->
+
+    <section
+      id="sessionView"
+      class="session hidden"
+    >
+
+      <div class="session-head">
+
+        <div>
+
+          <div
+            class="eyebrow"
+            id="sessionEyebrow"
+          >
+            TECHNICAL · MEDIUM
+          </div>
+
+          <div
+            class="session-title"
+            id="sessionTitle"
+          >
+            Interview Quest
+          </div>
+
+          <div
+            class="meta"
+            id="sessionMeta"
+          >
+            Software Engineer
+          </div>
+
+        </div>
+
+
+        <div
+          class="timer"
+          id="timer"
+        >
+          05:00
+        </div>
+
+      </div>
+
+
+      <div class="progress-wrap">
+
+        <div
+          class="progress"
+          id="progress"
+        ></div>
+
+      </div>
+
+
+      <div class="glass question-card">
+
+        <div class="q-top">
+
+          <span id="qCounter">
+            Question 1 / 5
+          </span>
+
+          <span
+            class="tag"
+            id="qTag"
+          >
+            Technical
+          </span>
+
+        </div>
+
+
+        <div
+          class="question"
+          id="questionText"
+        ></div>
+
+
+        <textarea
+          class="answer"
+          id="answer"
+          placeholder="Type your answer here. Explain your approach clearly..."
+        ></textarea>
+
+
+        <div class="session-actions">
+
+          <div
+            class="save-note"
+            id="saveNote"
+          >
+            Autosaved locally
+          </div>
+
+
+          <div
+            style="display:flex;gap:9px"
+          >
+
+            <button
+              class="btn"
+              id="skipBtn"
+            >
+              Skip
+            </button>
+
+            <button
+              class="btn primary"
+              id="nextBtn"
+            >
+              Submit & Next →
+            </button>
+
+            <button
+              class="btn finish"
+              id="finishBtn"
+            >
+              Finish Quest
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RESULT
+    ========================== -->
+
+    <section
+      id="resultView"
+      class="session hidden"
+    >
+
+      <div class="glass result-card">
+
+        <div class="eyebrow">
+          ✦ QUEST COMPLETE
+        </div>
+
+        <h2
+          style="
+            font:900 28px Syne;
+            margin:8px 0
+          "
+        >
+          Interview Mission Finished
+        </h2>
+
+
+        <div
+          class="score"
+          id="finalScore"
+        >
+          0
+        </div>
+
+
+        <div
+          class="muted"
+          id="resultSummary"
+        >
+          Calculating your performance...
+        </div>
+
+
+        <div class="result-grid">
+
+          <div class="metric">
+
+            <b id="answeredMetric">
+              0
+            </b>
+
+            <span>
+              Answered
+            </span>
+
+          </div>
+
+
+          <div class="metric">
+
+            <b id="accuracyMetric">
+              0%
+            </b>
+
+            <span>
+              AI Score
+            </span>
+
+          </div>
+
+
+          <div class="metric">
+
+            <b id="xpMetric">
+              +0 XP
+            </b>
+
+            <span>
+              XP Earned
+            </span>
+
+          </div>
+
+
+          <div class="metric">
+
+            <b id="timeMetric">
+              0m
+            </b>
+
+            <span>
+              Training Time
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="result-actions">
+
+          <a
+            class="btn"
+            href="dashboard.html"
+          >
+            ← Dashboard
+          </a>
+
+          <button
+            class="btn primary"
+            id="retryBtn"
+          >
+            ⚔ New Interview
+          </button>
+
+          <a
+            class="btn primary"
+            href="result.html"
+          >
+            ◈ View AI Results
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =========================
+       STATS
+  ========================== -->
+
+  <div class="glass stats">
+
+    <div class="stat">
+
+      <b>
+        ♛ Level 7
+      </b>
+
+      <span>
+        Current Rank
+      </span>
+
     </div>
+
+
+    <div class="stat">
+
+      <b>
+        🔥 7
+      </b>
+
+      <span>
+        Day Streak
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <b>
+        ◎ 12
+      </b>
+
+      <span>
+        Interviews
+      </span>
+
+    </div>
+
+
+    <div class="stat">
+
+      <b>
+        ★ 82%
+      </b>
+
+      <span>
+        Avg. Score
+      </span>
+
+    </div>
+
   </div>
 
-  <button class="start-btn" id="start-btn" onclick="startInterview()">
-    <div class="btn-glint"></div>🎙️ &nbsp;Start Interview Session
-  </button>
 </div>
-<div id="toast"></div>
+
+
+<div
+  id="toast"
+  class="toast hidden"
+></div>
+
 
 <script>
-if(localStorage.getItem('ai_logged_in')!=='true'){window.location.replace('ai_interviewer_login.html');}
 
-const selections={role:null,exp:null,type:null,company:''};
-let questionCount=10;
+/* =====================================================
+   QUESTION BANK
+===================================================== */
 
-function select(key, el, val){
-  const grid=el.parentElement;
-  grid.querySelectorAll('.opt-card').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  selections[key]=val;
-  updateSummary();
+const bank = {
+
+  technical: [
+
+    [
+      'Explain the difference between let, const and var in JavaScript. When would you use each?',
+      'JavaScript'
+    ],
+
+    [
+      'What is the virtual DOM in React and why does it improve UI development?',
+      'React'
+    ],
+
+    [
+      'What is the difference between SQL INNER JOIN and LEFT JOIN?',
+      'SQL'
+    ],
+
+    [
+      'Explain REST APIs and the purpose of HTTP methods such as GET, POST, PUT and DELETE.',
+      'Backend'
+    ],
+
+    [
+      'What is event bubbling in JavaScript and how can you prevent it?',
+      'JavaScript'
+    ],
+
+    [
+      'Explain the difference between authentication and authorization.',
+      'Security'
+    ],
+
+    [
+      'What is a closure in JavaScript? Give a practical use case.',
+      'JavaScript'
+    ],
+
+    [
+      'What are the main benefits of using indexes in a relational database?',
+      'SQL'
+    ],
+
+    [
+      'Explain synchronous versus asynchronous programming with an example.',
+      'Programming'
+    ],
+
+    [
+      'What makes a React component re-render?',
+      'React'
+    ],
+
+    [
+      'How would you debug a slow API endpoint in a production application?',
+      'Backend'
+    ],
+
+    [
+      'What is caching and where could you use it in a web application?',
+      'Architecture'
+    ],
+
+    [
+      'Explain the difference between cookies, localStorage and sessionStorage.',
+      'Web'
+    ],
+
+    [
+      'What is middleware in a Node.js/Express application?',
+      'Backend'
+    ],
+
+    [
+      'How would you secure a login endpoint?',
+      'Security'
+    ]
+
+  ],
+
+
+  dsa: [
+
+    [
+      'Given an array, how would you find two numbers that add up to a target? Explain the optimal approach.',
+      'Arrays'
+    ],
+
+    [
+      'What is the time complexity of binary search and why?',
+      'Searching'
+    ],
+
+    [
+      'How would you detect a cycle in a linked list?',
+      'Linked List'
+    ],
+
+    [
+      'Explain when you would use a stack versus a queue.',
+      'Data Structures'
+    ],
+
+    [
+      'How does a hash table achieve average O(1) lookup?',
+      'Hashing'
+    ],
+
+    [
+      'What is the difference between BFS and DFS?',
+      'Graphs'
+    ],
+
+    [
+      'How would you find the maximum subarray sum efficiently?',
+      'Dynamic Programming'
+    ],
+
+    [
+      'How can you determine whether a binary tree is balanced?',
+      'Trees'
+    ],
+
+    [
+      'What is Big O notation and why is it important?',
+      'Complexity'
+    ],
+
+    [
+      'How would you remove duplicates from an array efficiently?',
+      'Arrays'
+    ]
+
+  ],
+
+
+  'system-design': [
+
+    [
+      'Design a URL shortener. What components would you use and how would you scale it?',
+      'Scalability'
+    ],
+
+    [
+      'How would you design a chat application for millions of users?',
+      'Distributed Systems'
+    ],
+
+    [
+      'Design a video-sharing platform. Discuss storage, delivery and scaling.',
+      'Architecture'
+    ],
+
+    [
+      'How would you design an API rate limiter?',
+      'Reliability'
+    ],
+
+    [
+      'Explain database replication and why a system might need it.',
+      'Databases'
+    ],
+
+    [
+      'How would you design a notification service?',
+      'Distributed Systems'
+    ],
+
+    [
+      'What is horizontal scaling and when is it preferred?',
+      'Scalability'
+    ],
+
+    [
+      'How would you design an e-commerce checkout system?',
+      'Architecture'
+    ],
+
+    [
+      'What role does a message queue play in distributed systems?',
+      'Queues'
+    ],
+
+    [
+      'How would you make a web service highly available?',
+      'Reliability'
+    ]
+
+  ],
+
+
+  behavioural: [
+
+    [
+      'Tell me about yourself and the experience that makes you a strong candidate for this role.',
+      'Communication'
+    ],
+
+    [
+      'Tell me about a difficult technical problem you solved.',
+      'Problem Solving'
+    ],
+
+    [
+      'Describe a time you disagreed with a teammate. How did you handle it?',
+      'Teamwork'
+    ],
+
+    [
+      'Tell me about a failure and what you learned from it.',
+      'Growth'
+    ],
+
+    [
+      'Describe a project you are proud of. What was your contribution?',
+      'Ownership'
+    ],
+
+    [
+      'How do you prioritize when you have multiple deadlines?',
+      'Prioritization'
+    ],
+
+    [
+      'Tell me about a time you received critical feedback.',
+      'Growth'
+    ],
+
+    [
+      'Describe a situation where you had to learn something quickly.',
+      'Adaptability'
+    ],
+
+    [
+      'How do you explain a complex technical concept to a non-technical person?',
+      'Communication'
+    ],
+
+    [
+      'Why do you want this role?',
+      'Motivation'
+    ]
+
+  ]
+
+};
+
+
+/* =====================================================
+   STATE
+===================================================== */
+
+let state = {
+
+  type:'technical',
+
+  role:'Software Engineer',
+
+  difficulty:'Medium',
+
+  count:10,
+
+  questions:[],
+
+  index:0,
+
+  answers:[],
+
+  start:0,
+
+  remaining:300,
+
+  timer:null
+
+};
+
+
+/* =====================================================
+   HELPERS
+===================================================== */
+
+const $ = id =>
+  document.getElementById(id);
+
+
+const titleMap = {
+
+  technical:'Technical',
+
+  dsa:'DSA',
+
+  'system-design':'System Design',
+
+  behavioural:'Behavioral'
+
+};
+
+
+/* =====================================================
+   SETUP CHOICES
+===================================================== */
+
+function setupChoices(id,key){
+
+  document
+    .querySelectorAll('#'+id+' .choice')
+    .forEach(button => {
+
+      button.onclick = () => {
+
+        document
+          .querySelectorAll('#'+id+' .choice')
+          .forEach(item =>
+            item.classList.remove('selected')
+          );
+
+        button.classList.add('selected');
+
+        state[key] = button.dataset.value;
+
+        if(key === 'count'){
+          state.count = Number(button.dataset.value);
+        }
+
+      };
+
+    });
+
 }
 
-function setCompany(el,name){
-  document.querySelectorAll('.ctag').forEach(c=>c.classList.remove('selected'));
-  el.classList.add('selected');
-  document.getElementById('company-input').value=name;
-  selections.company=name;
-  updateSummary();
+
+setupChoices('typeChoices','type');
+
+setupChoices('roleChoices','role');
+
+setupChoices('difficultyChoices','difficulty');
+
+setupChoices('countChoices','count');
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+function toast(message){
+
+  const element = $('toast');
+
+  element.textContent = message;
+
+  element.classList.remove('hidden');
+
+  clearTimeout(element._timer);
+
+  element._timer = setTimeout(() => {
+
+    element.classList.add('hidden');
+
+  },2200);
+
 }
 
-document.getElementById('company-input').addEventListener('input',function(){
-  selections.company=this.value;
-  document.querySelectorAll('.ctag').forEach(c=>c.classList.remove('selected'));
-  updateSummary();
-});
 
-function changeCount(d){
-  questionCount=Math.max(5,Math.min(20,questionCount+d));
-  document.getElementById('count-val').textContent=questionCount;
-  document.getElementById('est-time').textContent=(questionCount*2)+' min';
+/* =====================================================
+   SHUFFLE
+===================================================== */
+
+function shuffle(array){
+
+  return [...array]
+    .sort(() => Math.random() - 0.5);
+
 }
 
-function updateSummary(){
-  const {role,exp,type,company}=selections;
-  if(role||exp||type){
-    document.getElementById('summary-card').style.display='block';
-    document.getElementById('sum-role').textContent=role||'—';
-    document.getElementById('sum-exp').textContent=exp||'—';
-    document.getElementById('sum-type').textContent=type||'—';
-    document.getElementById('sum-company').textContent=company||'General';
-  }
-}
+
+/* =====================================================
+   START INTERVIEW
+===================================================== */
 
 function startInterview(){
-  const{role,exp,type}=selections;
-  if(!role){showToast('⚠️ Please select your target role','error');return;}
-  if(!exp){showToast('⚠️ Please select your experience level','error');return;}
-  if(!type){showToast('⚠️ Please select interview type','error');return;}
-  localStorage.setItem('interview_role',role);
-  localStorage.setItem('interview_exp',exp);
-  localStorage.setItem('interview_type',type);
-  localStorage.setItem('interview_company',selections.company||'General');
-  localStorage.setItem('interview_count',questionCount);
-  const btn=document.getElementById('start-btn');
-  btn.disabled=true;
-  btn.innerHTML='<div class="btn-glint"></div>🚀 Starting your session...';
-  setTimeout(()=>{window.location.href='ai_interview_session.html';},1200);
+
+  const availableQuestions =
+    bank[state.type] || bank.technical;
+
+
+  state.questions =
+    shuffle(availableQuestions)
+      .slice(0,state.count)
+      .map(item => ({
+        q:item[0],
+        tag:item[1]
+      }));
+
+
+  state.answers =
+    new Array(state.questions.length)
+      .fill('');
+
+
+  state.index = 0;
+
+  state.start = Date.now();
+
+  state.remaining =
+    state.questions.length * 60;
+
+
+  $('setupView')
+    .classList
+    .add('hidden');
+
+  $('resultView')
+    .classList
+    .add('hidden');
+
+  $('sessionView')
+    .classList
+    .remove('hidden');
+
+
+  $('pageTitle').textContent =
+    'Interview in Progress';
+
+
+  $('sessionEyebrow').textContent =
+    titleMap[state.type].toUpperCase()
+    + ' · '
+    + state.difficulty.toUpperCase();
+
+
+  $('sessionTitle').textContent =
+    titleMap[state.type]
+    + ' Interview Quest';
+
+
+  $('sessionMeta').textContent =
+    state.role;
+
+
+  clearInterval(state.timer);
+
+
+  state.timer =
+    setInterval(tick,1000);
+
+
+  renderQuestion();
+
+  saveDraft();
+
 }
 
-function showToast(msg,type){const t=document.getElementById('toast');const m={error:{bg:'rgba(220,38,38,0.18)',bc:'rgba(220,38,38,0.4)',c:'#fca5a5'},info:{bg:'rgba(124,58,237,0.18)',bc:'rgba(124,58,237,0.4)',c:'#c4b5fd'}};const s=m[type]||m.info;t.style.background=s.bg;t.style.borderColor=s.bc;t.style.color=s.c;t.textContent=msg;t.style.opacity='1';t.style.transform='translateX(-50%) translateY(0)';clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-50%) translateY(-80px)';},3000);}
+
+/* =====================================================
+   RENDER QUESTION
+===================================================== */
+
+function renderQuestion(){
+
+  const question =
+    state.questions[state.index];
+
+
+  if(!question){
+    return;
+  }
+
+
+  $('qCounter').textContent =
+    `Question ${state.index + 1} / ${state.questions.length}`;
+
+
+  $('qTag').textContent =
+    question.tag;
+
+
+  $('questionText').textContent =
+    question.q;
+
+
+  $('answer').value =
+    state.answers[state.index] || '';
+
+
+  const progress =
+    state.questions.length
+      ? (state.index / state.questions.length) * 100
+      : 0;
+
+
+  $('progress').style.width =
+    progress + '%';
+
+
+  $('skipBtn').disabled =
+    state.index === state.questions.length - 1;
+
+
+  $('finishBtn').style.display =
+    state.index === state.questions.length - 1
+      ? 'inline-block'
+      : 'none';
+
+
+  $('nextBtn').textContent =
+    state.index === state.questions.length - 1
+      ? 'Submit Answer ✓'
+      : 'Submit & Next →';
+
+
+  updateTimer();
+
+}
+
+
+/* =====================================================
+   SAVE CURRENT ANSWER
+===================================================== */
+
+function saveCurrent(){
+
+  if(
+    state.index >= 0 &&
+    state.index < state.answers.length
+  ){
+
+    state.answers[state.index] =
+      $('answer').value;
+
+  }
+
+  saveDraft();
+
+}
+
+
+/* =====================================================
+   SAVE DRAFT
+===================================================== */
+
+function saveDraft(){
+
+  try{
+
+    localStorage.setItem(
+      'ai_interview_draft',
+      JSON.stringify({
+
+        type:state.type,
+
+        role:state.role,
+
+        difficulty:state.difficulty,
+
+        count:state.count,
+
+        index:state.index,
+
+        answers:state.answers,
+
+        questions:state.questions,
+
+        remaining:state.remaining,
+
+        start:state.start
+
+      })
+    );
+
+  }catch(error){
+
+    console.warn(
+      'Unable to save interview draft:',
+      error
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+function tick(){
+
+  state.remaining--;
+
+  if(state.remaining <= 0){
+
+    state.remaining = 0;
+
+    updateTimer();
+
+    finishInterview(true);
+
+    return;
+
+  }
+
+
+  updateTimer();
+
+
+  if(state.remaining % 5 === 0){
+
+    saveDraft();
+
+  }
+
+}
+
+
+/* =====================================================
+   UPDATE TIMER
+===================================================== */
+
+function updateTimer(){
+
+  const minutes =
+    Math.floor(state.remaining / 60);
+
+  const seconds =
+    state.remaining % 60;
+
+
+  $('timer').textContent =
+    String(minutes).padStart(2,'0')
+    + ':'
+    + String(seconds).padStart(2,'0');
+
+
+  $('timer').style.color =
+    state.remaining < 30
+      ? '#ff7070'
+      : 'var(--gold)';
+
+}
+
+
+/* =====================================================
+   NEXT QUESTION
+===================================================== */
+
+function next(){
+
+  saveCurrent();
+
+
+  if(
+    state.index <
+    state.questions.length - 1
+  ){
+
+    state.index++;
+
+    renderQuestion();
+
+    toast('Answer saved');
+
+    saveDraft();
+
+    return;
+
+  }
+
+
+  finishInterview(false);
+
+}
+
+
+/* =====================================================
+   SKIP QUESTION
+===================================================== */
+
+function skip(){
+
+  saveCurrent();
+
+
+  if(
+    state.index <
+    state.questions.length - 1
+  ){
+
+    state.index++;
+
+    renderQuestion();
+
+    toast('Question skipped');
+
+  }
+
+}
+
+
+/* =====================================================
+   AI EVALUATION
+   IMPORTANT:
+   This matches server.mjs:
+   POST /api/evaluate
+===================================================== */
+
+async function finishInterview(auto = false){
+
+  saveCurrent();
+
+  clearInterval(state.timer);
+
+
+  const answered =
+    state.answers
+      .filter(answer =>
+        answer.trim().length > 0
+      )
+      .length;
+
+
+  const total =
+    state.questions.length;
+
+
+  /*
+   * Demo fallback score.
+   * Used only if the API is unavailable.
+   */
+
+  const demoScore =
+    Math.max(
+      35,
+      Math.min(
+        98,
+        Math.round(
+          48
+          +
+          (
+            answered /
+            Math.max(1,total)
+          ) * 42
+          +
+          (
+            state.answers.filter(
+              answer =>
+                answer.trim().length > 120
+            ).length /
+            Math.max(1,total)
+          ) * 10
+        )
+      )
+    );
+
+
+  const duration =
+    Math.max(
+      1,
+      Math.round(
+        (Date.now() - state.start) / 60000
+      )
+    );
+
+
+  /*
+   * Interview record stored in localStorage.
+   */
+
+  const record = {
+
+    id:Date.now(),
+
+    type:titleMap[state.type],
+
+    track:state.type,
+
+    role:state.role,
+
+    difficulty:state.difficulty,
+
+    questions:total,
+
+    answered,
+
+    duration,
+
+    date:new Date().toISOString(),
+
+    answers:
+      state.questions.map((question,index) => ({
+
+        question:question.q,
+
+        tag:question.tag,
+
+        answer:
+          state.answers[index] || ''
+
+      })),
+
+    score:demoScore,
+
+    aiStatus:'pending'
+
+  };
+
+
+  /*
+   * Show temporary evaluation screen.
+   */
+
+  showResult(
+    record,
+    auto,
+    true
+  );
+
+
+  try{
+
+    /*
+     * Send EXACT structure expected
+     * by server.mjs.
+     */
+
+    const response =
+      await fetch(
+        '/api/evaluate',
+        {
+
+          method:'POST',
+
+          headers:{
+            'Content-Type':
+              'application/json'
+          },
+
+          body:JSON.stringify({
+
+            type:record.type,
+
+            role:record.role,
+
+            difficulty:record.difficulty,
+
+            questions:
+              record.answers.map(
+                answer => ({
+                  question:
+                    answer.question,
+
+                  tag:
+                    answer.tag
+                })
+              ),
+
+            answers:
+              record.answers.map(
+                answer =>
+                  answer.answer
+              )
+
+          })
+
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    /*
+     * Backend returns:
+     *
+     * {
+     *   success: true,
+     *   evaluation: {...}
+     * }
+     */
+
+    if(
+      !response.ok ||
+      !data.success ||
+      !data.evaluation
+    ){
+
+      throw new Error(
+        data.error ||
+        'AI evaluation failed'
+      );
+
+    }
+
+
+    /*
+     * Store the complete AI evaluation.
+     */
+
+    record.ai =
+      data.evaluation;
+
+
+    /*
+     * Read overallScore from evaluation.
+     */
+
+    record.score =
+      Number(
+        data.evaluation.overallScore
+        || demoScore
+      );
+
+
+    record.aiStatus =
+      'complete';
+
+
+    /*
+     * Save evaluated interview.
+     */
+
+    saveRecord(record);
+
+
+    /*
+     * Show final score.
+     */
+
+    showResult(
+      record,
+      auto,
+      false
+    );
+
+
+    toast(
+      '🤖 AI evaluation complete!'
+    );
+
+
+  }catch(error){
+
+    console.error(
+      'AI evaluation error:',
+      error
+    );
+
+
+    /*
+     * If OpenAI/API fails,
+     * save the demo score instead.
+     */
+
+    record.score =
+      demoScore;
+
+    record.aiStatus =
+      'demo';
+
+
+    saveRecord(record);
+
+
+    showResult(
+      record,
+      auto,
+      false
+    );
+
+
+    toast(
+      '⚠️ AI evaluation unavailable — demo score saved'
+    );
+
+  }
+
+}
+
+
+/* =====================================================
+   SAVE INTERVIEW RECORD
+===================================================== */
+
+function saveRecord(record){
+
+  let list = [];
+
+
+  try{
+
+    list =
+      JSON.parse(
+        localStorage.getItem(
+          'ai_interviews'
+        ) || '[]'
+      );
+
+  }catch(error){
+
+    list = [];
+
+  }
+
+
+  /*
+   * Calculate XP.
+   */
+
+  const xp =
+    50 + Number(record.score || 0);
+
+
+  /*
+   * Prevent duplicate XP if the same
+   * record is accidentally saved again.
+   */
+
+  const existing =
+    list.find(
+      item =>
+        item.id === record.id
+    );
+
+
+  if(
+    !existing &&
+    !record.aiXpAwarded
+  ){
+
+    record.aiXp =
+      xp;
+
+    record.aiXpAwarded =
+      true;
+
+
+    const oldXp =
+      Number(
+        localStorage.getItem(
+          'ai_xp'
+        ) || 720
+      );
+
+
+    localStorage.setItem(
+      'ai_xp',
+      String(oldXp + xp)
+    );
+
+  }
+
+
+  /*
+   * Replace existing record
+   * or insert newest record.
+   */
+
+  const index =
+    list.findIndex(
+      item =>
+        item.id === record.id
+    );
+
+
+  if(index >= 0){
+
+    list[index] =
+      record;
+
+  }else{
+
+    list.unshift(record);
+
+  }
+
+
+  /*
+   * Keep maximum 50 interviews.
+   */
+
+  localStorage.setItem(
+    'ai_interviews',
+    JSON.stringify(
+      list.slice(0,50)
+    )
+  );
+
+
+  localStorage.setItem(
+    'ai_last_interview',
+    JSON.stringify(record)
+  );
+
+
+  /*
+   * Interview completed.
+   */
+
+  localStorage.removeItem(
+    'ai_interview_draft'
+  );
+
+
+  /*
+   * Keep user logged in.
+   */
+
+  localStorage.setItem(
+    'ai_logged_in',
+    'true'
+  );
+
+}
+
+
+/* =====================================================
+   SHOW RESULT
+===================================================== */
+
+function showResult(
+  record,
+  auto,
+  evaluating = false
+){
+
+  $('sessionView')
+    .classList
+    .add('hidden');
+
+
+  $('resultView')
+    .classList
+    .remove('hidden');
+
+
+  /*
+   * Temporary AI loading state.
+   */
+
+  if(evaluating){
+
+    $('pageTitle').textContent =
+      'AI Evaluation in Progress';
+
+    $('finalScore').textContent =
+      '…';
+
+    $('resultSummary').textContent =
+      'Your answers were submitted to the AI interviewer. Generating your score, strengths, weaknesses, and question-by-question feedback…';
+
+    $('accuracyMetric').textContent =
+      'AI';
+
+    $('xpMetric').textContent =
+      '… XP';
+
+  }else{
+
+    $('pageTitle').textContent =
+      'Quest Complete';
+
+    $('finalScore').textContent =
+      Number(record.score || 0)
+      + '/100';
+
+
+    $('resultSummary').textContent =
+      auto
+        ? 'Time ran out, but your progress was saved. AI evaluation is complete.'
+        : 'AI evaluation complete. Open Results to see detailed feedback.';
+
+
+    $('accuracyMetric').textContent =
+      Number(record.score || 0)
+      + '%';
+
+
+    $('xpMetric').textContent =
+      '+'
+      + (
+        50 +
+        Number(record.score || 0)
+      )
+      + ' XP';
+
+  }
+
+
+  /*
+   * Metrics are available during
+   * both loading and final state.
+   */
+
+  $('answeredMetric').textContent =
+    record.answered
+    + '/'
+    + record.questions;
+
+
+  $('timeMetric').textContent =
+    record.duration
+    + 'm';
+
+}
+
+
+/* =====================================================
+   BUTTON EVENTS
+===================================================== */
+
+$('startBtn').onclick =
+  startInterview;
+
+
+$('nextBtn').onclick =
+  next;
+
+
+$('skipBtn').onclick =
+  skip;
+
+
+$('finishBtn').onclick =
+  () => finishInterview(false);
+
+
+$('retryBtn').onclick =
+  () => {
+
+    clearInterval(state.timer);
+
+    state.index = 0;
+
+    state.answers = [];
+
+    state.questions = [];
+
+    state.remaining = 300;
+
+    $('resultView')
+      .classList
+      .add('hidden');
+
+    $('sessionView')
+      .classList
+      .add('hidden');
+
+    $('setupView')
+      .classList
+      .remove('hidden');
+
+    $('pageTitle').textContent =
+      'INTERVIEW ARENA';
+
+  };
+
+
+/* =====================================================
+   ANSWER AUTOSAVE
+===================================================== */
+
+$('answer').addEventListener(
+  'input',
+  () => {
+
+    if(
+      state.index >= 0 &&
+      state.index < state.answers.length
+    ){
+
+      state.answers[state.index] =
+        $('answer').value;
+
+      saveDraft();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   KEYBOARD SHORTCUT
+   CTRL + ENTER = NEXT
+===================================================== */
+
+window.addEventListener(
+  'keydown',
+  event => {
+
+    if(
+      event.ctrlKey &&
+      event.key === 'Enter' &&
+      !$('sessionView')
+        .classList
+        .contains('hidden')
+    ){
+
+      next();
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   RESTORE DRAFT
+===================================================== */
+
+function restoreDraft(){
+
+  try{
+
+    const raw =
+      localStorage.getItem(
+        'ai_interview_draft'
+      );
+
+
+    if(!raw){
+      return false;
+    }
+
+
+    const draft =
+      JSON.parse(raw);
+
+
+    if(
+      !draft ||
+      !Array.isArray(draft.questions) ||
+      !draft.questions.length
+    ){
+
+      return false;
+
+    }
+
+
+    /*
+     * Do not automatically resume.
+     * Keep setup screen clean.
+     *
+     * Draft remains available in
+     * localStorage for future expansion.
+     */
+
+    return true;
+
+  }catch(error){
+
+    console.warn(
+      'Could not restore interview draft:',
+      error
+    );
+
+    return false;
+
+  }
+
+}
+
+
+/* =====================================================
+   INITIALIZATION
+===================================================== */
+
+(function init(){
+
+  /*
+   * User profile.
+   */
+
+  const name =
+    localStorage.getItem(
+      'ai_user_name'
+    ) || 'Y Manu';
+
+
+  $('profileName').textContent =
+    name;
+
+
+  $('avatar').textContent =
+    name
+      .trim()
+      .charAt(0)
+      .toUpperCase()
+      || 'M';
+
+
+  const level =
+    localStorage.getItem(
+      'ai_level'
+    ) || '7';
+
+
+  const xp =
+    localStorage.getItem(
+      'ai_xp'
+    ) || '720';
+
+
+  $('profileLevel').textContent =
+    'Level '
+    + level
+    + ' · '
+    + xp
+    + ' XP';
+
+
+  /*
+   * Support dashboard links such as:
+   *
+   * interview.html?track=dsa
+   * interview.html?track=system-design
+   * interview.html?track=behavioural
+   */
+
+  const params =
+    new URLSearchParams(
+      location.search
+    );
+
+
+  const track =
+    params.get('track');
+
+
+  if(
+    track &&
+    bank[track]
+  ){
+
+    state.type =
+      track;
+
+
+    document
+      .querySelectorAll(
+        '#typeChoices .choice'
+      )
+      .forEach(button => {
+
+        button.classList.toggle(
+          'selected',
+          button.dataset.value === track
+        );
+
+      });
+
+  }
+
+
+  /*
+   * Initial timer.
+   */
+
+  updateTimer();
+
+
+  /*
+   * Keep draft available.
+   */
+
+  restoreDraft();
+
+})();
+
 </script>
+
 </body>
 </html>
