@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1824,14 +1823,22 @@ const scores =
     interviews
     .map(i => Number(i.score) || 0);
 
+/* Prefer real OpenAI evaluation scores when available. */
+const aiEvaluated = interviews.filter(i =>
+    i && i.ai && typeof i.ai === "object"
+);
+
+const scoreFromEvaluation = item => {
+    const value = Number(item?.ai?.overallScore);
+    return Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : (Number(item?.score) || 0);
+};
+
+const aiScores = interviews.map(scoreFromEvaluation);
 
 const average =
-    scores.length
+    aiScores.length
         ? Math.round(
-            scores.reduce(
-                (a,b) => a+b,
-                0
-            ) / scores.length
+            aiScores.reduce((a,b) => a+b, 0) / aiScores.length
           )
         : 0;
 
@@ -1957,35 +1964,24 @@ animateNumber(
    READINESS
 ===================================================== */
 
-let technical =
-    average || 0;
+function evaluationMetric(key, fallback){
+    const values = aiEvaluated
+        .map(item => Number(item?.ai?.[key]))
+        .filter(value => Number.isFinite(value));
 
-let communication =
-    total
-        ? Math.min(100,average + 5)
-        : 0;
+    return values.length
+        ? Math.round(values.reduce((a,b) => a+b, 0) / values.length)
+        : fallback;
+}
 
-let confidence =
-    total
-        ? Math.max(0,average - 5)
-        : 0;
+const technical = evaluationMetric("technicalAccuracy", average);
+const communication = evaluationMetric("communication", average);
+const confidence = evaluationMetric("confidence", average);
+const problem = evaluationMetric("problemSolving", average);
 
-let problem =
-    total
-        ? Math.min(100,average + 2)
-        : 0;
-
-let readiness =
-    total
-        ? Math.round(
-            (
-                technical +
-                communication +
-                confidence +
-                problem
-            ) / 4
-          )
-        : 0;
+const readiness = aiEvaluated.length
+    ? Math.round((technical + communication + confidence + problem) / 4)
+    : average;
 
 
 /* bars */
@@ -2083,8 +2079,7 @@ if(total > 0){
         .slice(0,5)
         .forEach(item => {
 
-            const score =
-                Number(item.score) || 0;
+            const score = scoreFromEvaluation(item);
 
             const row =
                 document.createElement("div");
@@ -2142,6 +2137,34 @@ if(total > 0){
 
 }
 
+/* =====================================================
+   AI COMPANION / LATEST EVALUATION
+===================================================== */
+const latest = interviews.length ? interviews[interviews.length - 1] : null;
+const latestAI = latest?.ai && typeof latest.ai === "object" ? latest.ai : null;
+const mentorLabel = document.querySelector(".mentor-label");
+const mentorText = document.querySelector(".mentor p");
+
+if (mentorLabel && mentorText) {
+    if (latestAI) {
+        const latestScore = scoreFromEvaluation(latest);
+        mentorLabel.textContent = "AI COMPANION · EVALUATION COMPLETE";
+
+        if (latestScore >= 85) {
+            mentorText.textContent = `Excellent run. Your latest AI evaluation scored ${latestScore}%. Keep pushing toward elite interview performance.`;
+        } else if (latestScore >= 70) {
+            mentorText.textContent = `Solid progress. Your latest AI evaluation scored ${latestScore}%. Focus on your weaker skill areas and keep training.`;
+        } else {
+            mentorText.textContent = `Training battle complete. Your latest AI evaluation scored ${latestScore}%. Review the feedback and sharpen your fundamentals.`;
+        }
+    } else if (total > 0) {
+        mentorLabel.textContent = "AI COMPANION · DEMO DATA";
+        mentorText.textContent = "Your interview history is saved. Complete an AI-evaluated interview to unlock detailed readiness insights.";
+    } else {
+        mentorLabel.textContent = "ELITE MENTOR";
+        mentorText.textContent = "Complete your first interview to receive AI feedback, build your readiness score and unlock your next challenge.";
+    }
+}
 
 /* =====================================================
    HTML ESCAPE
