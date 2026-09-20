@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,7 +38,7 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
 .page-sub{font-size:15px;color:var(--muted);line-height:1.65;max-width:520px;margin:0 auto;}
 
 /* UPLOAD ZONE */
-.upload-zone{border-radius:20px;border:2px dashed rgba(124,58,237,0.3);background:rgba(124,58,237,0.04);padding:56px 40px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;margin-bottom:24px;}
+.upload-zone{border-radius:20px;border:2px dashed rgba(167,139,250,0.42);background:rgba(8,10,24,0.54);backdrop-filter:blur(14px);padding:56px 40px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;margin-bottom:24px;}
 .upload-zone:hover,.upload-zone.drag{border-color:rgba(124,58,237,0.6);background:rgba(124,58,237,0.08);}
 .upload-zone.has-file{border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.04);}
 .upload-icon{font-size:52px;margin-bottom:16px;animation:float 3s ease-in-out infinite alternate;}
@@ -124,8 +126,97 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
 .action-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:rgba(255,255,255,0.65);}
 .action-ghost:hover{background:rgba(255,255,255,0.08);color:#fff;border-color:rgba(255,255,255,0.2);}
 #toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);z-index:9999;padding:12px 26px;border-radius:12px;font-size:14px;font-weight:600;font-family:var(--font);transition:transform 0.35s cubic-bezier(.34,1.56,.64,1),opacity 0.3s;opacity:0;white-space:nowrap;backdrop-filter:blur(20px);border:1px solid;pointer-events:none;}
+
+@media print{
+  nav,.aurora,.grain,.upload-section,.results-toolbar,.action-row,.question-tools{display:none!important;}
+  body{background:#fff!important;color:#111!important;}
+  .page{max-width:none;padding:20px;}
+  .card,.resume-score-row,.feature-card,.win-item{break-inside:avoid;background:#fff!important;color:#111!important;border-color:#ddd!important;}
+}
+
 @media(max-width:768px){.three-col{grid-template-columns:1fr;}.resume-score-row{grid-template-columns:1fr;text-align:center;}.rs-meta{justify-content:center;}}
+
+/* ENHANCED RESUME ANALYSIS UI */
+body{
+  position:relative;
+  overflow-x:hidden;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(4,6,18,.62),rgba(4,6,18,.78)),
+    url("resume-background.png");
+  background-size:cover;
+  background-position:center top;
+  background-attachment:fixed;
+  background-repeat:no-repeat;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:radial-gradient(circle at 50% 20%,transparent 0%,rgba(0,0,0,.18) 65%,rgba(0,0,0,.38) 100%);
+}
+.page, nav{position:relative;z-index:1;}
+.feature-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin:-18px 0 28px;
+}
+.feature-card{
+  padding:15px 16px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  background:rgba(8,10,24,.60);
+  backdrop-filter:blur(14px);
+}
+.feature-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:#a78bfa;font-weight:800;}
+.feature-value{font-family:var(--font-head);font-size:20px;font-weight:800;margin-top:4px;}
+.feature-note{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
+.results-toolbar{
+  display:flex;
+  justify-content:flex-end;
+  gap:9px;
+  flex-wrap:wrap;
+  margin:-8px 0 16px;
+}
+.mini-btn{
+  padding:9px 13px;border-radius:9px;border:1px solid rgba(255,255,255,.12);
+  background:rgba(8,10,24,.62);color:#fff;font:600 12px var(--font);
+  cursor:pointer;backdrop-filter:blur(12px);transition:.2s;
+}
+.mini-btn:hover{transform:translateY(-1px);border-color:rgba(167,139,250,.55);background:rgba(124,58,237,.16);}
+.quick-wins{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
+.win-item{
+  padding:14px 16px;border-radius:12px;background:rgba(8,10,24,.55);
+  border:1px solid rgba(255,255,255,.07);font-size:12px;color:rgba(255,255,255,.76);line-height:1.55;
+}
+.win-item strong{display:block;color:#fff;margin-bottom:4px;font-size:13px;}
+.question-tools{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap;}
+.question-filter{
+  width:220px;padding:9px 11px;border-radius:9px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:#fff;font:500 12px var(--font);outline:none;
+}
+.question-filter::placeholder{color:rgba(255,255,255,.38);}
+.ai-q{position:relative;padding-right:48px;}
+.copy-q{
+  position:absolute;right:10px;top:12px;border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.04);color:rgba(255,255,255,.7);border-radius:7px;
+  width:30px;height:30px;cursor:pointer;transition:.2s;
+}
+.copy-q:hover{color:#fff;background:rgba(124,58,237,.2);border-color:rgba(124,58,237,.4);}
+.ats-checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px;}
+.ats-item{display:flex;gap:9px;align-items:center;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);font-size:12px;color:rgba(255,255,255,.72);}
+.ats-item .ok{color:#34d399;font-weight:900;}
+.ats-item .warn{color:#fbbf24;font-weight:900;}
+@media(max-width:760px){
+  .feature-strip{grid-template-columns:1fr 1fr;}
+  .quick-wins,.ats-checklist{grid-template-columns:1fr;}
+}
+
 </style>
+<link rel="stylesheet" href="game-theme.css">
 </head>
 <body>
 <div class="aurora"><div class="ab ab1"></div><div class="ab ab2"></div></div>
@@ -143,6 +234,13 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
     <div class="page-pill"><span class="pill-dot"></span>AI Resume Analysis</div>
     <h1 class="page-title">Upload Your <span class="grad-text">Resume</span></h1>
     <p class="page-sub">Our AI extracts your skills, experience and education — then generates personalised interview questions and identifies skill gaps.</p>
+  </div>
+
+  <div class="feature-strip" aria-label="Resume analysis highlights">
+    <div class="feature-card"><div class="feature-kicker">AI Parsing</div><div class="feature-value">PDF · DOCX · TXT</div><div class="feature-note">Fast document extraction</div></div>
+    <div class="feature-card"><div class="feature-kicker">Skill Intelligence</div><div class="feature-value">15+ Signals</div><div class="feature-note">Skills, gaps and strengths</div></div>
+    <div class="feature-card"><div class="feature-kicker">Interview Prep</div><div class="feature-value">8 Questions</div><div class="feature-note">Personalised question set</div></div>
+    <div class="feature-card"><div class="feature-kicker">Career Focus</div><div class="feature-value">Action Plan</div><div class="feature-note">Practical next steps</div></div>
   </div>
 
   <!-- UPLOAD SECTION -->
@@ -190,6 +288,11 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
 
   <!-- RESULTS -->
   <div class="results-wrap" id="results-wrap">
+    <div class="results-toolbar">
+      <button class="mini-btn" onclick="copySummary()">📋 Copy Summary</button>
+      <button class="mini-btn" onclick="downloadReport()">⬇️ Download Report</button>
+      <button class="mini-btn" onclick="window.print()">🖨️ Print Report</button>
+    </div>
     <!-- Resume Score -->
     <div class="resume-score-row">
       <div>
@@ -225,6 +328,28 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
       </div>
     </div>
 
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">🚀 Quick Wins — Improve Your Resume</div>
+      <div class="quick-wins">
+        <div class="win-item"><strong>Strengthen impact statements</strong>Turn responsibilities into measurable outcomes using numbers, scale, speed, revenue, or time saved.</div>
+        <div class="win-item"><strong>Close the biggest skill gaps</strong>Prioritise System Design, Cloud, and DSA because they currently have the highest interview impact.</div>
+        <div class="win-item"><strong>Add project metrics</strong>Include users, requests, performance improvements, test coverage, or deployment details for each major project.</div>
+        <div class="win-item"><strong>Prepare your story</strong>Have concise STAR stories ready for leadership, conflict, failure, ownership, and teamwork questions.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px;">
+      <div class="card-title">✅ ATS & Resume Quality Checklist</div>
+      <div class="ats-checklist">
+        <div class="ats-item"><span class="ok">✓</span> Standard section headings detected</div>
+        <div class="ats-item"><span class="ok">✓</span> Technical skills are easy to scan</div>
+        <div class="ats-item"><span class="ok">✓</span> Experience entries contain role context</div>
+        <div class="ats-item"><span class="warn">!</span> Add more quantified achievements</div>
+        <div class="ats-item"><span class="warn">!</span> Strengthen cloud / system-design keywords</div>
+        <div class="ats-item"><span class="ok">✓</span> Project technology stack is visible</div>
+      </div>
+    </div>
+
     <!-- Skill Gap -->
     <div class="card gap-section">
       <div class="card-title">🎯 Skill Gap Analysis — <span id="gap-role-label" style="color:#a78bfa">Your Target Role</span></div>
@@ -235,6 +360,10 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
     <div class="card" style="margin-bottom:24px;">
       <div class="card-title">🤖 AI-Generated Interview Questions Based On Your Resume</div>
       <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6;">These questions are personalised based on your actual experience and skills — expect these in real interviews.</p>
+      <div class="question-tools">
+        <input class="question-filter" id="question-filter" type="search" placeholder="Search your AI questions…" oninput="filterQuestions()">
+        <button class="mini-btn" onclick="copyAllQuestions()">📋 Copy All</button>
+      </div>
       <div class="ai-questions" id="ai-questions"></div>
     </div>
 
@@ -249,8 +378,11 @@ nav{position:sticky;top:0;z-index:100;height:64px;display:flex;align-items:cente
 </div>
 <div id="toast"></div>
 
+<script src="game-engine.js"></script>
+<script src="game-ui.js"></script>
 <script>
-if(localStorage.getItem('ai_logged_in')!=='true'){window.location.replace('ai_interviewer_login.html');}
+if(localStorage.getItem('ai_logged_in')!=='true'){window.location.replace('login.html');}
+if(window.CareerQuest) CareerQuest.init();
 let uploadedFile=null;
 
 function handleDrag(e){e.preventDefault();document.getElementById('upload-zone').classList.add('drag');}
@@ -382,24 +514,64 @@ function showResults(){
   ];
   const ql=document.getElementById('ai-questions');
   qList.forEach((q,i)=>{
-    ql.innerHTML+=`<div class="ai-q"><div class="ai-q-num">${i+1}</div><div><div class="ai-q-tag">${q.tag}</div><div class="ai-q-text">${q.q}</div></div></div>`;
+    ql.innerHTML+=`<div class="ai-q" data-question="${q.q.replace(/"/g,'&quot;').toLowerCase()}"><div class="ai-q-num">${i+1}</div><div><div class="ai-q-tag">${q.tag}</div><div class="ai-q-text">${q.q}</div></div><button class="copy-q" title="Copy question" aria-label="Copy question" onclick="copyText(${JSON.stringify(q.q)});event.stopPropagation();">⧉</button></div>`;
   });
 
   /* Save to localStorage */
   localStorage.setItem('resume_score',resumeScore);
   localStorage.setItem('resume_skills',JSON.stringify(allSkills.map(s=>s.s)));
   localStorage.setItem('resume_analyzed','true');
+
+  if(window.CareerQuest){
+    const rewardResult = CareerQuest.reward({ isResume: true });
+    if(window.CareerQuestUI) CareerQuestUI.playReward(rewardResult);
+  }
 }
 
 function practiceNow(){
   localStorage.setItem('interview_type','Technical');
   localStorage.setItem('interview_role',localStorage.getItem('ai_user_role')||'Software Engineer');
   localStorage.setItem('interview_count','8');
-  window.location.href='ai_interview_session.html';
+  window.location.href='session.html';
 }
 
 function saveAnalysis(){showToast('✅ Analysis saved to your dashboard!','success');}
 function resetUpload(){document.getElementById('results-wrap').style.display='none';document.getElementById('upload-section').style.display='block';removeFile();}
+
+
+function copyText(value){
+  navigator.clipboard?.writeText(value).then(()=>showToast('✅ Copied to clipboard','success')).catch(()=>showToast('⚠️ Clipboard access unavailable','error'));
+}
+function copyAllQuestions(){
+  const items=[...document.querySelectorAll('.ai-q .ai-q-text')].map((el,i)=>`${i+1}. ${el.textContent.trim()}`);
+  copyText(items.join('\n\n'));
+}
+function filterQuestions(){
+  const q=(document.getElementById('question-filter').value||'').toLowerCase().trim();
+  document.querySelectorAll('.ai-q').forEach(card=>{
+    card.style.display=(!q||card.textContent.toLowerCase().includes(q))?'flex':'none';
+  });
+}
+function copySummary(){
+  const score=document.getElementById('rs-score')?.textContent||'—';
+  const verdict=document.getElementById('rs-verdict')?.textContent||'—';
+  const role=document.getElementById('gap-role-label')?.textContent||'Software Engineer';
+  const skills=[...document.querySelectorAll('#skills-cloud .skill-tag')].map(x=>x.textContent).join(', ');
+  copyText(`InterviewAI Resume Summary\nRole: ${role}\nResume Score: ${score}\nVerdict: ${verdict}\nSkills: ${skills}`);
+}
+function downloadReport(){
+  const score=document.getElementById('rs-score')?.textContent||'—';
+  const verdict=document.getElementById('rs-verdict')?.textContent||'—';
+  const role=document.getElementById('gap-role-label')?.textContent||'Software Engineer';
+  const skills=[...document.querySelectorAll('#skills-cloud .skill-tag')].map(x=>x.textContent).join(', ');
+  const questions=[...document.querySelectorAll('.ai-q .ai-q-text')].map((el,i)=>`${i+1}. ${el.textContent.trim()}`).join('\n');
+  const report=`InterviewAI Resume Analysis\n\nTarget Role: ${role}\nResume Score: ${score}\nVerdict: ${verdict}\n\nSkills:\n${skills}\n\nAI Interview Questions:\n${questions}\n\nGenerated by InterviewAI`;
+  const blob=new Blob([report],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='InterviewAI_Resume_Report.txt';a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  showToast('✅ Report downloaded','success');
+}
 
 function showToast(msg,type){
   const t=document.getElementById('toast');
