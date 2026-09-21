@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>InterviewAI — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#050714;--card:rgba(8,13,38,.84);--line:rgba(165,180,255,.18);--white:#f7f8ff;--muted:#aeb7d6;--purple:#8b5cf6;--pink:#ec4899;--green:#34d399}
+html,body{min-height:100%;font-family:Inter,sans-serif;background:#050714;color:var(--white)}
+body{background:radial-gradient(circle at 70% 8%,rgba(124,58,237,.20),transparent 34%),radial-gradient(circle at 20% 85%,rgba(236,72,153,.09),transparent 28%),#050714}
+a{text-decoration:none;color:inherit}.layout{display:flex;min-height:100vh}
+.sidebar{position:fixed;inset:0 auto 0 0;width:245px;padding:22px 15px;background:rgba(4,7,24,.95);border-right:1px solid var(--line);backdrop-filter:blur(20px);display:flex;flex-direction:column;z-index:20}.brand{display:flex;gap:10px;align-items:center;padding:4px 8px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border-radius:11px;background:linear-gradient(135deg,#7c3aed,#db2777);font-weight:900;box-shadow:0 0 25px rgba(124,58,237,.45)}.brand-name{font-size:16px;font-weight:800}.brand-tag{font-size:9px;letter-spacing:1.7px;color:#baa8ff}.nav-label{font-size:9px;letter-spacing:2px;color:rgba(255,255,255,.25);text-transform:uppercase;padding:12px}.nav{display:flex;flex-direction:column;gap:4px}.nav a{display:flex;align-items:center;gap:11px;padding:11px 12px;border-radius:11px;font-size:13px;font-weight:600;color:#cbd2ed;border:1px solid transparent;transition:.2s}.nav a:hover{background:rgba(255,255,255,.05);color:#fff}.nav a.active{background:linear-gradient(90deg,rgba(124,58,237,.34),rgba(124,58,237,.08));border-color:rgba(177,143,255,.32);color:#fff;box-shadow:inset 3px 0 #b56cff}.nav i{font-style:normal;width:20px;text-align:center}.side-footer{margin-top:auto;padding-top:15px;border-top:1px solid rgba(255,255,255,.07)}.profile{display:flex;gap:9px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.03);border-radius:12px}.avatar{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#a855f7,#ec4899)}.uname{font-size:13px;font-weight:800}.urole{font-size:10px;color:#aab3d1;margin-top:2px}.level{display:inline-block;margin-top:4px;background:#fbbf24;color:#281c01;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:900}
+main{margin-left:245px;max-width:calc(100vw - 245px);flex:1;padding:30px 34px 60px}.topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:22px}.title{font:900 clamp(28px,3vw,44px)/1 Cinzel,serif;text-shadow:0 0 20px rgba(171,131,255,.5)}.subtitle{margin-top:7px;color:#dce3ff;font-size:14px}.top-actions{display:flex;gap:9px}.btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(161,134,255,.30);background:rgba(10,14,40,.82);color:#fff;font-weight:800;cursor:pointer}.btn.primary{border:none;background:linear-gradient(105deg,#7c3aed,#a855f7,#ec4899)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(12px);box-shadow:0 18px 44px rgba(0,0,0,.25)}.full{grid-column:1/-1}.section-title{font:800 17px Cinzel,serif}.section-sub{font-size:10px;color:#9fa9c7;margin-top:4px}
+.profile-form{display:grid;grid-template-columns:110px 1fr;gap:18px;align-items:center}.big-avatar{width:98px;height:98px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:linear-gradient(135deg,#7c3aed,#db2777);box-shadow:0 0 30px rgba(124,58,237,.35);border:3px solid rgba(255,255,255,.12)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:flex;flex-direction:column;gap:5px}.field.fullw{grid-column:1/-1}.label{font-size:10px;color:#aeb7d7;font-weight:700}.input,.select{padding:10px 11px;border-radius:9px;border:1px solid rgba(155,170,255,.16);background:rgba(255,255,255,.035);color:#fff;outline:0}.input:focus,.select:focus{border-color:#9d78ff;box-shadow:0 0 15px rgba(124,58,237,.16)}.select option{background:#101431;color:#fff}
+.option-list{display:flex;flex-direction:column;gap:9px;margin-top:13px}.option{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px;border-radius:11px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)}.option-title{font-size:12px;font-weight:800}.option-desc{font-size:10px;color:#9fa8c6;margin-top:3px;line-height:1.45}.toggle{width:44px;height:24px;padding:3px;border:0;border-radius:999px;background:#30364e;cursor:pointer;flex:none;transition:.2s}.toggle span{display:block;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}.toggle.on{background:linear-gradient(90deg,#7c3aed,#ec4899)}.toggle.on span{transform:translateX(20px)}
+.range-wrap{margin-top:12px}.range{width:100%;accent-color:#8b5cf6}.save-row{display:flex;justify-content:flex-end;gap:9px;margin-top:15px}.danger{border:1px solid rgba(248,113,113,.28);background:rgba(248,113,113,.08);color:#fda4af;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:25px;transform:translate(-50%,80px);opacity:0;background:rgba(13,18,47,.97);border:1px solid rgba(165,135,255,.38);padding:11px 18px;border-radius:11px;font-size:12px;font-weight:800;z-index:100;transition:.3s}.toast.show{transform:translate(-50%,0);opacity:1}
+@media(max-width:1000px){.sidebar{width:215px}main{margin-left:215px;max-width:calc(100vw - 215px)}.grid{grid-template-columns:1fr}.full{grid-column:auto}}@media(max-width:720px){.sidebar{position:fixed;transform:translateX(-100%);transition:.3s}.sidebar.open{transform:none}main{margin-left:0;max-width:100%;padding:16px}.topbar{flex-direction:column}.top-actions{width:100%}.top-actions .btn{flex:1}.profile-form{grid-template-columns:1fr}.big-avatar{margin:auto}.form-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">IA</div><div><div class="brand-name">InterviewAI</div><div class="brand-tag">TRAIN · EVOLVE · GET HIRED</div></div></div>
+  <div class="nav-label">Main</div>
+  <nav class="nav">
+    <a href="dashboard.html">🏠 <span>Dashboard</span></a>
+    <a href="interview.html">🎙️ <span>AI Interviews</span></a>
+    <a href="quest.html">🗺️ <span>Career Quest</span></a>
+    <a href="result.html">📊 <span>My Results</span></a>
+    <a href="badges.html">🏆 <span>Achievements</span></a>
+    <a href="training-arena.html">⚔️ <span>Training Arena</span></a>
+    <a class="active" href="settings.html">⚙️ <span>Settings</span></a>
+  </nav>
+  <div class="side-footer"><div class="profile"><div class="avatar">M</div><div><div class="uname" id="sideName">Manohar</div><div class="urole">Future Software Engineer</div><span class="level">Lv. 12</span></div></div></div>
+</aside>
+
+<main>
+  <div class="topbar"><div><div class="title">SETTINGS</div><div class="subtitle">Customize your InterviewAI experience, training preferences, and account.</div></div><div class="top-actions"><button class="btn" onclick="location.href='dashboard.html'">← Dashboard</button><button class="btn primary" onclick="saveSettings()">💾 Save Changes</button></div></div>
+
+  <div class="grid">
+    <section class="card full">
+      <div class="section-title">👤 Profile</div><div class="section-sub">Your basic information used across the InterviewAI dashboard.</div>
+      <div class="profile-form" style="margin-top:17px">
+        <div class="big-avatar">M</div>
+        <div class="form-grid">
+          <label class="field"><span class="label">Name</span><input id="name" class="input" value="Manohar"></label>
+          <label class="field"><span class="label">Role</span><input id="role" class="input" value="Future Software Engineer"></label>
+          <label class="field fullw"><span class="label">Email</span><input id="email" class="input" type="email" value="manohar@example.com"></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">🎮 Training Preferences</div><div class="section-sub">Set the defaults used when you start practice.</div>
+      <div class="option-list">
+        <label class="field"><span class="label">Default Interview Type</span><select id="defaultType" class="select"><option>Technical</option><option>DSA</option><option>System Design</option><option>Behavioural</option></select></label>
+        <label class="field"><span class="label">Difficulty</span><select id="difficulty" class="select"><option>Easy</option><option selected>Medium</option><option>Hard</option></select></label>
+        <label class="field"><span class="label">Questions per session</span><select id="questions" class="select"><option>5</option><option selected>10</option><option>15</option></select></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">🔔 Notifications</div><div class="section-sub">Choose which reminders you receive.</div>
+      <div class="option-list">
+        <div class="option"><div><div class="option-title">Daily Training Reminder</div><div class="option-desc">Reminder to maintain your practice streak.</div></div><button class="toggle on" data-key="dailyReminder"><span></span></button></div>
+        <div class="option"><div><div class="option-title">Quest Unlock Alerts</div><div class="option-desc">Notify when you unlock a new training quest.</div></div><button class="toggle on" data-key="questAlerts"><span></span></button></div>
+        <div class="option"><div><div class="option-title">Badge Notifications</div><div class="option-desc">Celebrate newly unlocked achievements.</div></div><button class="toggle on" data-key="badgeAlerts"><span></span></button></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">✨ Appearance & Experience</div><div class="section-sub">Control animations and audio feedback.</div>
+      <div class="option-list">
+        <div class="option"><div><div class="option-title">Neon Animations</div><div class="option-desc">Enable glowing UI transitions and micro-animations.</div></div><button class="toggle on" data-key="animations"><span></span></button></div>
+        <div class="option"><div><div class="option-title">Sound Effects</div><div class="option-desc">Play feedback sounds for achievements and actions.</div></div><button class="toggle on" data-key="sound"><span></span></button></div>
+        <div class="option"><div><div class="option-title">Reduced Motion</div><div class="option-desc">Use calmer transitions when animations are disabled.</div></div><button class="toggle" data-key="reducedMotion"><span></span></button></div>
+      </div>
+      <div class="range-wrap"><div class="label">Animation Intensity</div><input class="range" id="intensity" type="range" min="0" max="100" value="75"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">🔐 Privacy & Data</div><div class="section-sub">Control local training data stored in this browser.</div>
+      <div class="option-list">
+        <div class="option"><div><div class="option-title">Save Interview History</div><div class="option-desc">Keep scores and interview attempts in localStorage.</div></div><button class="toggle on" data-key="history"><span></span></button></div>
+        <div class="option"><div><div class="option-title">Save Resume Analysis</div><div class="option-desc">Keep resume score and extracted skills locally.</div></div><button class="toggle on" data-key="resumeSave"><span></span></button></div>
+      </div>
+      <div class="save-row"><button class="danger" onclick="clearLocalData()">Clear Local Data</button></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">🎯 Quick Links</div><div class="section-sub">Jump directly to your core training pages.</div>
+      <div class="save-row" style="justify-content:stretch;flex-direction:column">
+        <button class="btn" onclick="location.href='training-arena.html'">⚔ Training Arena</button>
+        <button class="btn" onclick="location.href='quest.html'">🗺 Career Quest</button>
+        <button class="btn" onclick="location.href='badges.html'">🏆 Achievements</button>
+        <button class="btn" onclick="location.href='resume.html'">📄 Resume Analysis</button>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const keys=['dailyReminder','questAlerts','badgeAlerts','animations','sound','reducedMotion','history','resumeSave'];
+function loadSettings(){
+ const saved=JSON.parse(localStorage.getItem('interviewai_settings')||'{}');
+ keys.forEach(k=>{const b=document.querySelector(`[data-key="${k}"]`);if(b && saved[k]!==undefined)b.classList.toggle('on',!!saved[k]);});
+ document.getElementById('name').value=localStorage.getItem('ai_user_name')||'Manohar';
+ document.getElementById('role').value=localStorage.getItem('ai_user_role')||'Future Software Engineer';
+ document.getElementById('defaultType').value=saved.defaultType||'Technical';
+ document.getElementById('difficulty').value=saved.difficulty||'Medium';
+ document.getElementById('questions').value=saved.questions||'10';
+ document.getElementById('intensity').value=saved.intensity??75;
+ document.getElementById('sideName').textContent=document.getElementById('name').value;
+}
+document.querySelectorAll('.toggle').forEach(b=>b.addEventListener('click',()=>b.classList.toggle('on')));
+function saveSettings(){
+ const s={defaultType:document.getElementById('defaultType').value,difficulty:document.getElementById('difficulty').value,questions:document.getElementById('questions').value,intensity:document.getElementById('intensity').value};
+ keys.forEach(k=>{const b=document.querySelector(`[data-key="${k}"]`);s[k]=b.classList.contains('on')});
+ localStorage.setItem('interviewai_settings',JSON.stringify(s));
+ localStorage.setItem('ai_user_name',document.getElementById('name').value.trim()||'Manohar');
+ localStorage.setItem('ai_user_role',document.getElementById('role').value.trim()||'Future Software Engineer');
+ localStorage.setItem('interview_default_type',s.defaultType);
+ localStorage.setItem('interview_difficulty',s.difficulty);
+ localStorage.setItem('interview_questions',s.questions);
+ document.getElementById('sideName').textContent=localStorage.getItem('ai_user_name');
+ toast('✅ Settings saved successfully');
+}
+function clearLocalData(){
+ if(!confirm('Clear InterviewAI local progress data? This will remove saved interview, badge, resume, and settings data from this browser.'))return;
+ ['ai_interviews','ai_last_interview','resume_score','resume_skills','resume_analyzed','interview_default_type','interview_difficulty','interview_questions'].forEach(k=>localStorage.removeItem(k));
+ toast('🧹 Local training data cleared');
+}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),3200)}
+loadSettings();
+</script>
+</body>
+</html>
