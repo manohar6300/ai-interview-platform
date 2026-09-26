@@ -115,16 +115,26 @@ main{margin-left:245px;max-width:calc(100vw - 245px);flex:1;padding:30px 34px 60
 </main>
 </div>
 <div class="toast" id="toast"></div>
+<script src="game-state.js"></script>
+<script src="phase3-engine.js"></script>
 <script>
 function startMode(type){
   const map={Technical:'technical',DSA:'dsa','System Design':'system-design',Behavioural:'behavioural'};
   localStorage.setItem('training_mode',type);
   localStorage.setItem('interview_type',type);
+  const weak = window.InterviewAIPhase3 ? InterviewAIPhase3.getWeakestSkill() : null;
+  if(weak) localStorage.setItem('ai_training_focus', weak.name);
   location.href='interview.html?track='+(map[type]||'technical');
 }
-let daily=1;
-function completeDaily(){daily=Math.min(3,daily+1);document.getElementById('dailyText').textContent=daily+' / 3';document.getElementById('dailyFill').style.width=(daily/3*100)+'%';toast(daily===3?'🏆 Daily objective complete! +150 XP':'✅ Practice recorded!')}
+function completeDaily(){
+  const count = Math.min(3, (()=>{try{return JSON.parse(localStorage.getItem('ai_interviews')||'[]').filter(r=>String(r.date||'').slice(0,10)===new Date().toISOString().slice(0,10)).length}catch{return 0}})());
+  document.getElementById('dailyText').textContent=count+' / 3';
+  document.getElementById('dailyFill').style.width=(count/3*100)+'%';
+  toast(count===3?'🏆 Daily objective complete!':'✅ Complete a real interview to advance today\'s objective.');
+}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),3000)}
+window.addEventListener('interviewai:state',()=>{if(window.InterviewAIPhase3)InterviewAIPhase3.refresh()});
 </script>
+
 </body>
 </html>
