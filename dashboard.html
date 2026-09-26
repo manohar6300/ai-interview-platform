@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -574,96 +577,98 @@ a{
 }
 
 /* =====================================================
-   READINESS
+   AI READINESS + SKILL ANALYTICS
 ===================================================== */
 
-.readiness{
-    display:flex;
-    gap:20px;
-    align-items:center;
+function clampScore(value, fallback=0){
+    const n = Number(value);
+    if(!Number.isFinite(n)) return fallback;
+    return Math.max(0, Math.min(100, Math.round(n)));
 }
 
-.gauge{
-    width:135px;
-    height:135px;
-    flex-shrink:0;
-    position:relative;
+function getAiEvaluation(item){
+    if(item && item.ai && typeof item.ai === "object") return item.ai;
+    if(item && item.evaluation && typeof item.evaluation === "object") return item.evaluation;
+    return null;
 }
 
-.gauge svg{
-    width:100%;
-    height:100%;
-    transform:rotate(-90deg);
+function averageMetric(key){
+    const values = [];
+    interviews.forEach(item => {
+        const ai = getAiEvaluation(item);
+        if(ai && ai[key] !== undefined) {
+            values.push(clampScore(ai[key]));
+        } else if(ai && key === "completeness" && Array.isArray(ai.questionAnalysis) && ai.questionAnalysis.length) {
+            const qScores = ai.questionAnalysis
+                .map(q => Number(q.score))
+                .filter(Number.isFinite);
+            if(qScores.length) values.push(clampScore(qScores.reduce((a,b)=>a+b,0) / qScores.length));
+        } else if(item && item.score !== undefined) {
+            values.push(clampScore(item.score));
+        }
+    });
+    return values.length ? Math.round(values.reduce((a,b)=>a+b,0) / values.length) : 0;
 }
 
-.gauge-bg{
-    fill:none;
-    stroke:rgba(255,255,255,.06);
-    stroke-width:10;
+const technical = averageMetric("technicalAccuracy");
+const communication = averageMetric("communication");
+const confidence = averageMetric("confidence");
+const problem = averageMetric("problemSolving");
+const completeness = averageMetric("completeness");
+const readiness = total ? Math.round((technical + problem + communication + confidence + completeness) / 5) : 0;
+
+function setBar(bar, text, value){
+    const barEl = document.getElementById(bar);
+    const textEl = document.getElementById(text);
+    if(barEl) barEl.style.width = value + "%";
+    if(textEl) textEl.textContent = value + "%";
 }
 
-.gauge-fill{
-    fill:none;
-    stroke:url(#g);
-    stroke-width:10;
-    stroke-linecap:round;
-    stroke-dasharray:377;
-    stroke-dashoffset:377;
-    transition:1.4s ease;
+setBar("technicalBar", "technicalText", technical);
+setBar("communicationBar", "communicationText", communication);
+setBar("confidenceBar", "confidenceText", confidence);
+setBar("problemBar", "problemText", problem);
+setBar("completenessBar", "completenessText", completeness);
+
+const aiEvaluatedCount = interviews.filter(item => !!getAiEvaluation(item)).length;
+const badge = document.getElementById("readinessBadge");
+if(badge){
+    badge.innerHTML = aiEvaluatedCount ? `<span class="ai-live-dot"></span> ${aiEvaluatedCount} AI EVALUATED` : "READY";
 }
 
-.gauge-center{
-    position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+function getWeakestSkill(){
+    return [
+        ["Technical Accuracy", technical],
+        ["Problem Solving", problem],
+        ["Communication", communication],
+        ["Confidence", confidence],
+        ["Completeness", completeness]
+    ].sort((a,b)=>a[1]-b[1])[0];
 }
 
-.gauge-number{
-    font-family:var(--head);
-    font-size:27px;
-    font-weight:800;
+const insight = document.getElementById("aiInsight");
+if(insight){
+    if(!total){
+        insight.textContent = "Complete your first AI-evaluated interview to unlock personalized skill insights.";
+    }else if(aiEvaluatedCount){
+        const [weakName, weakScore] = getWeakestSkill();
+        const latest = interviews.slice().reverse().find(item => getAiEvaluation(item));
+        const latestAi = latest ? getAiEvaluation(latest) : null;
+        const summary = latestAi && latestAi.summary ? String(latestAi.summary) : "Your dashboard is now learning from your interview performance.";
+        insight.textContent = `${weakName} is your current weakest area at ${weakScore}%. ${summary}`;
+    }else{
+        insight.textContent = "Your interviews are recorded. Finish an AI evaluation to replace estimated skill scores with real AI assessment data.";
+    }
 }
 
-.gauge-text{
-    color:#7f89a8;
-    font-size:9px;
-}
-
-.skills{
-    flex:1;
-}
-
-.skill{
-    margin-bottom:12px;
-}
-
-.skill-top{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:5px;
-    font-size:10px;
-}
-
-.skill-top span:last-child{
-    color:#c084fc;
-    font-weight:800;
-}
-
-.skill-track{
-    height:5px;
-    background:rgba(255,255,255,.06);
-    border-radius:10px;
-    overflow:hidden;
-}
-
-.skill-fill{
-    height:100%;
-    border-radius:10px;
-    background:linear-gradient(90deg,#7c3aed,#ec4899);
-}
+setTimeout(() => {
+    const circumference = 2 * Math.PI * 60;
+    const offset = circumference - (circumference * readiness / 100);
+    const gauge = document.getElementById("gauge");
+    gauge.style.strokeDasharray = circumference;
+    gauge.style.strokeDashoffset = offset;
+    animateNumber(document.getElementById("readiness"), readiness, "%");
+},300);
 
 /* =====================================================
    RECENT INTERVIEWS
@@ -960,6 +965,332 @@ a{
         min-height:300px;
     }
 }
+
+/* UI/UX PASS V1 — POLISH ONLY */
+body{overflow-x:hidden}
+.main{width:calc(100% - 245px);max-width:none;padding:30px 34px 50px}
+.sidebar{box-shadow:18px 0 50px rgba(0,0,0,.18)}
+.nav a{position:relative;border:1px solid transparent}
+.nav a.active{box-shadow:inset 3px 0 0 #a855f7,0 8px 25px rgba(124,58,237,.08)}
+.nav a.active::after{content:"";position:absolute;right:9px;width:5px;height:5px;border-radius:50%;background:#c084fc;box-shadow:0 0 12px rgba(192,132,252,.9)}
+.welcome h1{letter-spacing:-.7px}
+.streak{display:flex;align-items:center;gap:6px;white-space:nowrap;box-shadow:0 8px 24px rgba(251,191,36,.05)}
+.primary-btn{position:relative;overflow:hidden}
+.primary-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 25%,rgba(255,255,255,.18) 50%,transparent 75%);transform:translateX(-120%);transition:.55s}
+.primary-btn:hover::before{transform:translateX(120%)}
+.stat{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.stat:hover{box-shadow:0 14px 35px rgba(0,0,0,.22)}
+.stat-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:rgba(139,92,246,.09);border:1px solid rgba(139,92,246,.12)}
+.quest{box-shadow:0 22px 60px rgba(0,0,0,.22)}
+.quest::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 25%,rgba(168,85,247,.18),transparent 28%),linear-gradient(90deg,rgba(5,7,18,.12),transparent 55%);pointer-events:none}
+.quest-content{padding:36px}
+.quest h2{max-width:680px;letter-spacing:-1.2px}
+.character{cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,.12)}
+.character::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 45%,rgba(5,7,18,.18) 70%,rgba(5,7,18,.86));pointer-events:none}
+.character-info{left:11px;right:11px;bottom:11px}
+.character-role{color:#c3c9dc}
+.card{box-shadow:0 10px 35px rgba(0,0,0,.12)}
+.quick{min-height:116px;position:relative;overflow:hidden}
+.quick::after{content:"↗";position:absolute;top:13px;right:14px;color:#70799a;font-size:13px;opacity:0;transform:translate(-3px,3px);transition:.2s}
+.quick:hover::after{opacity:1;transform:none}
+.quick-icon{width:38px;height:38px;display:flex;align-items:center;justify-content:center;border-radius:11px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.12)}
+.interview{transition:.2s}
+.interview:hover{border-color:rgba(139,92,246,.28);background:rgba(139,92,246,.045);transform:translateX(2px)}
+.badge{transition:.2s}
+.badge:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.32);background:rgba(139,92,246,.055)}
+.mentor{box-shadow:0 16px 45px rgba(0,0,0,.2)}
+@media(max-width:1200px){.main{width:calc(100% - 245px);padding:26px}}
+@media(max-width:900px){.main{width:100%;padding:20px}.topbar{flex-wrap:wrap}.welcome h1{font-size:24px}.quest-content{padding:28px}}
+@media(max-width:600px){.main{padding:14px}.welcome h1{font-size:21px}.top-actions{width:100%}.top-actions .primary-btn{flex:1}.quest-content{padding:22px}.quest-buttons{flex-direction:column}.quest-buttons button{width:100%}.card{padding:17px}}
+
+
+/* =====================================================
+   UI/UX PASS V2 — PROGRESS + PREMIUM FEEDBACK
+===================================================== */
+
+/* Better visual rhythm */
+.stats{gap:14px}
+.content-grid{gap:18px}
+.section{margin-bottom:18px}
+
+/* Stat cards feel like progression, not plain numbers */
+.stat{
+    position:relative;
+    overflow:hidden;
+}
+.stat::after{
+    content:"";
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:2px;
+    background:linear-gradient(90deg,transparent,rgba(139,92,246,.45),transparent);
+    opacity:.45;
+}
+
+/* Progress bars */
+.progress,
+.progress-bar,
+.readiness-bar,
+.skill-bar{
+    overflow:hidden;
+    position:relative;
+}
+.progress::after,
+.progress-bar::after,
+.readiness-bar::after,
+.skill-bar::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);
+    transform:translateX(-100%);
+    animation:progressShine 3.5s ease-in-out infinite;
+}
+@keyframes progressShine{
+    0%,45%{transform:translateX(-100%)}
+    70%,100%{transform:translateX(100%)}
+}
+
+/* AI readiness becomes the dashboard's key feedback panel */
+.readiness,
+.ai-readiness{
+    position:relative;
+}
+.readiness-score,
+.readiness-value{
+    text-shadow:0 0 22px rgba(168,85,247,.22);
+}
+
+/* Empty states */
+.empty-state{
+    min-height:150px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    border:1px dashed rgba(139,92,246,.2);
+    border-radius:14px;
+    color:#7f88a8;
+    background:rgba(139,92,246,.025);
+    padding:24px;
+}
+.empty-state strong{
+    color:#d9dcf0;
+    margin-bottom:5px;
+}
+
+/* Character cards get a clear selected/active feel */
+.character{
+    transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.character:hover{
+    transform:translateY(-4px);
+    border-color:rgba(168,85,247,.4);
+    box-shadow:0 14px 34px rgba(0,0,0,.28),0 0 22px rgba(139,92,246,.08);
+}
+.character:focus-visible{
+    outline:2px solid #a855f7;
+    outline-offset:3px;
+}
+
+/* Buttons have clearer interaction states */
+.primary-btn,
+.secondary-btn,
+.quick{
+    transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.primary-btn:active,
+.secondary-btn:active,
+.quick:active{
+    transform:translateY(1px) scale(.99);
+}
+
+/* Mentor panel feels like a premium coaching moment */
+.mentor{
+    border-color:rgba(168,85,247,.18);
+}
+.mentor:hover{
+    border-color:rgba(168,85,247,.3);
+}
+
+/* Soft entrance animation, intentionally restrained */
+@keyframes dashboardFadeUp{
+    from{opacity:0;transform:translateY(7px)}
+    to{opacity:1;transform:none}
+}
+.stats,.quest,.character-section,.content-grid{
+    animation:dashboardFadeUp .45s ease both;
+}
+.quest{animation-delay:.05s}
+.character-section{animation-delay:.1s}
+.content-grid{animation-delay:.15s}
+
+/* Respect reduced-motion preferences */
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+        scroll-behavior:auto!important;
+    }
+}
+
+/* Mobile: keep progress and cards breathable */
+@media(max-width:600px){
+    .stats{gap:10px}
+    .content-grid{gap:14px}
+    .empty-state{min-height:125px;padding:18px}
+}
+
+
+/* =====================================================
+   UI/UX PASS V3 — GAMIFIED PROGRESSION HUD
+===================================================== */
+
+.profile-box{position:relative;overflow:hidden}
+.profile-box::after{
+    content:"";position:absolute;left:11px;right:11px;bottom:7px;height:2px;
+    border-radius:99px;background:rgba(255,255,255,.06);
+}
+.profile-box::before{
+    content:"";position:absolute;left:11px;bottom:7px;width:58%;height:2px;
+    border-radius:99px;background:linear-gradient(90deg,#7c3aed,#ec4899);
+    box-shadow:0 0 10px rgba(168,85,247,.35);
+}
+.profile-xp{margin-top:7px;font-size:8px;color:#70799a;letter-spacing:.2px}
+.stat-number{letter-spacing:-.7px}
+.stat-small{display:flex;align-items:center;gap:5px}
+.quest-buttons .primary-btn,.quest-buttons .secondary-btn{min-height:43px}
+.character:nth-child(9){
+    border-color:rgba(168,85,247,.34);
+    box-shadow:0 0 20px rgba(139,92,246,.08);
+}
+.character:nth-child(9)::after{background:linear-gradient(transparent,rgba(44,18,78,.92))}
+.character:nth-child(9) .character-role{color:#d8b4fe}
+.readiness{min-height:150px}
+.skill-track{box-shadow:inset 0 1px 2px rgba(0,0,0,.2)}
+.skill-fill{position:relative;transition:width .8s cubic-bezier(.22,1,.36,1)}
+.skill-fill::after{
+    content:"";position:absolute;right:0;top:0;width:18px;height:100%;
+    background:rgba(255,255,255,.18);filter:blur(3px);opacity:.7;
+}
+.score{box-shadow:0 0 16px rgba(52,211,153,.07)}
+.badge{position:relative;overflow:hidden}
+.badge::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.06),transparent 70%);
+    transform:translateX(-120%);transition:.6s;
+}
+.badge:hover::after{transform:translateX(120%)}
+.badge-icon{filter:drop-shadow(0 4px 10px rgba(168,85,247,.12))}
+.mentor .secondary-btn{background:rgba(255,255,255,.055)}
+.mentor .secondary-btn:hover{
+    border-color:rgba(168,85,247,.4);
+    box-shadow:0 8px 25px rgba(139,92,246,.12);
+}
+@media(max-width:900px){.profile-box::before{width:62%}}
+@media(max-width:600px){
+    .stats .stat{min-height:112px}
+    .readiness{gap:14px}
+    .gauge{width:125px;height:125px}
+    .badges{gap:8px}
+}
+
+
+/* =====================================================
+   UI/UX PASS V4 — FINAL PRODUCT POLISH
+===================================================== */
+
+/* Sidebar navigation: stronger hierarchy + subtle separators */
+.sidebar-nav a{
+    position:relative;
+    overflow:hidden;
+}
+.sidebar-nav a::after{
+    content:"";
+    position:absolute;
+    left:0;
+    top:50%;
+    width:2px;
+    height:0;
+    border-radius:4px;
+    background:#a855f7;
+    box-shadow:0 0 12px rgba(168,85,247,.55);
+    transition:height .22s ease,top .22s ease;
+}
+.sidebar-nav a:hover::after,
+.sidebar-nav a.active::after{
+    height:55%;
+    top:22.5%;
+}
+
+/* Dashboard cards share one premium surface language */
+.stat,
+.quest,
+.character-section,
+.card,
+.mentor{
+    backdrop-filter:blur(10px);
+}
+
+/* Hover depth without moving the whole layout */
+.card{
+    transition:border-color .2s ease,box-shadow .2s ease,background .2s ease;
+}
+.card:hover{
+    border-color:rgba(168,85,247,.18);
+    box-shadow:0 14px 32px rgba(0,0,0,.16);
+}
+
+/* Section headings become easier to scan */
+.section-title{
+    letter-spacing:-.15px;
+}
+.section-title::after{
+    content:"";
+    display:inline-block;
+    width:18px;
+    height:1px;
+    margin-left:9px;
+    vertical-align:middle;
+    background:rgba(168,85,247,.35);
+}
+
+/* Recent interview rows */
+.interview-row{
+    transition:background .18s ease,transform .18s ease,border-color .18s ease;
+}
+.interview-row:hover{
+    background:rgba(139,92,246,.045);
+    transform:translateX(2px);
+}
+
+/* Empty states have a clearer CTA affordance */
+.empty-state .primary-btn,
+.empty-state .secondary-btn{
+    margin-top:12px;
+}
+
+/* Focus accessibility */
+button:focus-visible,
+a:focus-visible{
+    outline:2px solid rgba(168,85,247,.9);
+    outline-offset:3px;
+}
+
+/* Mobile navigation/content polish */
+@media(max-width:900px){
+    .sidebar-nav a::after{display:none}
+    .card:hover,.interview-row:hover{transform:none}
+}
+@media(max-width:600px){
+    .section-title::after{display:none}
+    .quest{padding:20px}
+}
+
 </style>
 </head>
 
@@ -1038,7 +1369,7 @@ a{
             Behavioural
         </a>
 
-        <a href="training-arena.html">
+        <a href="Game%20ui.html">
             <span class="nav-icon">🎮</span>
             Training Arena
         </a>
@@ -1049,7 +1380,7 @@ a{
 
     <nav class="nav">
 
-        <a href="settings.html">
+        <a href="#" onclick="comingSoon(event,'Settings')">
             <span class="nav-icon">⚙️</span>
             Settings
         </a>
@@ -1070,6 +1401,7 @@ a{
                 <div class="profile-plan">
                     Level <span id="level">7</span> · <span id="xp">720</span> XP
                 </div>
+                <div class="profile-xp" id="xpProgressText">Next level progress</div>
             </div>
 
         </div>
@@ -1510,9 +1842,9 @@ a{
                         🧠 AI Readiness
                     </h3>
 
-                    <span class="card-badge">
-                        LIVE
-                    </span>
+                    <span class="card-badge" id="readinessBadge">
+                         <span class="ai-live-dot"></span> AI POWERED
+                     </span>
 
                 </div>
 
@@ -1646,6 +1978,21 @@ a{
                                     style="width:0%">
                                 </div>
                             </div>
+
+                        <div class="skill">
+                            <div class="skill-top">
+                                <span>Completeness</span>
+                                <span id="completenessText">0%</span>
+                            </div>
+                            <div class="skill-track">
+                                <div class="skill-fill" id="completenessBar" style="width:0%"></div>
+                            </div>
+                        </div>
+
+                        <div class="ai-insight">
+                            <div class="ai-insight-label"><span class="ai-live-dot"></span>AI Performance Insight</div>
+                            <div class="ai-insight-text" id="aiInsight">Complete an AI-evaluated interview to unlock personalized skill insights.</div>
+                        </div>
 
                         </div>
 
@@ -1822,22 +2169,14 @@ const scores =
     interviews
     .map(i => Number(i.score) || 0);
 
-/* Prefer real OpenAI evaluation scores when available. */
-const aiEvaluated = interviews.filter(i =>
-    i && i.ai && typeof i.ai === "object"
-);
-
-const scoreFromEvaluation = item => {
-    const value = Number(item?.ai?.overallScore);
-    return Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : (Number(item?.score) || 0);
-};
-
-const aiScores = interviews.map(scoreFromEvaluation);
 
 const average =
-    aiScores.length
+    scores.length
         ? Math.round(
-            aiScores.reduce((a,b) => a+b, 0) / aiScores.length
+            scores.reduce(
+                (a,b) => a+b,
+                0
+            ) / scores.length
           )
         : 0;
 
@@ -1888,6 +2227,22 @@ document.getElementById("xp").textContent =
 
 document.getElementById("level").textContent =
     level;
+
+/* =====================================================
+   XP PROGRESSION HUD
+===================================================== */
+const xpPerLevel = 250;
+const xpProgress = Math.max(
+    0,
+    Math.min(100, Math.round(
+        ((xp - (level - 1) * xpPerLevel) / xpPerLevel) * 100
+    ))
+);
+const xpProgressText = document.getElementById("xpProgressText");
+if(xpProgressText){
+    xpProgressText.textContent = xpProgress + "% to next level";
+}
+
 
 
 /* =====================================================
@@ -1963,24 +2318,35 @@ animateNumber(
    READINESS
 ===================================================== */
 
-function evaluationMetric(key, fallback){
-    const values = aiEvaluated
-        .map(item => Number(item?.ai?.[key]))
-        .filter(value => Number.isFinite(value));
+let technical =
+    average || 0;
 
-    return values.length
-        ? Math.round(values.reduce((a,b) => a+b, 0) / values.length)
-        : fallback;
-}
+let communication =
+    total
+        ? Math.min(100,average + 5)
+        : 0;
 
-const technical = evaluationMetric("technicalAccuracy", average);
-const communication = evaluationMetric("communication", average);
-const confidence = evaluationMetric("confidence", average);
-const problem = evaluationMetric("problemSolving", average);
+let confidence =
+    total
+        ? Math.max(0,average - 5)
+        : 0;
 
-const readiness = aiEvaluated.length
-    ? Math.round((technical + communication + confidence + problem) / 4)
-    : average;
+let problem =
+    total
+        ? Math.min(100,average + 2)
+        : 0;
+
+let readiness =
+    total
+        ? Math.round(
+            (
+                technical +
+                communication +
+                confidence +
+                problem
+            ) / 4
+          )
+        : 0;
 
 
 /* bars */
@@ -2078,7 +2444,8 @@ if(total > 0){
         .slice(0,5)
         .forEach(item => {
 
-            const score = scoreFromEvaluation(item);
+            const score =
+                Number(item.score) || 0;
 
             const row =
                 document.createElement("div");
@@ -2102,6 +2469,9 @@ if(total > 0){
                 item.date ||
                 "Recent";
 
+            const rank = score >= 90 ? "S" : score >= 80 ? "A" : score >= 70 ? "B" : score >= 60 ? "C" : "D";
+            const ai = getAiEvaluation(item);
+
             row.innerHTML = `
 
                 <div class="interview-icon">
@@ -2122,6 +2492,9 @@ if(total > 0){
                         ·
                         ${item.duration || 15} min
                     </div>
+                    <div class="interview-status">
+                        ${ai ? '<span class="ai-live-dot"></span>AI evaluated' : 'Recorded'} · Rank ${rank}
+                    </div>
 
                 </div>
 
@@ -2136,34 +2509,6 @@ if(total > 0){
 
 }
 
-/* =====================================================
-   AI COMPANION / LATEST EVALUATION
-===================================================== */
-const latest = interviews.length ? interviews[interviews.length - 1] : null;
-const latestAI = latest?.ai && typeof latest.ai === "object" ? latest.ai : null;
-const mentorLabel = document.querySelector(".mentor-label");
-const mentorText = document.querySelector(".mentor p");
-
-if (mentorLabel && mentorText) {
-    if (latestAI) {
-        const latestScore = scoreFromEvaluation(latest);
-        mentorLabel.textContent = "AI COMPANION · EVALUATION COMPLETE";
-
-        if (latestScore >= 85) {
-            mentorText.textContent = `Excellent run. Your latest AI evaluation scored ${latestScore}%. Keep pushing toward elite interview performance.`;
-        } else if (latestScore >= 70) {
-            mentorText.textContent = `Solid progress. Your latest AI evaluation scored ${latestScore}%. Focus on your weaker skill areas and keep training.`;
-        } else {
-            mentorText.textContent = `Training battle complete. Your latest AI evaluation scored ${latestScore}%. Review the feedback and sharpen your fundamentals.`;
-        }
-    } else if (total > 0) {
-        mentorLabel.textContent = "AI COMPANION · DEMO DATA";
-        mentorText.textContent = "Your interview history is saved. Complete an AI-evaluated interview to unlock detailed readiness insights.";
-    } else {
-        mentorLabel.textContent = "ELITE MENTOR";
-        mentorText.textContent = "Complete your first interview to receive AI feedback, build your readiness score and unlock your next challenge.";
-    }
-}
 
 /* =====================================================
    HTML ESCAPE
@@ -2314,7 +2659,222 @@ setTimeout(() => {
 
 },500);
 
+
+/* Final dashboard polish: keep status text quietly informative */
+const mentorStatus = document.querySelector(".mentor-status");
+if(mentorStatus && !mentorStatus.textContent.trim()){
+    mentorStatus.textContent = "AI Mentor · Ready";
+}
+
 </script>
 
+
+<script src="game-state.js"></script>
+<script>
+(() => {
+  'use strict';
+
+  if (!window.InterviewAIState) return;
+
+  const state = InterviewAIState.snapshot();
+  const progression = state.progression || {};
+  const interviews = Array.isArray(state.interviews) ? state.interviews : [];
+  const twin = state.careerTwin || {};
+  const profile = twin.skillProfile || {};
+
+  const $ = id => document.getElementById(id);
+  const clamp = n => Math.max(0, Math.min(100, Math.round(Number(n) || 0)));
+
+  const scores = interviews
+    .map(r => Number(r.score))
+    .filter(Number.isFinite);
+
+  const average = scores.length
+    ? Math.round(scores.reduce((a,b) => a+b, 0) / scores.length)
+    : 0;
+
+  const best = scores.length
+    ? Math.max(...scores)
+    : 0;
+
+  const hours = interviews.reduce(
+    (sum, r) => sum + (Number(r.duration) || 0),
+    0
+  ) / 60;
+
+  const metricAverage = key => {
+    const vals = interviews
+      .map(r => r && r.ai && Number(r.ai[key]))
+      .filter(Number.isFinite);
+
+    return vals.length
+      ? Math.round(vals.reduce((a,b) => a+b, 0) / vals.length)
+      : average;
+  };
+
+  const technical = clamp(metricAverage('technicalScore'));
+  const problem = clamp(metricAverage('problemSolvingScore'));
+  const communication = clamp(metricAverage('communicationScore'));
+  const confidence = clamp(metricAverage('confidenceScore'));
+
+  const readiness = twin.readiness
+    ? clamp(twin.readiness)
+    : (scores.length
+      ? Math.round((technical + problem + communication + confidence) / 4)
+      : 0);
+
+  if ($('profileName')) {
+    $('profileName').textContent = state.user?.name || 'Y Manu';
+  }
+
+  if ($('avatar')) {
+    $('avatar').textContent =
+      String(state.user?.name || 'Y Manu').trim().charAt(0).toUpperCase() || 'Y';
+  }
+
+  if ($('level')) {
+    $('level').textContent = progression.level || 1;
+  }
+
+  if ($('xp')) {
+    $('xp').textContent = progression.xp || 0;
+  }
+
+  if ($('streak')) {
+    $('streak').textContent = progression.streak || 0;
+  }
+
+  if ($('xpProgressText')) {
+    const level = Number(progression.level || 1);
+    const xp = Number(progression.xp || 0);
+    const base = (level - 1) * 120;
+    const within = Math.max(0, xp - base);
+    const needed = level * 120;
+    $('xpProgressText').textContent =
+      `${Math.max(0, needed - within)} XP to Level ${level + 1}`;
+  }
+
+  if ($('totalInterviews')) $('totalInterviews').textContent = interviews.length;
+  if ($('averageScore')) $('averageScore').textContent = average + '%';
+  if ($('bestScore')) $('bestScore').textContent = best + '%';
+  if ($('hours')) $('hours').textContent = Math.round(hours) + 'h';
+
+  const setBar = (barId, textId, value) => {
+    if ($(barId)) $(barId).style.width = value + '%';
+    if ($(textId)) $(textId).textContent = value + '%';
+  };
+
+  setBar('technicalBar', 'technicalText', technical);
+  setBar('communicationBar', 'communicationText', communication);
+  setBar('confidenceBar', 'confidenceText', confidence);
+  setBar('problemBar', 'problemText', problem);
+
+  if ($('readiness')) $('readiness').textContent = readiness + '%';
+
+  const gauge = $('gauge');
+  if (gauge) {
+    const circumference = 2 * Math.PI * 60;
+    gauge.style.strokeDasharray = circumference;
+    gauge.style.strokeDashoffset = circumference - (circumference * readiness / 100);
+  }
+
+  const aiCount = interviews.filter(
+    r => r && r.ai && typeof r.ai === 'object'
+  ).length;
+
+  const insight = $('aiInsight');
+  if (insight) {
+    const weaknesses = Array.isArray(twin.weakestSkills)
+      ? twin.weakestSkills.filter(x => Number(x.score) < 70)
+      : [];
+
+    if (weaknesses.length) {
+      const w = weaknesses[0];
+      insight.textContent =
+        `${w.label} is currently at ${clamp(w.score)}%. Your next training mission should target this gap.`;
+    } else if (aiCount) {
+      insight.textContent =
+        `Career Twin updated from ${aiCount} AI-evaluated interview${aiCount === 1 ? '' : 's'}. Keep training to deepen your strongest skills.`;
+    } else if (interviews.length) {
+      insight.textContent =
+        'Your interview history is connected. Complete an AI-evaluated session to unlock deeper personalized skill signals.';
+    } else {
+      insight.textContent =
+        'Complete your first AI-evaluated interview to unlock personalized skill insights.';
+    }
+  }
+
+  // Use the Career Twin to update the existing quest hero text without changing its styling.
+  const mission = twin.recommendedMission;
+  const quest = document.querySelector('.quest');
+  const questTitle = quest ? quest.querySelector('h2') : null;
+  const questCopy = quest ? quest.querySelector('p') : null;
+
+  if (mission && questTitle && questCopy) {
+    questTitle.textContent = mission.title || 'Your Next Career Quest';
+    questCopy.textContent = mission.reason || 'Your Career Twin has selected your next training mission.';
+  }
+
+  // Preserve the existing Recent Interviews visual component but make it state-driven.
+  const interviewList = $('interviewList');
+  if (interviewList) {
+    if (!interviews.length) {
+      interviewList.innerHTML = `
+        <div style="text-align:center;padding:28px;color:#69728f;font-size:11px;">
+          🎙️ No interviews yet.<br><br>
+          Start your first interview to begin your journey.
+        </div>`;
+    } else {
+      interviewList.innerHTML = interviews.slice(0,5).map(item => {
+        const type = item.type || 'Technical';
+        const role = item.role || 'Software Engineer';
+        const score = clamp(item.score);
+        const date = item.date
+          ? new Date(item.date).toLocaleDateString()
+          : 'Recent';
+        return `
+          <div class="interview">
+            <div class="interview-icon">🎙️</div>
+            <div class="interview-info">
+              <div class="interview-title">${escapeHtml(role)} — ${escapeHtml(type)}</div>
+              <div class="interview-meta">${escapeHtml(date)} · ${Number(item.duration) || 0} min · ${item.aiStatus === 'complete' ? 'AI evaluated' : 'Recorded'}</div>
+            </div>
+            <div class="score">${score}%</div>
+          </div>`;
+      }).join('');
+    }
+  }
+
+  if ($('interviewCount')) {
+    $('interviewCount').textContent = `${interviews.length} TOTAL`;
+  }
+
+  const skillEntries = Object.values(profile)
+    .filter(x => x && typeof x === 'object')
+    .sort((a,b) => Number(b.score || 0) - Number(a.score || 0));
+
+  const skillLabels = document.querySelectorAll('.skill-top span:first-child');
+  const skillValues = document.querySelectorAll('.skill-top span:last-child');
+  const skillBars = document.querySelectorAll('.skill-fill');
+
+  // Keep the existing four-bar UI and map the live Career Twin skills into it when available.
+  const mapped = skillEntries.slice(0,4);
+  mapped.forEach((skill, i) => {
+    if (skillLabels[i]) skillLabels[i].textContent = skill.label || 'Skill';
+    if (skillValues[i]) skillValues[i].textContent = clamp(skill.score) + '%';
+    if (skillBars[i]) skillBars[i].style.width = clamp(skill.score) + '%';
+  });
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>'"]/g, ch => ({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      "'":'&#39;',
+      '"':'&quot;'
+    }[ch]));
+  }
+})();
+</script>
 </body>
 </html>
