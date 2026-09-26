@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,29 +49,41 @@ main{margin-left:245px;max-width:calc(100vw - 245px);width:100%;padding:28px 34p
 </main></div>
 <div class="modal" id="modal" onclick="outsideClose(event)"><div class="modal-box"><button class="close" onclick="closeModal()">✕</button><img class="modal-img" id="modalImg" alt=""><div class="modal-rarity" id="modalRarity"></div><div class="modal-name" id="modalName"></div><div class="modal-desc" id="modalDesc"></div><div class="modal-bar"><div class="modal-top"><span id="modalReq"></span><span id="modalVal"></span></div><div class="small-track"><div class="small-fill" id="modalFill"></div></div></div><button class="action" onclick="closeModal()">Continue →</button></div></div>
 <div class="toast" id="toast"></div>
+<script src="game-state.js"></script>
+<script src="phase3-engine.js"></script>
 <script>
 const badgeDefs=[
 {id:'first',cat:'interview',rarity:'COMMON',name:'First Step',desc:'Complete 1 AI interview',xp:100,total:1,img:'first-step.png'},
 {id:'learner',cat:'interview',rarity:'UNCOMMON',name:'Interview Learner',desc:'Complete 5 AI interviews',xp:250,total:5,img:'interview-learner.png'},
-{id:'dsa',cat:'dsa',rarity:'RARE',name:'DSA Explorer',desc:'Solve 10 DSA problems',xp:400,total:10,img:'dsa-warrior.png'},
+{id:'dsa',cat:'dsa',rarity:'RARE',name:'DSA Explorer',desc:'Complete 10 DSA interviews',xp:400,total:10,img:'dsa-warrior.png'},
 {id:'system',cat:'system',rarity:'EPIC',name:'System Thinker',desc:'Complete 5 system design interviews',xp:600,total:5,img:'system-thinker.png'},
 {id:'warrior',cat:'interview',rarity:'LEGENDARY',name:'Interview Warrior',desc:'Complete 25 AI interviews',xp:1000,total:25,img:'interview-warrior.png'},
-{id:'resume',cat:'resume',rarity:'UNCOMMON',name:'Resume Builder',desc:'Analyze 5 resumes',xp:300,total:5,img:'resume-builder.png'},
+{id:'resume',cat:'resume',rarity:'UNCOMMON',name:'Resume Builder',desc:'Complete 5 resume analyses',xp:300,total:5,img:'resume-builder.png'},
 {id:'streak',cat:'streak',rarity:'RARE',name:'Consistent Learner',desc:'Maintain a 7 day streak',xp:350,total:7,img:'consistent-learner.png'},
-{id:'hidden1',cat:'special',rarity:'???',name:'Hidden Achievement',desc:'Keep training to discover this badge.',xp:0,total:1,img:'',hidden:true},
-{id:'hidden2',cat:'behavioral',rarity:'???',name:'Hidden Achievement',desc:'Keep training to discover this badge.',xp:0,total:1,img:'',hidden:true},
-{id:'hidden3',cat:'special',rarity:'???',name:'Hidden Achievement',desc:'Keep training to discover this badge.',xp:0,total:1,img:'',hidden:true}
+{id:'hidden1',cat:'special',rarity:'MYTHIC',name:'AI Awakened',desc:'Complete 3 AI-evaluated interviews',xp:500,total:3,img:'',hidden:false},
+{id:'hidden2',cat:'special',rarity:'MYTHIC',name:'Elite Response',desc:'Earn an AI-evaluated score of 90+',xp:750,total:1,img:'',hidden:false},
+{id:'hidden3',cat:'special',rarity:'LEGENDARY',name:'Interview DNA',desc:'Build a multi-skill Career Twin after 10 interviews',xp:900,total:1,img:'',hidden:false}
 ];
-let currentFilter='all',challenge=Number(localStorage.getItem('daily_challenge_count')||0);const $=id=>document.getElementById(id);function go(url){location.href=url}
-function readState(){const interviews=JSON.parse(localStorage.getItem('ai_interviews')||'[]');const resumeDone=localStorage.getItem('resume_analyzed')==='true';const dsaCount=interviews.filter(x=>/dsa/i.test(String(x.type||x.track||x.category))).length;const systemCount=interviews.filter(x=>/system/i.test(String(x.type||x.track||x.category))).length;const interviewCount=interviews.length;const streak=Number(localStorage.getItem('streak')||localStorage.getItem('cq_streak')||7);return{interviews,dsaCount,systemCount,interviewCount,resumeDone,streak}}
-function progressFor(b,s){if(b.id==='first')return Math.min(1,s.interviewCount);if(b.id==='learner')return Math.min(5,s.interviewCount);if(b.id==='warrior')return Math.min(25,s.interviewCount);if(b.id==='dsa')return Math.min(10,s.dsaCount);if(b.id==='system')return Math.min(5,s.systemCount);if(b.id==='resume')return s.resumeDone?5:0;if(b.id==='streak')return Math.min(7,s.streak);return 0}
-function getBadges(){const s=readState();return badgeDefs.map(b=>({...b,value:progressFor(b,s),unlocked:!b.hidden&&progressFor(b,s)>=b.total}))}
+let currentFilter='all';
+const $=id=>document.getElementById(id);
+function go(url){location.href=url}
+function safeState(){return window.InterviewAIState?InterviewAIState.load():{careerTwin:{},badges:[],progression:{}}}
+function interviews(){try{const x=JSON.parse(localStorage.getItem('ai_interviews')||'[]');return Array.isArray(x)?x:[]}catch{return[]}}
+function trackOf(r){const s=String(r?.track||r?.type||'').toLowerCase();if(s.includes('system'))return'system';if(s.includes('dsa'))return'dsa';if(s.includes('behavi'))return'behavioral';return'interview'}
+function progressFor(b,s){const ints=interviews();const counts={interview:ints.length,dsa:ints.filter(r=>trackOf(r)==='dsa').length,system:ints.filter(r=>trackOf(r)==='system').length,behavioral:ints.filter(r=>trackOf(r)==='behavioral').length};const earned=(s.badges||[]).some(x=>x.id===b.id);if(b.id==='first')return Math.min(1,counts.interview);if(b.id==='learner')return Math.min(5,counts.interview);if(b.id==='warrior')return Math.min(25,counts.interview);if(b.id==='dsa')return Math.min(10,counts.dsa);if(b.id==='system')return Math.min(5,counts.system);if(b.id==='resume')return Number(s?.resume?.analysisCount||0);if(b.id==='streak')return Math.min(7,Number(s?.progression?.streak||0));if(b.id==='hidden1')return Math.min(3,ints.filter(r=>r.aiStatus==='complete'||r.ai).length);if(b.id==='hidden2')return ints.some(r=>Number(r.score)>=90&&(r.aiStatus==='complete'||r.ai))?1:0;if(b.id==='hidden3')return ints.length>=10&&Object.keys(s?.careerTwin?.skillProfile||{}).length>=3?1:0;return earned?b.total:0}
+function isUnlocked(b,s){return (s.badges||[]).some(x=>x.id===b.id)||progressFor(b,s)>=b.total}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function render(){const q=$('search').value.toLowerCase().trim(),badges=getBadges();$('grid').innerHTML='';badges.filter(b=>(currentFilter==='all'||b.cat===currentFilter)&&(!q||(b.name+' '+b.desc+' '+b.rarity).toLowerCase().includes(q))).forEach(b=>{const el=document.createElement('div');el.className='badge '+(b.unlocked?'unlocked ':'locked ')+(b.rarity==='EPIC'?'epic ':'')+(b.rarity==='LEGENDARY'?'legendary':'');el.onclick=()=>openModal(b);el.innerHTML=`<div class="rarity">${b.rarity}</div>${b.hidden?'<div class="hidden-lock">🔒</div>':`<img class="badge-img" src="${b.img}" alt="${esc(b.name)}">`}<div class="badge-name">${esc(b.name)}</div><div class="badge-desc">${esc(b.desc)}</div><div class="badge-xp">${b.hidden?'???':b.unlocked?'✓ Unlocked · +'+b.xp+' XP':b.value+' / '+b.total}</div>`;$('grid').appendChild(el)});updateStats(badges);renderRecent(badges)}
-function updateStats(badges){const real=badges.filter(b=>!b.hidden),earned=real.filter(b=>b.unlocked).length;$('earned').textContent=earned;$('completion').textContent=Math.round(earned/real.length*100)+'%';$('streak').textContent=readState().streak}
-function renderRecent(badges){const list=badges.filter(b=>b.unlocked).slice(-3).reverse();$('recent').innerHTML=list.length?list.map((b,i)=>`<div class="recent-row"><img src="${b.img}" alt=""><div><strong>${esc(b.name)}</strong><span>Unlocked ${i===0?'today':i===1?'2 days ago':'4 days ago'}</span></div><div class="recent-xp">+${b.xp} XP</div></div>`).join(''):'<div style="font-size:11px;color:#98a2c4">Complete an interview or challenge to start your achievement history.</div>'}
-function openModal(b){if(b.hidden){toast('🔒 Keep training to discover this achievement');return}$('modalImg').src=b.img;$('modalRarity').textContent=b.rarity+' ACHIEVEMENT';$('modalName').textContent=b.name;$('modalDesc').textContent=b.desc;$('modalReq').textContent=b.unlocked?'Requirement complete':'Progress';$('modalVal').textContent=b.value+' / '+b.total;$('modalFill').style.width=Math.min(100,b.value/b.total*100)+'%';$('modal').classList.add('show')}
-function closeModal(){$('modal').classList.remove('show')}function outsideClose(e){if(e.target===$('modal'))closeModal()}function demoChallenge(){challenge=Math.min(3,challenge+1);localStorage.setItem('daily_challenge_count',challenge);$('challengeCount').textContent=challenge;$('challengeFill').style.width=(challenge/3*100)+'%';if(challenge===3)toast('🏆 Daily challenge complete! +150 XP')}function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3000)}
-document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;render()}));$('search').addEventListener('input',render);$('challengeCount').textContent=challenge;$('challengeFill').style.width=Math.min(100,challenge/3*100)+'%';render();
+function render(){const s=safeState(),q=($('search')?.value||'').toLowerCase().trim();const badges=badgeDefs.map(b=>({...b,value:progressFor(b,s),unlocked:isUnlocked(b,s)}));$('grid').innerHTML='';badges.filter(b=>(currentFilter==='all'||b.cat===currentFilter)&&(!q||(b.name+' '+b.desc+' '+b.rarity).toLowerCase().includes(q))).forEach(b=>{const el=document.createElement('div');el.className='badge '+(b.unlocked?'unlocked ':'locked ')+(b.rarity==='EPIC'?'epic ':'')+(b.rarity==='LEGENDARY'?'legendary ':'');el.onclick=()=>openModal(b);el.innerHTML=`<div class="rarity">${b.rarity}</div>${b.img?`<img class="badge-img" src="${b.img}" alt="${esc(b.name)}">`:'<div class="hidden-lock">✦</div>'}<div class="badge-name">${esc(b.name)}</div><div class="badge-desc">${esc(b.desc)}</div><div class="badge-xp">${b.unlocked?'✓ Unlocked · +'+b.xp+' XP':b.value+' / '+b.total}</div>`;$('grid').appendChild(el)});updateStats(badges);renderRecent(badges)}
+function updateStats(badges){const earned=badges.filter(b=>b.unlocked).length;const total=badges.length;$('earned').textContent=earned;$('completion').textContent=Math.round(earned/total*100)+'%';$('streak').textContent=Number(safeState()?.progression?.streak||0)}
+function renderRecent(badges){const unlocked=(safeState()?.badges||[]).slice().reverse().slice(0,3);$('recent').innerHTML=unlocked.length?unlocked.map(b=>{const d=badgeDefs.find(x=>x.id===b.id);return d?`<div class="recent-row">${d.img?`<img src="${d.img}" alt="">`:`<div class="hidden-lock">✦</div>`}<div><strong>${esc(d.name)}</strong><span>Unlocked ${(b.unlockedAt||'').slice(0,10)||'recently'}</span></div><div class="recent-xp">+${d.xp} XP</div></div>`:''}).join(''):'<div style="font-size:11px;color:#98a2c4">Complete an interview to build your achievement history.</div>'}
+function openModal(b){const unlocked=isUnlocked(b,safeState());if(!b.img){toast(unlocked?'✦ Achievement unlocked!':'🔒 Keep training to unlock this achievement');return}$('modalImg').src=b.img;$('modalRarity').textContent=b.rarity+' ACHIEVEMENT';$('modalName').textContent=b.name;$('modalDesc').textContent=b.desc;$('modalReq').textContent=unlocked?'Requirement complete':'Progress';$('modalVal').textContent=b.value+' / '+b.total;$('modalFill').style.width=Math.min(100,b.value/b.total*100)+'%';$('modal').classList.add('show')}
+function closeModal(){$('modal').classList.remove('show')}
+function outsideClose(e){if(e.target===$('modal'))closeModal()}
+function demoChallenge(){toast('Challenge progress is now driven by real interviews. Complete interviews today to advance it.')}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3000)}
+document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;render()}));
+if($('search'))$('search').addEventListener('input',render);render();
+window.addEventListener('interviewai:state',render);
 </script>
+
 </body></html>
