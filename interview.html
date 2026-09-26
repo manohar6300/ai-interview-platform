@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2096,411 +2097,268 @@ textarea{
 ></div>
 
 
+
+<script src="game-state.js"></script>
+<script src="ai-core.js"></script>
 <script>
 
 /* =====================================================
-   QUESTION BANK
+   INTERVIEWAI ADVANCED CORE
+   UI intentionally untouched.
+   Only behavior/state/AI intelligence is upgraded.
 ===================================================== */
 
 const bank = {
 
   technical: [
-
-    [
-      'Explain the difference between let, const and var in JavaScript. When would you use each?',
-      'JavaScript'
-    ],
-
-    [
-      'What is the virtual DOM in React and why does it improve UI development?',
-      'React'
-    ],
-
-    [
-      'What is the difference between SQL INNER JOIN and LEFT JOIN?',
-      'SQL'
-    ],
-
-    [
-      'Explain REST APIs and the purpose of HTTP methods such as GET, POST, PUT and DELETE.',
-      'Backend'
-    ],
-
-    [
-      'What is event bubbling in JavaScript and how can you prevent it?',
-      'JavaScript'
-    ],
-
-    [
-      'Explain the difference between authentication and authorization.',
-      'Security'
-    ],
-
-    [
-      'What is a closure in JavaScript? Give a practical use case.',
-      'JavaScript'
-    ],
-
-    [
-      'What are the main benefits of using indexes in a relational database?',
-      'SQL'
-    ],
-
-    [
-      'Explain synchronous versus asynchronous programming with an example.',
-      'Programming'
-    ],
-
-    [
-      'What makes a React component re-render?',
-      'React'
-    ],
-
-    [
-      'How would you debug a slow API endpoint in a production application?',
-      'Backend'
-    ],
-
-    [
-      'What is caching and where could you use it in a web application?',
-      'Architecture'
-    ],
-
-    [
-      'Explain the difference between cookies, localStorage and sessionStorage.',
-      'Web'
-    ],
-
-    [
-      'What is middleware in a Node.js/Express application?',
-      'Backend'
-    ],
-
-    [
-      'How would you secure a login endpoint?',
-      'Security'
-    ]
-
+    ['Explain the difference between let, const and var in JavaScript. When would you use each?','JavaScript'],
+    ['What is the virtual DOM in React and why does it improve UI development?','React'],
+    ['What is the difference between SQL INNER JOIN and LEFT JOIN?','SQL'],
+    ['Explain REST APIs and the purpose of HTTP methods such as GET, POST, PUT and DELETE.','Backend'],
+    ['What is event bubbling in JavaScript and how can you prevent it?','JavaScript'],
+    ['Explain the difference between authentication and authorization.','Security'],
+    ['What is a closure in JavaScript? Give a practical use case.','JavaScript'],
+    ['What are the main benefits of using indexes in a relational database?','SQL'],
+    ['Explain synchronous versus asynchronous programming with an example.','Programming'],
+    ['What makes a React component re-render?','React'],
+    ['How would you debug a slow API endpoint in a production application?','Backend'],
+    ['What is caching and where could you use it in a web application?','Architecture'],
+    ['Explain the difference between cookies, localStorage and sessionStorage.','Web'],
+    ['What is middleware in a Node.js/Express application?','Backend'],
+    ['How would you secure a login endpoint?','Security']
   ],
-
 
   dsa: [
-
-    [
-      'Given an array, how would you find two numbers that add up to a target? Explain the optimal approach.',
-      'Arrays'
-    ],
-
-    [
-      'What is the time complexity of binary search and why?',
-      'Searching'
-    ],
-
-    [
-      'How would you detect a cycle in a linked list?',
-      'Linked List'
-    ],
-
-    [
-      'Explain when you would use a stack versus a queue.',
-      'Data Structures'
-    ],
-
-    [
-      'How does a hash table achieve average O(1) lookup?',
-      'Hashing'
-    ],
-
-    [
-      'What is the difference between BFS and DFS?',
-      'Graphs'
-    ],
-
-    [
-      'How would you find the maximum subarray sum efficiently?',
-      'Dynamic Programming'
-    ],
-
-    [
-      'How can you determine whether a binary tree is balanced?',
-      'Trees'
-    ],
-
-    [
-      'What is Big O notation and why is it important?',
-      'Complexity'
-    ],
-
-    [
-      'How would you remove duplicates from an array efficiently?',
-      'Arrays'
-    ]
-
+    ['Given an array, how would you find two numbers that add up to a target? Explain the optimal approach.','Arrays'],
+    ['What is the time complexity of binary search and why?','Searching'],
+    ['How would you detect a cycle in a linked list?','Linked List'],
+    ['Explain when you would use a stack versus a queue.','Data Structures'],
+    ['How does a hash table achieve average O(1) lookup?','Hashing'],
+    ['What is the difference between BFS and DFS?','Graphs'],
+    ['How would you find the maximum subarray sum efficiently?','Dynamic Programming'],
+    ['How can you determine whether a binary tree is balanced?','Trees'],
+    ['What is Big O notation and why is it important?','Complexity'],
+    ['How would you remove duplicates from an array efficiently?','Arrays']
   ],
-
 
   'system-design': [
-
-    [
-      'Design a URL shortener. What components would you use and how would you scale it?',
-      'Scalability'
-    ],
-
-    [
-      'How would you design a chat application for millions of users?',
-      'Distributed Systems'
-    ],
-
-    [
-      'Design a video-sharing platform. Discuss storage, delivery and scaling.',
-      'Architecture'
-    ],
-
-    [
-      'How would you design an API rate limiter?',
-      'Reliability'
-    ],
-
-    [
-      'Explain database replication and why a system might need it.',
-      'Databases'
-    ],
-
-    [
-      'How would you design a notification service?',
-      'Distributed Systems'
-    ],
-
-    [
-      'What is horizontal scaling and when is it preferred?',
-      'Scalability'
-    ],
-
-    [
-      'How would you design an e-commerce checkout system?',
-      'Architecture'
-    ],
-
-    [
-      'What role does a message queue play in distributed systems?',
-      'Queues'
-    ],
-
-    [
-      'How would you make a web service highly available?',
-      'Reliability'
-    ]
-
+    ['Design a URL shortener. What components would you use and how would you scale it?','Scalability'],
+    ['How would you design a chat application for millions of users?','Distributed Systems'],
+    ['Design a video-sharing platform. Discuss storage, delivery and scaling.','Architecture'],
+    ['How would you design an API rate limiter?','Reliability'],
+    ['Explain database replication and why a system might need it.','Databases'],
+    ['How would you design a notification service?','Distributed Systems'],
+    ['What is horizontal scaling and when is it preferred?','Scalability'],
+    ['How would you design an e-commerce checkout system?','Architecture'],
+    ['What role does a message queue play in distributed systems?','Queues'],
+    ['How would you make a web service highly available?','Reliability']
   ],
 
-
   behavioural: [
-
-    [
-      'Tell me about yourself and the experience that makes you a strong candidate for this role.',
-      'Communication'
-    ],
-
-    [
-      'Tell me about a difficult technical problem you solved.',
-      'Problem Solving'
-    ],
-
-    [
-      'Describe a time you disagreed with a teammate. How did you handle it?',
-      'Teamwork'
-    ],
-
-    [
-      'Tell me about a failure and what you learned from it.',
-      'Growth'
-    ],
-
-    [
-      'Describe a project you are proud of. What was your contribution?',
-      'Ownership'
-    ],
-
-    [
-      'How do you prioritize when you have multiple deadlines?',
-      'Prioritization'
-    ],
-
-    [
-      'Tell me about a time you received critical feedback.',
-      'Growth'
-    ],
-
-    [
-      'Describe a situation where you had to learn something quickly.',
-      'Adaptability'
-    ],
-
-    [
-      'How do you explain a complex technical concept to a non-technical person?',
-      'Communication'
-    ],
-
-    [
-      'Why do you want this role?',
-      'Motivation'
-    ]
-
+    ['Tell me about yourself and the experience that makes you a strong candidate for this role.','Communication'],
+    ['Tell me about a difficult technical problem you solved.','Problem Solving'],
+    ['Describe a time you disagreed with a teammate. How did you handle it?','Teamwork'],
+    ['Tell me about a failure and what you learned from it.','Growth'],
+    ['Describe a project you are proud of. What was your contribution?','Ownership'],
+    ['How do you prioritize when you have multiple deadlines?','Prioritization'],
+    ['Tell me about a time you received critical feedback.','Growth'],
+    ['Describe a situation where you had to learn something quickly.','Adaptability'],
+    ['How do you explain a complex technical concept to a non-technical person?','Communication'],
+    ['Why do you want this role?','Motivation']
   ]
-
 };
-
-
-/* =====================================================
-   STATE
-===================================================== */
 
 let state = {
-
   type:'technical',
-
   role:'Software Engineer',
-
   difficulty:'Medium',
-
   count:10,
-
   questions:[],
-
-  index:0,
-
   answers:[],
-
+  index:0,
   start:0,
-
   remaining:300,
-
-  timer:null
-
+  timer:null,
+  adaptiveBusy:false,
+  aiEvaluating:false
 };
 
-
-/* =====================================================
-   HELPERS
-===================================================== */
-
-const $ = id =>
-  document.getElementById(id);
-
+const $ = id => document.getElementById(id);
 
 const titleMap = {
-
   technical:'Technical',
-
   dsa:'DSA',
-
   'system-design':'System Design',
-
   behavioural:'Behavioral'
-
 };
 
-
 /* =====================================================
-   SETUP CHOICES
+   CAREER TWIN HELPERS
 ===================================================== */
 
-function setupChoices(id,key){
-
-  document
-    .querySelectorAll('#'+id+' .choice')
-    .forEach(button => {
-
-      button.onclick = () => {
-
-        document
-          .querySelectorAll('#'+id+' .choice')
-          .forEach(item =>
-            item.classList.remove('selected')
-          );
-
-        button.classList.add('selected');
-
-        state[key] = button.dataset.value;
-
-        if(key === 'count'){
-          state.count = Number(button.dataset.value);
-        }
-
-      };
-
-    });
-
+function twin(){
+  if(window.InterviewAIState &&
+     typeof InterviewAIState.snapshot === 'function'){
+    return InterviewAIState.snapshot().careerTwin || {};
+  }
+  return {};
 }
 
+function updateProfileHUD(){
+  const stateApi = window.InterviewAIState;
+  let name = localStorage.getItem('ai_user_name') || 'Y Manu';
+  let xp = Number(localStorage.getItem('ai_xp') || 720);
+  let level = Number(localStorage.getItem('ai_level') || 7);
 
-setupChoices('typeChoices','type');
+  if(stateApi){
+    const s = stateApi.get();
+    name = s.user?.name || name;
+    xp = Number(s.progression?.xp || xp);
+    level = Number(s.progression?.level || level);
+  }
 
-setupChoices('roleChoices','role');
+  $('profileName').textContent = name;
+  $('avatar').textContent =
+    name.trim().charAt(0).toUpperCase() || 'M';
+  $('profileLevel').textContent =
+    `Level ${level} · ${xp} XP`;
 
-setupChoices('difficultyChoices','difficulty');
+  const xpBar = document.querySelector('.xpbar i');
+  if(xpBar){
+    const current = xp % 120;
+    const pct = Math.max(8, Math.min(100, (current / 120) * 100));
+    xpBar.style.width = `${pct}%`;
+  }
 
-setupChoices('countChoices','count');
+  const stats = document.querySelectorAll('.stats .stat b');
+  if(stats.length >= 4){
+    const records = stateApi ? stateApi.get().interviews : [];
+    const validScores = records
+      .map(r => Number(r.score))
+      .filter(Number.isFinite);
+    const avg = validScores.length
+      ? Math.round(validScores.reduce((a,b)=>a+b,0)/validScores.length)
+      : 82;
 
+    const streak = stateApi
+      ? Number(stateApi.get().progression?.streak || 0)
+      : Number(localStorage.getItem('ai_streak') || 7);
+
+    stats[0].textContent = `♛ Level ${level}`;
+    stats[1].textContent = `🔥 ${streak}`;
+    stats[2].textContent = `◎ ${records.length || 12}`;
+    stats[3].textContent = `★ ${avg}%`;
+  }
+}
 
 /* =====================================================
-   TOAST
+   SETUP
+===================================================== */
+
+function setupChoices(id, key){
+  document.querySelectorAll('#'+id+' .choice').forEach(button => {
+    button.onclick = () => {
+      document.querySelectorAll('#'+id+' .choice').forEach(item =>
+        item.classList.remove('selected')
+      );
+      button.classList.add('selected');
+
+      state[key] = button.dataset.value;
+
+      if(key === 'count'){
+        state.count = Number(button.dataset.value);
+      }
+
+      if(key === 'type'){
+        localStorage.setItem('training_mode', titleMap[state.type]);
+        localStorage.setItem('interview_type', titleMap[state.type]);
+      }
+
+      saveDraft();
+    };
+  });
+}
+
+setupChoices('typeChoices','type');
+setupChoices('roleChoices','role');
+setupChoices('difficultyChoices','difficulty');
+setupChoices('countChoices','count');
+
+/* =====================================================
+   UI HELPERS
 ===================================================== */
 
 function toast(message){
-
   const element = $('toast');
-
   element.textContent = message;
-
   element.classList.remove('hidden');
-
   clearTimeout(element._timer);
-
   element._timer = setTimeout(() => {
-
     element.classList.add('hidden');
-
-  },2200);
-
+  }, 2600);
 }
-
-
-/* =====================================================
-   SHUFFLE
-===================================================== */
 
 function shuffle(array){
-
-  return [...array]
-    .sort(() => Math.random() - 0.5);
-
+  return [...array].sort(() => Math.random() - 0.5);
 }
 
+function saveDraft(){
+  try{
+    localStorage.setItem(
+      'ai_interview_draft',
+      JSON.stringify({
+        type:state.type,
+        role:state.role,
+        difficulty:state.difficulty,
+        count:state.count,
+        index:state.index,
+        answers:state.answers,
+        questions:state.questions,
+        remaining:state.remaining,
+        start:state.start
+      })
+    );
+  }catch(error){
+    console.warn('Draft save failed:', error);
+  }
+}
+
+function saveCurrent(){
+  if(
+    state.index >= 0 &&
+    state.index < state.answers.length
+  ){
+    state.answers[state.index] = $('answer').value;
+  }
+  saveDraft();
+}
 
 /* =====================================================
-   START INTERVIEW
+   INITIAL QUESTION SET
+===================================================== */
+
+function createInitialQuestions(){
+  const pool = bank[state.type] || bank.technical;
+
+  return shuffle(pool)
+    .slice(0,state.count)
+    .map(item => ({
+      q:item[0],
+      tag:item[1],
+      adaptive:false
+    }));
+}
+
+/* =====================================================
+   START
 ===================================================== */
 
 function startInterview(){
 
-  const availableQuestions =
-    bank[state.type] || bank.technical;
-
-
-  state.questions =
-    shuffle(availableQuestions)
-      .slice(0,state.count)
-      .map(item => ({
-        q:item[0],
-        tag:item[1]
-      }));
-
+  state.questions = createInitialQuestions();
 
   state.answers =
-    new Array(state.questions.length)
-      .fill('');
-
+    new Array(state.questions.length).fill('');
 
   state.index = 0;
 
@@ -2509,55 +2367,41 @@ function startInterview(){
   state.remaining =
     state.questions.length * 60;
 
+  state.aiEvaluating = false;
+  state.adaptiveBusy = false;
 
-  $('setupView')
-    .classList
-    .add('hidden');
-
-  $('resultView')
-    .classList
-    .add('hidden');
-
-  $('sessionView')
-    .classList
-    .remove('hidden');
-
+  $('setupView').classList.add('hidden');
+  $('resultView').classList.add('hidden');
+  $('sessionView').classList.remove('hidden');
 
   $('pageTitle').textContent =
-    'Interview in Progress';
-
+    'INTERVIEW ARENA';
 
   $('sessionEyebrow').textContent =
     titleMap[state.type].toUpperCase()
     + ' · '
     + state.difficulty.toUpperCase();
 
-
   $('sessionTitle').textContent =
-    titleMap[state.type]
-    + ' Interview Quest';
-
+    titleMap[state.type] + ' Interview Quest';
 
   $('sessionMeta').textContent =
     state.role;
 
-
   clearInterval(state.timer);
-
 
   state.timer =
     setInterval(tick,1000);
-
 
   renderQuestion();
 
   saveDraft();
 
+  toast('⚔ Interview started — your answers will shape the next questions.');
 }
 
-
 /* =====================================================
-   RENDER QUESTION
+   QUESTION RENDER
 ===================================================== */
 
 function renderQuestion(){
@@ -2565,124 +2409,50 @@ function renderQuestion(){
   const question =
     state.questions[state.index];
 
-
-  if(!question){
-    return;
-  }
-
+  if(!question) return;
 
   $('qCounter').textContent =
     `Question ${state.index + 1} / ${state.questions.length}`;
 
-
   $('qTag').textContent =
-    question.tag;
-
+    question.tag || 'Adaptive';
 
   $('questionText').textContent =
     question.q;
 
-
   $('answer').value =
     state.answers[state.index] || '';
-
 
   const progress =
     state.questions.length
       ? (state.index / state.questions.length) * 100
       : 0;
 
-
   $('progress').style.width =
     progress + '%';
 
-
   $('skipBtn').disabled =
+    state.adaptiveBusy ||
     state.index === state.questions.length - 1;
-
 
   $('finishBtn').style.display =
     state.index === state.questions.length - 1
       ? 'inline-block'
       : 'none';
 
+  $('finishBtn').disabled =
+    state.adaptiveBusy;
+
+  $('nextBtn').disabled =
+    state.adaptiveBusy;
 
   $('nextBtn').textContent =
     state.index === state.questions.length - 1
       ? 'Submit Answer ✓'
       : 'Submit & Next →';
 
-
   updateTimer();
-
 }
-
-
-/* =====================================================
-   SAVE CURRENT ANSWER
-===================================================== */
-
-function saveCurrent(){
-
-  if(
-    state.index >= 0 &&
-    state.index < state.answers.length
-  ){
-
-    state.answers[state.index] =
-      $('answer').value;
-
-  }
-
-  saveDraft();
-
-}
-
-
-/* =====================================================
-   SAVE DRAFT
-===================================================== */
-
-function saveDraft(){
-
-  try{
-
-    localStorage.setItem(
-      'ai_interview_draft',
-      JSON.stringify({
-
-        type:state.type,
-
-        role:state.role,
-
-        difficulty:state.difficulty,
-
-        count:state.count,
-
-        index:state.index,
-
-        answers:state.answers,
-
-        questions:state.questions,
-
-        remaining:state.remaining,
-
-        start:state.start
-
-      })
-    );
-
-  }catch(error){
-
-    console.warn(
-      'Unable to save interview draft:',
-      error
-    );
-
-  }
-
-}
-
 
 /* =====================================================
    TIMER
@@ -2701,25 +2471,14 @@ function tick(){
     finishInterview(true);
 
     return;
-
   }
-
 
   updateTimer();
 
-
   if(state.remaining % 5 === 0){
-
     saveDraft();
-
   }
-
 }
-
-
-/* =====================================================
-   UPDATE TIMER
-===================================================== */
 
 function updateTimer(){
 
@@ -2729,61 +2488,175 @@ function updateTimer(){
   const seconds =
     state.remaining % 60;
 
-
   $('timer').textContent =
     String(minutes).padStart(2,'0')
     + ':'
     + String(seconds).padStart(2,'0');
 
-
   $('timer').style.color =
     state.remaining < 30
       ? '#ff7070'
       : 'var(--gold)';
-
 }
 
-
 /* =====================================================
-   NEXT QUESTION
+   ADAPTIVE QUESTION
 ===================================================== */
 
-function next(){
+async function requestAdaptiveQuestion(){
 
-  saveCurrent();
+  if(state.adaptiveBusy) return;
 
+  state.adaptiveBusy = true;
 
-  if(
-    state.index <
-    state.questions.length - 1
-  ){
+  $('nextBtn').disabled = true;
+  $('skipBtn').disabled = true;
+  $('finishBtn').disabled = true;
 
-    state.index++;
+  $('questionText').textContent =
+    'AI is adapting your next challenge…';
 
-    renderQuestion();
+  $('qTag').textContent =
+    'ADAPTIVE AI';
 
-    toast('Answer saved');
+  $('answer').value = '';
+
+  const previousQuestions =
+    state.questions
+      .map(q => q.q)
+      .filter(Boolean);
+
+  const previousAnswers =
+    state.answers
+      .slice(0,state.index)
+      .filter(a => String(a).trim());
+
+  try{
+
+    if(
+      !window.InterviewAICore ||
+      typeof InterviewAICore.nextQuestion !== 'function'
+    ){
+      throw new Error('Adaptive core unavailable');
+    }
+
+    const result =
+      await InterviewAICore.nextQuestion({
+
+        type:state.type,
+
+        role:state.role,
+
+        difficulty:state.difficulty,
+
+        questionIndex:
+          state.index + 1,
+
+        totalQuestions:
+          state.questions.length,
+
+        previousQuestions,
+
+        previousAnswers
+      });
+
+    state.questions[state.index] = {
+      q:result.question,
+      tag:result.tag || 'Adaptive',
+      adaptive:true
+    };
 
     saveDraft();
 
-    return;
+    renderQuestion();
 
+    toast(
+      result.source === 'ai-adaptive'
+        ? '🧠 Adaptive AI selected your next challenge.'
+        : '⚙ Adaptive fallback selected your next challenge.'
+    );
+
+  }catch(error){
+
+    console.warn(
+      'Adaptive question failed:',
+      error
+    );
+
+    const fallback =
+      poolFallbackQuestion();
+
+    state.questions[state.index] = {
+      q:fallback.q,
+      tag:fallback.tag,
+      adaptive:true
+    };
+
+    saveDraft();
+
+    renderQuestion();
+
+    toast(
+      '⚙ Adaptive fallback active.'
+    );
+
+  }finally{
+
+    state.adaptiveBusy = false;
+
+    $('nextBtn').disabled = false;
+    $('finishBtn').disabled = false;
+
+    renderQuestion();
   }
-
-
-  finishInterview(false);
-
 }
 
+function poolFallbackQuestion(){
+
+  const pool =
+    bank[state.type] ||
+    bank.technical;
+
+  const used =
+    new Set(
+      state.questions
+        .slice(0,state.index)
+        .map(q => q.q)
+    );
+
+  const available =
+    pool.filter(
+      item => !used.has(item[0])
+    );
+
+  const source =
+    available.length
+      ? available
+      : pool;
+
+  const selected =
+    source[
+      Math.floor(
+        Math.random() *
+        source.length
+      )
+    ];
+
+  return {
+    q:selected[0],
+    tag:selected[1]
+  };
+}
 
 /* =====================================================
-   SKIP QUESTION
+   NEXT / SKIP
 ===================================================== */
 
-function skip(){
+async function next(){
+
+  if(state.adaptiveBusy) return;
 
   saveCurrent();
-
 
   if(
     state.index <
@@ -2792,70 +2665,101 @@ function skip(){
 
     state.index++;
 
-    renderQuestion();
+    saveDraft();
 
-    toast('Question skipped');
+    await requestAdaptiveQuestion();
 
+    return;
   }
 
+  await finishInterview(false);
 }
 
+async function skip(){
+
+  if(state.adaptiveBusy) return;
+
+  saveCurrent();
+
+  if(
+    state.index <
+    state.questions.length - 1
+  ){
+
+    state.index++;
+
+    saveDraft();
+
+    await requestAdaptiveQuestion();
+
+    toast('Question skipped — AI will compensate with a targeted question.');
+
+  }
+}
 
 /* =====================================================
-   AI EVALUATION
-   IMPORTANT:
-   This matches server.mjs:
-   POST /api/evaluate
+   FALLBACK SCORING
 ===================================================== */
 
-async function finishInterview(auto = false){
+function demoScore(){
+
+  const total =
+    Math.max(
+      1,
+      state.questions.length
+    );
+
+  const answered =
+    state.answers.filter(
+      answer =>
+        String(answer).trim().length > 0
+    ).length;
+
+  const detailed =
+    state.answers.filter(
+      answer =>
+        String(answer).trim().length > 120
+    ).length;
+
+  return Math.max(
+    35,
+    Math.min(
+      98,
+      Math.round(
+        48
+        +
+        (answered / total) * 42
+        +
+        (detailed / total) * 10
+      )
+    )
+  );
+}
+
+/* =====================================================
+   FINISH + AI
+===================================================== */
+
+async function finishInterview(
+  auto = false
+){
+
+  if(state.aiEvaluating) return;
 
   saveCurrent();
 
   clearInterval(state.timer);
 
+  state.aiEvaluating = true;
 
   const answered =
-    state.answers
-      .filter(answer =>
-        answer.trim().length > 0
-      )
-      .length;
-
+    state.answers.filter(
+      answer =>
+        String(answer).trim().length > 0
+    ).length;
 
   const total =
     state.questions.length;
-
-
-  /*
-   * Demo fallback score.
-   * Used only if the API is unavailable.
-   */
-
-  const demoScore =
-    Math.max(
-      35,
-      Math.min(
-        98,
-        Math.round(
-          48
-          +
-          (
-            answered /
-            Math.max(1,total)
-          ) * 42
-          +
-          (
-            state.answers.filter(
-              answer =>
-                answer.trim().length > 120
-            ).length /
-            Math.max(1,total)
-          ) * 10
-        )
-      )
-    );
-
 
   const duration =
     Math.max(
@@ -2865,10 +2769,8 @@ async function finishInterview(auto = false){
       )
     );
 
-
-  /*
-   * Interview record stored in localStorage.
-   */
+  const demo =
+    demoScore();
 
   const record = {
 
@@ -2891,27 +2793,26 @@ async function finishInterview(auto = false){
     date:new Date().toISOString(),
 
     answers:
-      state.questions.map((question,index) => ({
+      state.questions.map(
+        (question,index) => ({
 
-        question:question.q,
+          question:question.q,
 
-        tag:question.tag,
+          tag:question.tag,
 
-        answer:
-          state.answers[index] || ''
+          answer:
+            state.answers[index] || ''
 
-      })),
+        })
+      ),
 
-    score:demoScore,
+    score:demo,
 
-    aiStatus:'pending'
+    aiStatus:'pending',
+
+    aiXpAwarded:false
 
   };
-
-
-  /*
-   * Show temporary evaluation screen.
-   */
 
   showResult(
     record,
@@ -2919,117 +2820,60 @@ async function finishInterview(auto = false){
     true
   );
 
-
   try{
 
-    /*
-     * Send EXACT structure expected
-     * by server.mjs.
-     */
-
-    const response =
-      await fetch(
-        '/api/evaluate',
-        {
-
-          method:'POST',
-
-          headers:{
-            'Content-Type':
-              'application/json'
-          },
-
-          body:JSON.stringify({
-
-            type:record.type,
-
-            role:record.role,
-
-            difficulty:record.difficulty,
-
-            questions:
-              record.answers.map(
-                answer => ({
-                  question:
-                    answer.question,
-
-                  tag:
-                    answer.tag
-                })
-              ),
-
-            answers:
-              record.answers.map(
-                answer =>
-                  answer.answer
-              )
-
-          })
-
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    /*
-     * Backend returns:
-     *
-     * {
-     *   success: true,
-     *   evaluation: {...}
-     * }
-     */
-
     if(
-      !response.ok ||
-      !data.success ||
-      !data.evaluation
+      !window.InterviewAICore
     ){
-
       throw new Error(
-        data.error ||
-        'AI evaluation failed'
+        'AI client core is unavailable.'
       );
-
     }
 
+    const result =
+      await InterviewAICore.evaluateInterview({
 
-    /*
-     * Store the complete AI evaluation.
-     */
+        type:record.track,
+
+        role:record.role,
+
+        difficulty:record.difficulty,
+
+        answers:record.answers,
+
+        careerTwin:twin()
+
+      });
+
+    if(
+      !result.ok ||
+      !result.evaluation
+    ){
+      throw new Error(
+        result.error ||
+        'AI evaluation unavailable.'
+      );
+    }
 
     record.ai =
-      data.evaluation;
-
-
-    /*
-     * Read overallScore from evaluation.
-     */
+      result.evaluation;
 
     record.score =
       Number(
-        data.evaluation.overallScore
-        || demoScore
+        result.evaluation.overallScore ||
+        demo
       );
-
 
     record.aiStatus =
       'complete';
 
+    processAIFeedback(
+      record.ai
+    );
 
-    /*
-     * Save evaluated interview.
-     */
-
-    saveRecord(record);
-
-
-    /*
-     * Show final score.
-     */
+    saveRecord(
+      record
+    );
 
     showResult(
       record,
@@ -3037,11 +2881,9 @@ async function finishInterview(auto = false){
       false
     );
 
-
     toast(
-      '🤖 AI evaluation complete!'
+      '🤖 AI Interview DNA updated.'
     );
-
 
   }catch(error){
 
@@ -3050,21 +2892,15 @@ async function finishInterview(auto = false){
       error
     );
 
-
-    /*
-     * If OpenAI/API fails,
-     * save the demo score instead.
-     */
-
     record.score =
-      demoScore;
+      demo;
 
     record.aiStatus =
       'demo';
 
-
-    saveRecord(record);
-
+    saveRecord(
+      record
+    );
 
     showResult(
       record,
@@ -3072,53 +2908,209 @@ async function finishInterview(auto = false){
       false
     );
 
-
     toast(
-      '⚠️ AI evaluation unavailable — demo score saved'
+      '⚠️ AI unavailable — local evaluation saved.'
+    );
+
+  }finally{
+
+    state.aiEvaluating = false;
+
+  }
+}
+
+/* =====================================================
+   AI → CAREER TWIN
+===================================================== */
+
+function processAIFeedback(
+  evaluation
+){
+
+  if(
+    !window.InterviewAIState ||
+    !evaluation
+  ){
+    return;
+  }
+
+  const skills =
+    Array.isArray(
+      evaluation.skillSignals
+    )
+      ? evaluation.skillSignals
+      : [];
+
+  skills.forEach(
+    signal => {
+
+      if(
+        !signal ||
+        !signal.skill
+      ){
+        return;
+      }
+
+      InterviewAIState.updateSkill(
+
+        signal.skill,
+
+        Number(
+          signal.score
+        ),
+
+        signal.evidence || '',
+
+        'ai-interview'
+
+      );
+
+    }
+  );
+
+  const weaknesses =
+    Array.isArray(
+      evaluation.recurringWeaknessCandidates
+    )
+      ? evaluation.recurringWeaknessCandidates
+      : [];
+
+  weaknesses.forEach(
+    weakness => {
+
+      if(
+        !weakness ||
+        !weakness.issue
+      ){
+        return;
+      }
+
+      InterviewAIState.addWeakness(
+
+        weakness.issue,
+
+        weakness.skill || 'General',
+
+        weakness.severity || 'medium'
+
+      );
+
+    }
+  );
+
+  if(
+    evaluation.nextDrill
+  ){
+
+    InterviewAIState.set(
+      'careerTwin.recommendedMission',
+      {
+        title:
+          evaluation.nextDrill.title,
+
+        skill:
+          evaluation.nextDrill.skill,
+
+        reason:
+          evaluation.nextDrill.goal
+      }
     );
 
   }
 
+  InterviewAIState.set(
+    'careerTwin.confidence',
+    Number(
+      evaluation.confidenceScore || 0
+    )
+  );
+
+  InterviewAIState.set(
+    'careerTwin.targetRole',
+    state.role
+  );
 }
 
-
 /* =====================================================
-   SAVE INTERVIEW RECORD
+   SAVE RECORD
 ===================================================== */
 
-function saveRecord(record){
+function saveRecord(
+  record
+){
 
+  if(
+    window.InterviewAIState
+  ){
+
+    InterviewAIState.recordInterview(
+      record
+    );
+
+    const existing =
+      InterviewAIState
+        .get()
+        .interviews
+        .find(
+          item =>
+            item.id === record.id
+        );
+
+    if(
+      existing &&
+      !existing.aiXpAwarded
+    ){
+
+      const xp =
+        50 +
+        Number(
+          record.score || 0
+        );
+
+      InterviewAIState.awardXP(
+        xp,
+        `${record.type} Interview`
+      );
+
+      const current =
+        InterviewAIState
+          .get()
+          .interviews
+          .find(
+            item =>
+              item.id === record.id
+          );
+
+      if(current){
+        current.aiXpAwarded = true;
+        InterviewAIState.save();
+      }
+
+    }
+
+    updateProfileHUD();
+
+    localStorage.setItem(
+      'ai_last_interview',
+      JSON.stringify(record)
+    );
+
+    return;
+  }
+
+  /* Legacy fallback */
   let list = [];
 
-
   try{
-
     list =
       JSON.parse(
         localStorage.getItem(
           'ai_interviews'
         ) || '[]'
       );
-
-  }catch(error){
-
+  }catch{
     list = [];
-
   }
-
-
-  /*
-   * Calculate XP.
-   */
-
-  const xp =
-    50 + Number(record.score || 0);
-
-
-  /*
-   * Prevent duplicate XP if the same
-   * record is accidentally saved again.
-   */
 
   const existing =
     list.find(
@@ -3126,39 +3118,29 @@ function saveRecord(record){
         item.id === record.id
     );
 
-
   if(
     !existing &&
     !record.aiXpAwarded
   ){
 
     record.aiXp =
-      xp;
+      50 + Number(record.score || 0);
 
-    record.aiXpAwarded =
-      true;
-
+    record.aiXpAwarded = true;
 
     const oldXp =
       Number(
-        localStorage.getItem(
-          'ai_xp'
-        ) || 720
+        localStorage.getItem('ai_xp') || 720
       );
-
 
     localStorage.setItem(
       'ai_xp',
-      String(oldXp + xp)
+      String(
+        oldXp +
+        record.aiXp
+      )
     );
-
   }
-
-
-  /*
-   * Replace existing record
-   * or insert newest record.
-   */
 
   const index =
     list.findIndex(
@@ -3166,22 +3148,11 @@ function saveRecord(record){
         item.id === record.id
     );
 
-
   if(index >= 0){
-
-    list[index] =
-      record;
-
+    list[index] = record;
   }else{
-
     list.unshift(record);
-
   }
-
-
-  /*
-   * Keep maximum 50 interviews.
-   */
 
   localStorage.setItem(
     'ai_interviews',
@@ -3190,36 +3161,20 @@ function saveRecord(record){
     )
   );
 
-
   localStorage.setItem(
     'ai_last_interview',
     JSON.stringify(record)
   );
 
-
-  /*
-   * Interview completed.
-   */
-
   localStorage.removeItem(
     'ai_interview_draft'
   );
 
-
-  /*
-   * Keep user logged in.
-   */
-
-  localStorage.setItem(
-    'ai_logged_in',
-    'true'
-  );
-
+  updateProfileHUD();
 }
 
-
 /* =====================================================
-   SHOW RESULT
+   RESULT
 ===================================================== */
 
 function showResult(
@@ -3232,15 +3187,9 @@ function showResult(
     .classList
     .add('hidden');
 
-
   $('resultView')
     .classList
     .remove('hidden');
-
-
-  /*
-   * Temporary AI loading state.
-   */
 
   if(evaluating){
 
@@ -3251,7 +3200,7 @@ function showResult(
       '…';
 
     $('resultSummary').textContent =
-      'Your answers were submitted to the AI interviewer. Generating your score, strengths, weaknesses, and question-by-question feedback…';
+      'Your interview is being analyzed for technical depth, reasoning, communication, skill gaps, recurring weaknesses, and your next training mission…';
 
     $('accuracyMetric').textContent =
       'AI';
@@ -3265,82 +3214,79 @@ function showResult(
       'Quest Complete';
 
     $('finalScore').textContent =
-      Number(record.score || 0)
-      + '/100';
-
+      Number(record.score || 0) + '/100';
 
     $('resultSummary').textContent =
-      auto
-        ? 'Time ran out, but your progress was saved. AI evaluation is complete.'
-        : 'AI evaluation complete. Open Results to see detailed feedback.';
 
+      record.aiStatus === 'complete'
+
+        ? (
+            record.ai?.summary ||
+            'AI evaluation complete. Your Interview DNA has been updated.'
+          )
+
+        : auto
+
+          ? 'Time ran out, but your progress was saved. A local fallback evaluation was used.'
+
+          : 'AI evaluation was unavailable. Your local fallback score has been saved.';
 
     $('accuracyMetric').textContent =
-      Number(record.score || 0)
-      + '%';
-
+      Number(record.score || 0) + '%';
 
     $('xpMetric').textContent =
-      '+'
-      + (
+      '+' +
+      (
         50 +
         Number(record.score || 0)
-      )
-      + ' XP';
+      ) +
+      ' XP';
 
   }
 
-
-  /*
-   * Metrics are available during
-   * both loading and final state.
-   */
-
   $('answeredMetric').textContent =
-    record.answered
-    + '/'
-    + record.questions;
-
+    record.answered +
+    '/' +
+    record.questions;
 
   $('timeMetric').textContent =
-    record.duration
-    + 'm';
-
+    record.duration + 'm';
 }
 
-
 /* =====================================================
-   BUTTON EVENTS
+   BUTTONS
 ===================================================== */
 
 $('startBtn').onclick =
   startInterview;
 
-
 $('nextBtn').onclick =
   next;
-
 
 $('skipBtn').onclick =
   skip;
 
-
 $('finishBtn').onclick =
-  () => finishInterview(false);
-
+  () =>
+    finishInterview(false);
 
 $('retryBtn').onclick =
   () => {
 
-    clearInterval(state.timer);
+    clearInterval(
+      state.timer
+    );
 
-    state.index = 0;
-
-    state.answers = [];
-
-    state.questions = [];
-
-    state.remaining = 300;
+    state = {
+      ...state,
+      questions:[],
+      answers:[],
+      index:0,
+      remaining:300,
+      timer:null,
+      adaptiveBusy:false,
+      aiEvaluating:false
+    };
 
     $('resultView')
       .classList
@@ -3354,14 +3300,15 @@ $('retryBtn').onclick =
       .classList
       .remove('hidden');
 
-    $('pageTitle').textContent =
+    $('pageTitle')
+      .textContent =
       'INTERVIEW ARENA';
 
+    updateProfileHUD();
   };
 
-
 /* =====================================================
-   ANSWER AUTOSAVE
+   AUTOSAVE
 ===================================================== */
 
 $('answer').addEventListener(
@@ -3379,14 +3326,11 @@ $('answer').addEventListener(
       saveDraft();
 
     }
-
   }
 );
 
-
 /* =====================================================
    KEYBOARD SHORTCUT
-   CTRL + ENTER = NEXT
 ===================================================== */
 
 window.addEventListener(
@@ -3408,130 +3352,46 @@ window.addEventListener(
   }
 );
 
-
-/* =====================================================
-   RESTORE DRAFT
-===================================================== */
-
-function restoreDraft(){
-
-  try{
-
-    const raw =
-      localStorage.getItem(
-        'ai_interview_draft'
-      );
-
-
-    if(!raw){
-      return false;
-    }
-
-
-    const draft =
-      JSON.parse(raw);
-
-
-    if(
-      !draft ||
-      !Array.isArray(draft.questions) ||
-      !draft.questions.length
-    ){
-
-      return false;
-
-    }
-
-
-    /*
-     * Do not automatically resume.
-     * Keep setup screen clean.
-     *
-     * Draft remains available in
-     * localStorage for future expansion.
-     */
-
-    return true;
-
-  }catch(error){
-
-    console.warn(
-      'Could not restore interview draft:',
-      error
-    );
-
-    return false;
-
-  }
-
-}
-
-
 /* =====================================================
    INITIALIZATION
 ===================================================== */
 
 (function init(){
 
-  /*
-   * User profile.
-   */
+  const api =
+    window.InterviewAIState;
 
-  const name =
-    localStorage.getItem(
-      'ai_user_name'
-    ) || 'Y Manu';
+  if(api){
 
+    const s =
+      api.get();
 
-  $('profileName').textContent =
-    name;
+    if(
+      s.user?.name
+    ){
+      localStorage.setItem(
+        'ai_user_name',
+        s.user.name
+      );
+    }
 
+    if(
+      s.user?.role
+    ){
+      state.role =
+        s.user.role;
+    }
+  }
 
-  $('avatar').textContent =
-    name
-      .trim()
-      .charAt(0)
-      .toUpperCase()
-      || 'M';
-
-
-  const level =
-    localStorage.getItem(
-      'ai_level'
-    ) || '7';
-
-
-  const xp =
-    localStorage.getItem(
-      'ai_xp'
-    ) || '720';
-
-
-  $('profileLevel').textContent =
-    'Level '
-    + level
-    + ' · '
-    + xp
-    + ' XP';
-
-
-  /*
-   * Support dashboard links such as:
-   *
-   * interview.html?track=dsa
-   * interview.html?track=system-design
-   * interview.html?track=behavioural
-   */
+  updateProfileHUD();
 
   const params =
     new URLSearchParams(
       location.search
     );
 
-
   const track =
     params.get('track');
-
 
   if(
     track &&
@@ -3541,38 +3401,149 @@ function restoreDraft(){
     state.type =
       track;
 
-
     document
       .querySelectorAll(
         '#typeChoices .choice'
       )
-      .forEach(button => {
+      .forEach(
+        button => {
 
-        button.classList.toggle(
-          'selected',
-          button.dataset.value === track
-        );
+          button.classList.toggle(
+            'selected',
+            button.dataset.value === track
+          );
 
-      });
+        }
+      );
 
   }
 
+  if(api){
 
-  /*
-   * Initial timer.
-   */
+    const settings =
+      api.get().settings || {};
+
+    const typeToTrack = {
+      'Technical':'technical',
+      'DSA':'dsa',
+      'System Design':'system-design',
+      'Behavioural':'behavioural'
+    };
+
+    if(
+      !track &&
+      settings.defaultType &&
+      typeToTrack[settings.defaultType]
+    ){
+
+      state.type =
+        typeToTrack[
+          settings.defaultType
+        ];
+
+      document
+        .querySelectorAll(
+          '#typeChoices .choice'
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              'selected',
+              button.dataset.value === state.type
+            );
+
+          }
+        );
+
+    }
+
+    if(
+      settings.difficulty
+    ){
+
+      state.difficulty =
+        settings.difficulty;
+
+      document
+        .querySelectorAll(
+          '#difficultyChoices .choice'
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              'selected',
+              button.dataset.value ===
+                settings.difficulty
+            );
+
+          }
+        );
+
+    }
+
+    if(
+      Number(settings.questions)
+    ){
+
+      state.count =
+        Number(
+          settings.questions
+        );
+
+      document
+        .querySelectorAll(
+          '#countChoices .choice'
+        )
+        .forEach(
+          button => {
+
+            button.classList.toggle(
+              'selected',
+              Number(button.dataset.value) ===
+                state.count
+            );
+
+          }
+        );
+
+    }
+
+  }
 
   updateTimer();
 
+  try{
+    const draft =
+      localStorage.getItem(
+        'ai_interview_draft'
+      );
 
-  /*
-   * Keep draft available.
-   */
+    if(draft){
 
-  restoreDraft();
+      const parsed =
+        JSON.parse(draft);
+
+      if(
+        parsed &&
+        Array.isArray(
+          parsed.questions
+        ) &&
+        parsed.questions.length
+      ){
+
+        toast(
+          '💾 Previous interview draft detected in this browser.'
+        );
+
+      }
+
+    }
+
+  }catch{}
 
 })();
-
 </script>
 
 </body>
